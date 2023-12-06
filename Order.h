@@ -1,7 +1,6 @@
-// Class Order
+// Class Order (incomplete)
 
-#ifndef ORDER_H
-#define ORDER_H
+#pragma once
 
 #include <queue>
 using namespace std;
@@ -18,7 +17,7 @@ class Order {
         int iDeliveryMan;
 
     public:
-        Order(int iItems, int iQuantity, int iDestination);
+        Order(int iItems, int iQuantity, int iDestination, int iPrice, int iDeliveryMan, int iOrderNumber, int iOrigin, bool bType);
 
         void setType(bool bType);
         bool getType(){
@@ -61,8 +60,4 @@ class Order {
         }
 
         queue<int> FindRoute();
-
-
 };
-
-#endif

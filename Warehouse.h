@@ -1,39 +1,42 @@
 // Class WareHouse
 
-#ifndef WAREHOUSE_H
-#define WAREHOUSE_H
+#pragma once
 
-class WareHouse {
+class Warehouse {
     private:
-        int iWareHouseID;
+        int iWarehouseID;
         int iItems;
         int iQuantity;
         int iLocation; 
 
     public:
-        WareHouse(int iWareHouseID, int iItems, int iQuantity, int iLocation);
+        Warehouse(int iWarehouseID, int iItems, int iQuantity, int iLocation);
 
-        void setWareHouseID(int iWareHouseID);
-        int getWareHouseID(){
-            return iWareHouseID;
+        void setWarehouseID(int newID) {
+            iWarehouseID = newID;
+        }
+        int getWarehouseID(){
+            return iWarehouseID;
         }
 
-        void setItems(int iItems);
+        void setItems(int newItems){
+            iItems = newItems;
+        }
         int getItems(){
             return iItems;
         }
 
-        void setQuantity(int iQuantity);
+        void setQuantity(int newQuantity){
+            iQuantity = newQuantity;   
+        }
         int getQuantity(){
             return iQuantity;
         }
 
-        void setLocation(int iLocation);
+        void setLocation(int newLocation){
+            iLocation = newLocation;
+        }
         int getLocation(){
             return iLocation;
         }
-
-
 };
-
-#endif
