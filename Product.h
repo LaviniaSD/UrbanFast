@@ -1,7 +1,6 @@
 // Class Product
 
-#ifndef PRODUCT_H
-#define PRODUCT_H
+#pragma once
 
 class Product {
     private:
@@ -46,4 +45,3 @@ class Product {
         }
 };
 
-#endif

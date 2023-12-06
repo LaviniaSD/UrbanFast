@@ -1,7 +1,6 @@
 // Class Seller
 
-#ifndef SELLER_H
-#define SELLER_H
+#pragma once
 
 class Seller {
     private:
@@ -34,6 +33,3 @@ class Seller {
         }
 
 };
-
-
-#endif

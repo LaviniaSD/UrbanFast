@@ -3,40 +3,59 @@
 #include "Deliveryman.h"
 #include "Warehouse.h"
 
-#ifndef EDGENODE_H
-#define EDGENODE_H
-
+#pragma once
 
 class EdgeNode {
     private:
-        int m_originVertex;
-        int m_otherVertex;
-        int m_distance;
-        DeliveryMan *m_deliveryMan;
-        WareHouse *m_warehouse;
-        EdgeNode *m_next;
+        int originVertex;
+        int otherVertex;
+        int distance;
+        DeliveryMan* deliveryMan;
+        Warehouse* warehouse;
+        EdgeNode* next;
 
     public:
-        EdgeNode(int originVertex, int otherVertex, int distance, DeliveryMan *deliveryMan, WareHouse *warehouse, EdgeNode *next);
-
-        int originVertex(){
-            return m_originVertex;
+        EdgeNode(int originVertex, int otherVertex, int distance, DeliveryMan* deliveryMan, Warehouse* warehouse, EdgeNode* next);
+        
+        void setOriginVertex(int newOrigin){
+            originVertex = newOrigin;
+        }
+        int getOriginVertex(){
+            return originVertex;
         }
 
-        int otherVertex(){
-            return m_otherVertex;
+        void setOtherVertex(int newOther){
+            otherVertex = newOther;
         }
-        int distance(){
-            return m_distance;
+        int getOtherVertex(){
+            return otherVertex;
         }
-        DeliveryMan *deliveryMan(){
-            return m_deliveryMan;
+
+        void setDistance(int newDistance){
+            distance = newDistance;
         }
-        WareHouse *warehouse(){
-            return m_warehouse;
+        int getDistance(){
+            return distance;
         }
-        EdgeNode *next();
-        void setNext(EdgeNode *next);
+
+        void setDeliveryMan(DeliveryMan* newDeliveryMan){
+            deliveryMan = newDeliveryMan;
+        }
+        DeliveryMan* getDeliveryMan(){
+            return deliveryMan;
+        }
+
+        void setWarehouse(Warehouse* newWarehouse){
+            warehouse = newWarehouse;
+        }
+        Warehouse* getWarehouse(){
+            return warehouse;
+        }
+        
+        void setNext(EdgeNode* newNext){
+            next = newNext;
+        }
+        EdgeNode* getNext(){
+            return next;
+        }
 };
-
-#endif
