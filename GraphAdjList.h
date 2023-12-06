@@ -15,7 +15,7 @@ public:
     GraphAdjList(int numVertices);
     ~GraphAdjList();
 
-    void addEdge(int v1, int v2, int , int time);
+    void addEdge(int v1, int v2, int , int distance);
     void removeEdge(int v1, int v2);
     void print();
     EdgeNode** edges();

@@ -19,24 +19,34 @@ class DeliveryMan {
         int iQuantity;
 
     public:
-        DeliveryMan(int iLocation, int iCapacity, int iItems, int iQuantity);
+        DeliveryMan(int iDeliveryManID, int iLocation, int iCapacity, int iItems, int iQuantity):iDeliveryManID(iDeliveryManID),iLocation()iLocation{}
 
-        void setDeliveryManID(int iDeliveryManID);
-        int getDeliveryManID();
+        void setDeliveryManID(int iDeliveryManID){}
+        int getDeliveryManID(){
+            return iDeliveryManID;
+        }
 
-        void setLocation(int iLocation);
-        int getLocation();
+        void setLocation(int iLocation){}
+        int getLocation(){
+            return iLocation;
+        }
 
-        void setCapacity(int iCapacity);
-        int getCapacity();
+        void setCapacity(int iCapacity){}
+        int getCapacity(){
+            return iCapacity;
+        }
 
-        void setItems(int iItems);
-        int getItems();
+        void setItems(int iItems){}
+        int getItems(){
+            return iItems;
+        }
 
-        void setQuantity(int iQuantity);
-        int getQuantity();
+        void setQuantity(int iQuantity){}
+        int getQuantity(){
+            return iQuantity;
+        }
 
-        queue<int> SeeRoute(Order order);
+        queue<int> SeeRoute(Order order){}
 
 
 };

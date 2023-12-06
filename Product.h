@@ -16,22 +16,34 @@ class Product {
         Product(int iProductNumber, int iPrice, bool bInWarehouse, int iSellerID, int iLocation, int iQuantity);
 
         void setProductNumber(int iProductNumber);
-        int getProductNumber();
+        int getProductNumber(){
+            return iProductNumber;
+        }
 
         void setPrice(int iPrice);
-        int getPrice();
+        int getPrice(){
+            return iPrice;
+        }
 
         void setInWarehouse(bool bInWarehouse);
-        bool getInWarehouse();
+        bool getInWarehouse(){
+            return bInWarehouse;
+        }
 
         void setSellerID(int iSellerID);
-        int getSellerID();
+        int getSellerID(){
+            return iSellerID;
+        }
 
         void setLocation(int iLocation);
-        int getLocation();
+        int getLocation(){
+            return iLocation;
+        }
 
         void setQuantity(int iQuantity);
-        int getQuantity();
+        int getQuantity(){
+            return iQuantity; 
+        }
 };
 
 #endif

@@ -14,16 +14,24 @@ class WareHouse {
         WareHouse(int iWareHouseID, int iItems, int iQuantity, int iLocation);
 
         void setWareHouseID(int iWareHouseID);
-        int getWareHouseID();
+        int getWareHouseID(){
+            return iWareHouseID;
+        }
 
         void setItems(int iItems);
-        int getItems();
+        int getItems(){
+            return iItems;
+        }
 
         void setQuantity(int iQuantity);
-        int getQuantity();
+        int getQuantity(){
+            return iQuantity;
+        }
 
         void setLocation(int iLocation);
-        int getLocation();
+        int getLocation(){
+            return iLocation;
+        }
 
 
 };

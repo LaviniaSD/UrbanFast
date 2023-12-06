@@ -21,28 +21,44 @@ class Order {
         Order(int iItems, int iQuantity, int iDestination);
 
         void setType(bool bType);
-        bool getType();
+        bool getType(){
+            return bType;
+        }
 
         void setOrderNumber(int iOrderNumber);
-        int getOrderNumber();
+        int getOrderNumber(){
+            return iOrderNumber;
+        }
 
         void setItems(int iItems);
-        int getItems();
+        int getItems(){
+            return iItems;
+        }
 
         void setQuantity(int iQuantity);
-        int getQuantity();
+        int getQuantity(){
+            return iQuantity;
+        }
 
         void setOrigin(int iOrigin);
-        int getOrigin();
+        int getOrigin(){
+            return iOrigin; 
+        }
 
         void setDestination(int iDestination);
-        int getDestination();
+        int getDestination(){
+            return iDestination;
+        }
 
         void setPrice(int iPrice);
-        int getPrice();
+        int getPrice(){
+            return iPrice;
+        }
 
         void setDeliveryMan(int iDeliveryMan);
-        int getDeliveryMan();
+        int getDeliveryMan(){
+            return iDeliveryMan;
+        }
 
         queue<int> FindRoute();
 

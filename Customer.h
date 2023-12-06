@@ -9,13 +9,17 @@ class Customer {
         int iLocation;
 
     public:
-        Customer(int iCustomerID, int iLocation);
+        Customer(int iCustomerID, int iLocation):iCustomerID(iCustomerID),iLocation(iLocation){}
 
-        void setCustomerID(int iCustomerID);
-        int getCustomerID();
+        void setCustomerID(int iCustomerID){}
+        int getCustomerID(){
+            return iCustomerID;
+        }
 
-        void setLocation(int iLocation);
-        int getLocation();
+        void setLocation(int iLocation){}
+        int getLocation(){
+            return iLocation;
+        }
 
 
 };

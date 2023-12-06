@@ -14,16 +14,24 @@ class Seller {
         Seller(int iSellerID, int iItems, int SellerLocation);
 
         void setSellerID(int iSellerID);
-        int getSellerID();
+        int getSellerID(){
+            return iSellerID;
+        }
 
         void setItems(int iItems);
-        int getItems();
+        int getItems(){
+            return iItems;
+        }
 
         void setQuantity(int iQuantity);
-        int getQuantity();
+        int getQuantity(){
+            return iQuantity;
+        }
 
         void setSellerLocation(int SellerLocation);
-        int getSellerLocation();
+        int getSellerLocation(){
+            return SellerLocation;
+        }
 
 };
 
