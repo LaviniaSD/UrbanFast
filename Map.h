@@ -10,6 +10,12 @@
 
 using namespace std;
 
+struct ReturnDijkstra{
+    int* distances;
+    int* parents;
+    int* minDistance;
+};
+
 class Map {
     private:
         int numVertices;
@@ -64,7 +70,9 @@ class Map {
         void print();
 
         bool isSubGraph(Map &otherMap);
-        
-        bool isTopological();
+
+        ReturnDijkstra cptDijkstra(int v0);
+
+        vector<int> nearestDMen(int origin, int numDMen);   
 };
 
