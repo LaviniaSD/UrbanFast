@@ -332,3 +332,51 @@ ReturnDijkstra Map::cptDijkstra(int v0) {
     return *result;
 }
 
+ReturnDijkstra Map::FindRoute(Order order, DeliveryMan deliveryman){
+    // Obtaining the positions of the deliveryman, seller and customer
+    int deliverymanPosition = deliveryman.getLocation();
+    int sellerPosition = order.getOrigin();
+    int customerPosition = order.getDestination();
+
+    // Calculating the routes from the deliveryman to the seller and from the seller to the customer
+    ReturnDijkstra routeDeliverymanToSeller = cptDijkstra(deliverymanPosition);
+    ReturnDijkstra routeSellerToCustomer = cptDijkstra(sellerPosition);
+
+    // Creating the arrays to store the full route
+    int* DeliverymanToSeller = routeDeliverymanToSeller.parents;
+    int* SellerToCustomer = routeSellerToCustomer.parents;
+    int* fullRoute = new int[getNumVertices()];
+    int* distances = new int[getNumVertices()];
+    int* minDistance = 0;
+    
+    // Calculing the route from the seller to the customer
+    int current = customerPosition;
+    while (current != sellerPosition){
+        minDistance += routeSellerToCustomer.distances[current];
+        fullRoute[current] = SellerToCustomer[current];
+        distances[current] = routeSellerToCustomer.distances[current];
+        current = SellerToCustomer[current];
+    }
+
+    // Calculing the route from the deliveryman to the seller
+    while (current != deliverymanPosition){
+        minDistance += routeSellerToCustomer.distances[current];
+        fullRoute[current] = DeliverymanToSeller[current];
+        distances[current] = routeDeliverymanToSeller.distances[current];
+        current = DeliverymanToSeller[current];
+    }
+
+    fullRoute[deliverymanPosition] = deliverymanPosition;
+    minDistance += routeDeliverymanToSeller.distances[deliverymanPosition];
+    distances[deliverymanPosition] = 0;
+
+    // Returning the full route
+    ReturnDijkstra fullRouteReturn;
+    fullRouteReturn.distances = distances;
+    fullRouteReturn.parents = fullRoute;
+    fullRouteReturn.minDistance = minDistance;
+
+    return fullRouteReturn;
+
+}
+

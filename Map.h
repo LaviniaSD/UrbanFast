@@ -89,5 +89,8 @@ class Map {
         ReturnDijkstra cptDijkstra(int v0);
 
         vector<int> nearestDMen(int origin, int numDMen);   
+
+        // Additional method to find the route
+        ReturnDijkstra FindRoute(Order order,DeliveryMan deliveryman);
 };
 
