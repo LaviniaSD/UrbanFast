@@ -3,6 +3,8 @@
 #pragma once
 
 #include <queue>
+#include "Deliveryman.h"
+#include "Map.h"
 using namespace std;
 
 class Order {
@@ -14,10 +16,10 @@ class Order {
         int iOrigin;
         int iDestination;
         int iPrice;
-        int iDeliveryMan;
+        DeliveryMan iDeliveryMan;
 
     public:
-        Order(int iItems, int iQuantity, int iDestination, int iPrice, int iDeliveryMan, int iOrderNumber, int iOrigin, bool bType);
+        Order(int iItems, int iQuantity, int iDestination, int iPrice, DeliveryMan iDeliveryMan, int iOrderNumber, int iOrigin, bool bType);
 
         void setType(bool bType);
         bool getType(){
@@ -54,10 +56,10 @@ class Order {
             return iPrice;
         }
 
-        void setDeliveryMan(int iDeliveryMan);
-        int getDeliveryMan(){
+        void setDeliveryMan(DeliveryMan iDeliveryMan);
+        DeliveryMan getDeliveryMan(){
             return iDeliveryMan;
         }
 
-        queue<int> FindRoute();
+        ReturnDijkstra FindRoute(Map map);
 };
