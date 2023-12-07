@@ -14,57 +14,88 @@ Map::Map(int numVertices): numVertices(numVertices), numEdges(0),deliveryManList
 }
 
 Map::~Map() {
+    // Clean up the DeliveryMan list
+    for (int i = 0; i < numVertices; ++i) {
+        DeliveryMan* deliveryMan = deliveryManList[i];
+        while (deliveryMan) {
+            DeliveryMan* nextDeliveryMan = deliveryMan->getNext();
+            delete deliveryMan;
+            deliveryMan = nextDeliveryMan;
+        }
+    }
+
+    // Clean up the Warehouse list
+    for (int i = 0; i < numVertices; ++i) {
+        Warehouse* warehouse = warehouseList[i];
+        while (warehouse) {
+            Warehouse* nextWarehouse = warehouse->getNext();
+            delete warehouse;
+            warehouse = nextWarehouse;
+        }
+    }
+
+    // Clean up the Seller list
+    for (int i = 0; i < numVertices; ++i) {
+        Seller* seller = sellerList[i];
+        while (seller) {
+            Seller* nextSeller = seller->getNext();
+            delete seller;
+            seller = nextSeller;
+        }
+    }
+
+    // Clean up the EdgeNode list
     for (int i = 0; i < numVertices; ++i) {
         EdgeNode* edge = edgesList[i];
         while (edge) {
-            EdgeNode* next = edge->getNext();
+            EdgeNode* nextEdge = edge->getNext();
             delete edge;
-            edge = next;
+            edge = nextEdge;
         }
     }
 }
 
-void Map::addDeliveryMan(DeliveryMan* newDeliveryMan) {
-    DeliveryMan* vertice = deliveryManList[newDeliveryMan->getLocation()];
-    if(vertice!=nullptr){
-        while(vertice->getNext()!=nullptr){
-            vertice = vertice->getNext();
-        }
-        vertice->setNext(newDeliveryMan);
+void Map::addDeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapacity, int iQuantity) {
+    // Adds a new DeliveryMan to the list
+    DeliveryMan* newDeliveryMan = new DeliveryMan(iDeliveryManID, iDeliveryManLocation, iCapacity, iQuantity, nullptr);
+    if(!deliveryManList[iDeliveryManLocation]){
+        deliveryManList[iDeliveryManLocation] = newDeliveryMan;
     }
     else{
-        deliveryManList[newDeliveryMan->getLocation()] = newDeliveryMan;
+        newDeliveryMan->setNext(deliveryManList[iDeliveryManLocation]);
+        deliveryManList[iDeliveryManLocation] = newDeliveryMan;
     }
     numDeliveryMan++;
 }
 
-void Map::addWarehouse(Warehouse* newWarehouse) {
-    Warehouse* vertice = warehouseList[newWarehouse->getLocation()];
-    if(vertice!=nullptr){
-        while(vertice->getNext()!=nullptr){
-            vertice = vertice->getNext();
-        }
-        vertice->setNext(newWarehouse);
+
+void Map::addWarehouse(int iWarehouseID, int iWarehouseLocation) {
+    // Adds a new Warehouse to the list
+    Warehouse* newWarehouse = new Warehouse(iWarehouseID, iWarehouseLocation, nullptr);
+    if(!warehouseList[iWarehouseLocation]){
+        warehouseList[iWarehouseLocation] = newWarehouse;
     }
     else{
-        warehouseList[newWarehouse->getLocation()] = newWarehouse;
+        newWarehouse->setNext(warehouseList[iWarehouseLocation]);
+        warehouseList[iWarehouseLocation] = newWarehouse;
     }
     numWarehouse++;
 }
 
-void Map::addSeller(Seller* newSeller) {
-    Seller* vertice = sellerList[newSeller->getSellerLocation()];
-    if(vertice!=nullptr){
-        while(vertice->getNext()!=nullptr){
-            vertice = vertice->getNext();
-        }
-        vertice->setNext(newSeller);
+
+void Map::addSeller(int iSellerID,int iSellerLocation) {
+    // Adds a new Seller to the list
+    Seller* newSeller = new Seller(iSellerID, iSellerLocation, nullptr);
+    if(!sellerList[iSellerLocation]){
+        sellerList[iSellerLocation] = newSeller;
     }
     else{
-        sellerList[newSeller->getSellerLocation()] = newSeller;
+        newSeller->setNext(sellerList[iSellerLocation]);
+        sellerList[iSellerLocation] = newSeller;
     }
     numSeller++;
 }
+
 
 void Map::addEdge(int v1, int v2, int distance) {
     // Adds one side of the edge
@@ -155,6 +186,52 @@ bool Map::hasEdge(int v1, int v2) {
     return false;
 }
 
+// Checks if a DeliveryMan with the given ID and location exists in the Map
+bool Map::hasDeliveryMan(int iDeliveryManID, int iDeliveryManLocation) {
+    DeliveryMan* deliveryMan = deliveryManList[iDeliveryManLocation];
+
+    while (deliveryMan) {
+        if (deliveryMan->getDeliveryManID() == iDeliveryManID) {
+            return true;  // Found a DeliveryMan with the specified ID and location
+        }
+
+        deliveryMan = deliveryMan->getNext();
+    }
+
+    return false; // DeliveryMan not found
+}
+
+// Checks if a Warehouse with the given ID and location exists in the Map
+bool Map::hasWarehouse(int iWarehouseID, int iWarehouseLocation) {
+    Warehouse* warehouse = warehouseList[iWarehouseLocation];
+
+    while (warehouse) {
+        if (warehouse->getWarehouseID() == iWarehouseID) {
+            return true; // Found a Warehouse with the specified ID and location
+        }
+
+        warehouse = warehouse->getNext();
+    }
+
+    return false; // Warehouse not found
+}
+
+// Checks if a Seller with the given ID and location exists in the Map
+bool Map::hasSeller(int iSellerID, int iSellerLocation) {
+    Seller* seller = sellerList[iSellerLocation];
+
+    while (seller) {
+        if (seller->getSellerID() == iSellerID) {
+            return true; // Found a Seller with the specified ID and location
+        }
+
+        seller = seller->getNext();
+    }
+
+    return false; // Seller not found
+}
+
+// Prints the adjacency list representation of the Map
 void Map::print() {
     for (int i = 0; i < numVertices; ++i) {
         EdgeNode* edge = edgesList[i];
@@ -167,6 +244,7 @@ void Map::print() {
     }
 }
 
+// Checks if the current Map is a subgraph of the otherMap
 bool Map::isSubGraph(Map & otherMap) {
     vector hEdges = otherMap.edgesList;
 
@@ -175,12 +253,12 @@ bool Map::isSubGraph(Map & otherMap) {
 
         while (hEdge) {
             int v2 = hEdge->getOtherVertex();
-            if (!hasEdge(v1, v2)) return false;
-            
+            if (!hasEdge(v1, v2)) return false;  // Edge not found in the current Map
+             
             hEdge = hEdge->getNext();
         }
     }
-    return true;
+    return true; // All edges in otherMap are found in the current Map
 }
 
 ReturnDijkstra Map::cptDijkstra(int v0) {
