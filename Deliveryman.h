@@ -14,6 +14,7 @@ class DeliveryMan {
         int iCapacity;
         int iItems;
         int iQuantity;
+        DeliveryMan* next;
 
     public:
         DeliveryMan(int iDeliveryManID, int iLocation, int iCapacity, int iItems, int iQuantity);
@@ -51,6 +52,13 @@ class DeliveryMan {
         }
         int getQuantity(){
             return iQuantity;
+        }
+
+        void setNext(DeliveryMan* newNext){
+            next = newNext;
+        }
+        DeliveryMan* getNext(){
+            return next;
         }
 
         queue<int> SeeRoute(Order order);

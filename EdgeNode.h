@@ -10,12 +10,10 @@ class EdgeNode {
         int originVertex;
         int otherVertex;
         int distance;
-        DeliveryMan* deliveryMan;
-        Warehouse* warehouse;
         EdgeNode* next;
 
     public:
-        EdgeNode(int originVertex, int otherVertex, int distance, DeliveryMan* deliveryMan, Warehouse* warehouse, EdgeNode* next);
+        EdgeNode(int originVertex, int otherVertex, int distance, EdgeNode* next);
         
         void setOriginVertex(int newOrigin){
             originVertex = newOrigin;
@@ -36,20 +34,6 @@ class EdgeNode {
         }
         int getDistance(){
             return distance;
-        }
-
-        void setDeliveryMan(DeliveryMan* newDeliveryMan){
-            deliveryMan = newDeliveryMan;
-        }
-        DeliveryMan* getDeliveryMan(){
-            return deliveryMan;
-        }
-
-        void setWarehouse(Warehouse* newWarehouse){
-            warehouse = newWarehouse;
-        }
-        Warehouse* getWarehouse(){
-            return warehouse;
         }
         
         void setNext(EdgeNode* newNext){
