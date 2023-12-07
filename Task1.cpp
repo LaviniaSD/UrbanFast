@@ -1,4 +1,5 @@
 #include "Map.h"
+#include "Heap.h"
 
 #include <iostream>
 #include <vector>
@@ -7,13 +8,39 @@
 using namespace std;
 
 vector<int> Map::nearestDMen(int origin, int numDMen) {
+    // First, get the CPT
     ReturnDijkstra dijkstra = cptDijkstra(origin);
-
-    if (getNumDeliveryMan() > numDMen) {
-        vector<int> nearestDMen(getNumDeliveryMan());
+    
+    // Then, define the vector to return
+    int maxSize;
+    if (getNumDeliveryMan() < numDMen) {
+        maxSize = getNumDeliveryMan();
     } else {
-        vector<int> nearestDMen(numDMen);
+        maxSize = numDMen;
     }
+    vector<int> nearestDMen(maxSize);
+
+    // Now, get the n-nearest Deliverymen with a heap (n = maxSize)
+    Heap heap(1);
+    for (int i=0; i<getNumDeliveryMan(); i++) {
+        int dManLoc = deliveryManList[i]->getLocation();
+
+        if (heap.getSize() < numDMen) {
+            heap.push(i, dijkstra.distances[dManLoc]);
+        } else {
+            if (heap.getTop().value > dijkstra.distances[dManLoc]) {
+                heap.replace(i, dijkstra.distances[dManLoc]);
+            }
+        }
+    }
+
+    // Finally, add the n-nearest Deliverymen to the vector in the correct order
+    for (int i=0; i<maxSize; i++) {
+        nearestDMen[i] = heap.getTop().id;
+        heap.pop();
+    }
+
+    return nearestDMen;
 }
 
 int main() {
@@ -30,7 +57,7 @@ int main() {
     mapa.addEdge(4, 1, 40);
     mapa.addEdge(4, 5, 60);
 
-    mapa.print();
+    // mapa.print();
 
     return 0;
 }
