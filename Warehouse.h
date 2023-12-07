@@ -2,42 +2,53 @@
 
 #pragma once
 
+#include "Product.h"
+
+// Class representing a warehouse
 class Warehouse {
     private:
-        int iWarehouseID;
-        int iItems[100];
-        int iLocation; 
-        Warehouse* next;
+        int iWarehouseID; // Warehouse identifier
+        int iWarehouseLocation; // Warehouse location
+        Warehouse* next; // Pointer to the next warehouse
 
     public:
-        Warehouse(int iWarehouseID, int iLocation, Warehouse* next);
+        Product* pProductsList; // Pointer to the linked list of products in the warehouse
 
-        void setWarehouseID(int newID) {
-            iWarehouseID = newID;
+        // Constructor
+        Warehouse(int iWarehouseID, int iWarehouseLocation, Warehouse* next);
+
+        // Destructor
+        ~Warehouse();
+
+        // Setter and Getter for Warehouse ID
+        void setWarehouseID(int iWarehouseID){
+            iWarehouseID = iWarehouseID;
         }
         int getWarehouseID(){
             return iWarehouseID;
         }
 
-        void setItems(int newItems){
-            iItems[newItems]++;
+        // Setter and Getter for Warehouse Location
+        void setWarehouseLocation(int WarehouseLocation){
+            WarehouseLocation = WarehouseLocation;
         }
-        int* getItems(){
-            return iItems;
+        int getWarehouseLocation(){
+            return iWarehouseLocation;
         }
 
-        void setLocation(int newLocation){
-            iLocation = newLocation;
-        }
-        int getLocation(){
-            return iLocation;
-        }
-        void removeItem(int removeItem);
-
+        // Setter and Getter for the next warehouse in the list
         void setNext(Warehouse* newNext){
             next = newNext;
         }
+
         Warehouse* getNext(){
             return next;
         }
+
+        // Method to add products to the warehouse's product list
+        void addProducts(int iProductNumber, int iPrice, int iQuantity, int iWeight);
+
+        // Method to remove products from the warehouse's product list
+        void removeProducts(int iProductID, int iQuantity);
+
 };
