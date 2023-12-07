@@ -10,6 +10,12 @@
 
 using namespace std;
 
+struct ReturnDijkstra{
+    int* distances;
+    int* parents;
+    int* minDistance;
+};
+
 class Map {
     private:
         int numVertices; // Number of vertices in the map
@@ -79,5 +85,9 @@ class Map {
 
         // Method to check if the current Map is a subgraph of another Map
         bool isSubGraph(Map &otherMap);
+
+        ReturnDijkstra cptDijkstra(int v0);
+
+        vector<int> nearestDMen(int origin, int numDMen);   
 };
 
