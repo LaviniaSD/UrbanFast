@@ -25,6 +25,11 @@ class Map {
         int numSeller; // Number of sellers in the map
 
     public:
+        
+        vector<DeliveryMan> deliveryManInMap; // Vector of deliverymen 
+        vector<Warehouse> warehouseInMap; // Vector of warehouses 
+        vector<Seller> sellerInMap; // Vector of sellers 
+
         vector<DeliveryMan*> deliveryManList; // List of deliverymen at each vertex
         vector<Warehouse*> warehouseList; // List of warehouses at each vertex
         vector<Seller*> sellerList; // List of sellers at each vertex

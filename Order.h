@@ -4,7 +4,6 @@
 
 #include "Product.h"
 
-
 #include <queue>
 #include <vector>
 

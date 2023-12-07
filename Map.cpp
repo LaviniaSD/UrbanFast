@@ -67,6 +67,8 @@ void Map::addDeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapa
         newDeliveryMan->setNext(deliveryManList[iDeliveryManLocation]);
         deliveryManList[iDeliveryManLocation] = newDeliveryMan;
     }
+    // Adds a new DeliveryMan to the vector
+    deliveryManInMap.push_back(*newDeliveryMan);
     numDeliveryMan++;
 }
 
@@ -81,6 +83,8 @@ void Map::addWarehouse(int iWarehouseID, int iWarehouseLocation) {
         newWarehouse->setNext(warehouseList[iWarehouseLocation]);
         warehouseList[iWarehouseLocation] = newWarehouse;
     }
+    // Adds a new Warehouse to the vector
+    warehouseInMap.push_back(*newWarehouse);
     numWarehouse++;
 }
 
@@ -95,6 +99,8 @@ void Map::addSeller(int iSellerID,int iSellerLocation) {
         newSeller->setNext(sellerList[iSellerLocation]);
         sellerList[iSellerLocation] = newSeller;
     }
+    // Adds a new Seller to the vector
+    sellerInMap.push_back(*newSeller);
     numSeller++;
 }
 
