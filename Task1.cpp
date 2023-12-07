@@ -23,7 +23,7 @@ vector<int> Map::nearestDMen(int origin, int numDMen) {
     // Now, get the n-nearest Deliverymen with a heap (n = maxSize)
     Heap heap(1);
     for (int i=0; i<getNumDeliveryMan(); i++) {
-        int dManLoc = deliveryManList[i]->getLocation();
+        int dManLoc = deliveryManInMap[i].getLocation();
 
         if (heap.getSize() < numDMen) {
             heap.push(i, dijkstra.distances[dManLoc]);
@@ -43,21 +43,49 @@ vector<int> Map::nearestDMen(int origin, int numDMen) {
     return nearestDMen;
 }
 
-int main() {
-    cout << "oi";
-
-    Map mapa(6);
+Map* generateMapQ1() {
+    Map* map = new Map(16);
     
-    mapa.addEdge(0, 1, 10);
-    mapa.addEdge(0, 2, 20);
-    mapa.addEdge(1, 3, 30);
-    mapa.addEdge(1, 4, 20);
-    mapa.addEdge(2, 4, 90);
-    mapa.addEdge(3, 4, 100);
-    mapa.addEdge(4, 1, 40);
-    mapa.addEdge(4, 5, 60);
+    map->addEdge(0,1, 61);
+    map->addEdge(0,4, 98);
+    map->addEdge(1,2, 114);
+    map->addEdge(1,5, 115);
+    map->addEdge(2,3, 93);
+    map->addEdge(2,6, 87);
+    map->addEdge(3,7, 107);
+    map->addEdge(4,5, 105);
+    map->addEdge(4,8, 128);
+    map->addEdge(5,6, 70);
+    map->addEdge(5,9, 74);
+    map->addEdge(6,7, 103);
+    map->addEdge(6,10, 115);
+    map->addEdge(7,11, 116);
+    map->addEdge(8,9, 127);
+    map->addEdge(8,12, 96);
+    map->addEdge(9,10, 97);
+    map->addEdge(9,13, 116);
+    map->addEdge(10,11, 99);
+    map->addEdge(10,14, 104);
+    map->addEdge(11,15, 95);
+    map->addEdge(12,13, 123);
+    map->addEdge(13,14, 63);
+    map->addEdge(14,15, 127);
 
-    // mapa.print();
+    map->addDeliveryMan(1, 5, 10);
+    map->addDeliveryMan(2, 12, 10);
+    map->addDeliveryMan(2, 15, 10);
+
+    map->addSeller(1, 7);
+
+    return map;
+}
+
+int main() {
+    Map* map = generateMapQ1();
+    // map->print();
+
+    vector<int> nearestDMen = map->nearestDMen(8, 1);
+    cout << "Nearest Deliverymen is in vertex: " << map->deliveryManInMap[nearestDMen[0]].getLocation() << endl;
 
     return 0;
 }
