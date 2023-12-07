@@ -5,31 +5,42 @@
 class Seller {
     private:
         int iSellerID;
-        int iItems;
-        int iQuantity;
+        int iItems[100];
         int SellerLocation;
+        Seller* next;
 
     public:
-        Seller(int iSellerID, int iItems, int SellerLocation);
+        Seller(int iSellerID, int SellerLocation);
 
-        void setSellerID(int iSellerID);
+        void setSellerID(int iSellerID){
+            iSellerID = iSellerID;
+        }
         int getSellerID(){
             return iSellerID;
         }
 
-        void setItems(int iItems);
-        int getItems(){
+        void setItems(int newItem){
+            iItems[newItem]++;
+        }
+        int* getItems(){
             return iItems;
         }
 
-        void setQuantity(int iQuantity);
-        int getQuantity(){
-            return iQuantity;
+        void setSellerLocation(int SellerLocation){
+            SellerLocation = SellerLocation;
         }
-
-        void setSellerLocation(int SellerLocation);
         int getSellerLocation(){
             return SellerLocation;
         }
+
+        void setNext(Seller* newNext){
+            next = newNext;
+        }
+
+        Seller* getNext(){
+            return next;
+        }
+
+        void removeItem(int removeItem);
 
 };

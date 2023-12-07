@@ -5,12 +5,12 @@
 class Warehouse {
     private:
         int iWarehouseID;
-        int iItems;
-        int iQuantity;
+        int iItems[100];
         int iLocation; 
+        Warehouse* next;
 
     public:
-        Warehouse(int iWarehouseID, int iItems, int iQuantity, int iLocation);
+        Warehouse(int iWarehouseID, int iLocation, Warehouse* next);
 
         void setWarehouseID(int newID) {
             iWarehouseID = newID;
@@ -20,17 +20,10 @@ class Warehouse {
         }
 
         void setItems(int newItems){
-            iItems = newItems;
+            iItems[newItems]++;
         }
-        int getItems(){
+        int* getItems(){
             return iItems;
-        }
-
-        void setQuantity(int newQuantity){
-            iQuantity = newQuantity;   
-        }
-        int getQuantity(){
-            return iQuantity;
         }
 
         void setLocation(int newLocation){
@@ -38,5 +31,13 @@ class Warehouse {
         }
         int getLocation(){
             return iLocation;
+        }
+        void removeItem(int removeItem);
+
+        void setNext(Warehouse* newNext){
+            next = newNext;
+        }
+        Warehouse* getNext(){
+            return next;
         }
 };
