@@ -2,16 +2,25 @@
 
 #pragma once
 
+#include "Product.h"
+
+// Class representing a seller
 class Seller {
     private:
-        int iSellerID;
-        int iItems[100];
-        int SellerLocation;
-        Seller* next;
+        int iSellerID; // Seller ID
+        int iSellerLocation; // Location of the seller
+        Seller* next; // Pointer to the next seller
 
     public:
-        Seller(int iSellerID, int SellerLocation, Seller* next);
+        Product* pProductsList; // Pointer to the list of products
+        
+        // Constructor for the Seller class
+        Seller(int iSellerID, int iSellerLocation, Seller* next);
 
+        // Destructor for the Seller class
+        ~Seller();
+
+        // Setter and getter methods for Seller ID
         void setSellerID(int iSellerID){
             iSellerID = iSellerID;
         }
@@ -19,20 +28,15 @@ class Seller {
             return iSellerID;
         }
 
-        void setItems(int newItem){
-            iItems[newItem]++;
-        }
-        int* getItems(){
-            return iItems;
-        }
-
+        // Setter and getter methods for Seller location
         void setSellerLocation(int SellerLocation){
             SellerLocation = SellerLocation;
         }
         int getSellerLocation(){
-            return SellerLocation;
+            return iSellerLocation;
         }
 
+        // Setter and getter methods for the next seller
         void setNext(Seller* newNext){
             next = newNext;
         }
@@ -41,6 +45,10 @@ class Seller {
             return next;
         }
 
-        void removeItem(int removeItem);
+        // Method to add products to the seller's product list
+        void addProducts(int iProductNumber, int iPrice, int iQuantity, int iWeight);
+
+        // Method to remove products from the seller's product list
+        void removeProducts(int iProductID, int iQuantity);
 
 };

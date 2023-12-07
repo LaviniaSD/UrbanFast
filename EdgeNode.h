@@ -7,14 +7,16 @@
 
 class EdgeNode {
     private:
-        int originVertex;
-        int otherVertex;
-        int distance;
-        EdgeNode* next;
+        int originVertex; // Origin vertex of the edge
+        int otherVertex; // The other vertex connected by the edge
+        int distance; // Distance or weight associated with the edge
+        EdgeNode* next; // Pointer to the next edge in the list
 
     public:
+        // Constructor for the EdgeNode class
         EdgeNode(int originVertex, int otherVertex, int distance, EdgeNode* next);
         
+        // Setter and getter for the origin vertex of the edge
         void setOriginVertex(int newOrigin){
             originVertex = newOrigin;
         }
@@ -22,6 +24,7 @@ class EdgeNode {
             return originVertex;
         }
 
+        // Setter and getter for the other vertex connected by the edge
         void setOtherVertex(int newOther){
             otherVertex = newOther;
         }
@@ -29,6 +32,7 @@ class EdgeNode {
             return otherVertex;
         }
 
+        // Setter and getter for the distance or weight associated with the edge
         void setDistance(int newDistance){
             distance = newDistance;
         }
@@ -36,6 +40,7 @@ class EdgeNode {
             return distance;
         }
         
+        // Setter and getter for the pointer to the next edge in the list
         void setNext(EdgeNode* newNext){
             next = newNext;
         }

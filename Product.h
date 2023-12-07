@@ -4,44 +4,51 @@
 
 class Product {
     private:
-        int iProductNumber;
-        int iPrice;
-        bool bInWarehouse;
-        int iSellerID;
-        int iLocation;
-        int iQuantity;
-
+        int iProductID; // Product ID
+        int iPrice; // Price of the product
+        int iQuantity; // Quantity of the product
+        int iWeight; // Weight of the product
+        Product* next; // Pointer to the next product
     public:
-        Product(int iProductNumber, int iPrice, bool bInWarehouse, int iSellerID, int iLocation, int iQuantity);
+        // Constructor for the Product class
+        Product(int iProductID, int iPrice, int iQuantity, int iWeight, Product* next):iProductID(iProductID),iPrice(iPrice),iQuantity(iQuantity),iWeight(iWeight){}
 
-        void setProductNumber(int iProductNumber);
-        int getProductNumber(){
-            return iProductNumber;
+        // Getter and setter methods for private members
+        void setProductID(int iProductID){
+            iProductID = iProductID;             
+        }
+        int getProductID(){
+            return iProductID;
         }
 
-        void setPrice(int iPrice);
+        void setPrice(int iPrice){
+            iPrice = iPrice;
+        }
         int getPrice(){
             return iPrice;
         }
 
-        void setInWarehouse(bool bInWarehouse);
-        bool getInWarehouse(){
-            return bInWarehouse;
+        void setQuantity(int iQuantity){
+            iQuantity = iQuantity;
         }
-
-        void setSellerID(int iSellerID);
-        int getSellerID(){
-            return iSellerID;
-        }
-
-        void setLocation(int iLocation);
-        int getLocation(){
-            return iLocation;
-        }
-
-        void setQuantity(int iQuantity);
         int getQuantity(){
             return iQuantity; 
         }
+
+        void setWeight(int iWeight){
+            iWeight = iWeight;
+        }
+        int getWeight(){
+            return iWeight; 
+        }
+
+        Product* getNext() const {
+            return next;
+        }
+
+        void setNext(Product* newNext){
+            next = newNext;
+        }
+
 };
 
