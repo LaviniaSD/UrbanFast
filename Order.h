@@ -3,6 +3,8 @@
 #pragma once
 
 #include "Product.h"
+#include "Map.h"
+#include "Deliveryman.h"
 
 #include <queue>
 #include <vector>
@@ -122,6 +124,6 @@ class Order {
         // Method to add products to the order
         void addProducts(int iProductID, int iPrice, int iQuantity, int iWeight);
 
-        // Additional method to find the route (commented out for future implementation)
-        //queue<int> FindRoute();
+        // Additional method to find the route
+        ReturnDijkstra FindRoute(Map map, DeliveryMan deliveryMan);
 };
