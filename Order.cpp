@@ -1,5 +1,4 @@
 #include "Order.h"
-#include "DeliveryMan.h"
 
 // Constructor for the Order class
 Order::Order(int iOrderNumber, int iDestination, int iOrigin, bool bType):
@@ -51,7 +50,6 @@ void Order::addProducts(int iProductID, int iPrice, int iQuantity, int iWeight) 
     }
     pProducts = newProductQuantity;
 }
-
 
 
 
