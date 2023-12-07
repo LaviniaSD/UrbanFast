@@ -70,11 +70,9 @@ class Map {
         void print();
 
         bool isSubGraph(Map &otherMap);
-        
-        bool isTopological();
 
         ReturnDijkstra cptDijkstra(int v0);
 
-
+        vector<int> nearestDMen(int origin, int numDMen);   
 };
 
