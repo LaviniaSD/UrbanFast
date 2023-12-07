@@ -2,6 +2,8 @@
 #include "Map.h"
 #include "EdgeNode.h"
 #include "limits.h"
+#include "DeliveryMan.h"
+
 #include <iostream>
 #include <vector>
 

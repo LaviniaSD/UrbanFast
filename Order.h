@@ -3,8 +3,7 @@
 #pragma once
 
 #include "Product.h"
-#include "Map.h"
-#include "Deliveryman.h"
+#include "DeliveryMan.h"
 
 #include <queue>
 #include <vector>
