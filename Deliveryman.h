@@ -62,4 +62,7 @@ class DeliveryMan {
         }
 
         queue<int> SeeRoute(Order order);
+
+        Order OrderSugestion(int* route[],int max_distance = 150);
+
 };
