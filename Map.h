@@ -54,7 +54,7 @@ class Map {
         }
 
         // Method to add a new DeliveryMan to the Map
-        void addDeliveryMan(int iDeliveryManID, int iDeliveryManLocation,int iCapacity, int iQuantity);
+        void addDeliveryMan(int iDeliveryManID, int iDeliveryManLocation,int iCapacity);
 
         // Method to add a new Warehouse to the Map
         void addWarehouse(int iWarehouseID, int iWarehouseLocation);

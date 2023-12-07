@@ -5,7 +5,7 @@
 using namespace std;
 
 // Constructor for the DeliveryMan class
-DeliveryMan::DeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapacity, int iQuantity, DeliveryMan* next):
+DeliveryMan::DeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapacity, DeliveryMan* next):
 iDeliveryManID(iDeliveryManID), 
 iDeliveryManLocation(iDeliveryManLocation), 
 iCapacity(iCapacity), 

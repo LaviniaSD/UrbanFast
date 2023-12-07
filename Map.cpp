@@ -57,9 +57,9 @@ Map::~Map() {
     }
 }
 
-void Map::addDeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapacity, int iQuantity) {
+void Map::addDeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapacity) {
     // Adds a new DeliveryMan to the list
-    DeliveryMan* newDeliveryMan = new DeliveryMan(iDeliveryManID, iDeliveryManLocation, iCapacity, iQuantity, nullptr);
+    DeliveryMan* newDeliveryMan = new DeliveryMan(iDeliveryManID, iDeliveryManLocation, iCapacity, nullptr);
     if(!deliveryManList[iDeliveryManLocation]){
         deliveryManList[iDeliveryManLocation] = newDeliveryMan;
     }
