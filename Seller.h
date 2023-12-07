@@ -10,7 +10,7 @@ class Seller {
         Seller* next;
 
     public:
-        Seller(int iSellerID, int SellerLocation);
+        Seller(int iSellerID, int SellerLocation, Seller* next);
 
         void setSellerID(int iSellerID){
             iSellerID = iSellerID;
