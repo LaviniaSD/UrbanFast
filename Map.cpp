@@ -9,7 +9,16 @@
 
 using namespace std;
 
-Map::Map(int numVertices): numVertices(numVertices), numEdges(0),deliveryManList(numVertices),warehouseList(numVertices),sellerList(numVertices), edgesList(numVertices) {
+Map::Map(int numVertices): 
+numVertices(numVertices), 
+numEdges(0),
+numDeliveryMan(0),
+numWarehouse(0),
+numSeller(0),
+deliveryManList(numVertices),
+warehouseList(numVertices),
+sellerList(numVertices), 
+edgesList(numVertices) {
     for (int i = 0; i < numVertices; ++i) {
         edgesList[i] = nullptr;
     }
