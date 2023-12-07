@@ -1,6 +1,6 @@
 #include "Seller.h"
 
-Seller::Seller(int iSellerID, int SellerLocation):
+Seller::Seller(int iSellerID, int SellerLocation, Seller* next):
 iSellerID(iSellerID),
 SellerLocation(SellerLocation){
     for(int i=0; i<100;i++){
