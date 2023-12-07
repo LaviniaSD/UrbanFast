@@ -57,9 +57,9 @@ Map::~Map() {
     }
 }
 
-void Map::addDeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapacity, int iQuantity) {
+void Map::addDeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapacity) {
     // Adds a new DeliveryMan to the list
-    DeliveryMan* newDeliveryMan = new DeliveryMan(iDeliveryManID, iDeliveryManLocation, iCapacity, iQuantity, nullptr);
+    DeliveryMan* newDeliveryMan = new DeliveryMan(iDeliveryManID, iDeliveryManLocation, iCapacity, nullptr);
     if(!deliveryManList[iDeliveryManLocation]){
         deliveryManList[iDeliveryManLocation] = newDeliveryMan;
     }
@@ -67,6 +67,8 @@ void Map::addDeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapa
         newDeliveryMan->setNext(deliveryManList[iDeliveryManLocation]);
         deliveryManList[iDeliveryManLocation] = newDeliveryMan;
     }
+    // Adds a new DeliveryMan to the vector
+    deliveryManInMap.push_back(*newDeliveryMan);
     numDeliveryMan++;
 }
 
@@ -81,6 +83,8 @@ void Map::addWarehouse(int iWarehouseID, int iWarehouseLocation) {
         newWarehouse->setNext(warehouseList[iWarehouseLocation]);
         warehouseList[iWarehouseLocation] = newWarehouse;
     }
+    // Adds a new Warehouse to the vector
+    warehouseInMap.push_back(*newWarehouse);
     numWarehouse++;
 }
 
@@ -95,6 +99,8 @@ void Map::addSeller(int iSellerID,int iSellerLocation) {
         newSeller->setNext(sellerList[iSellerLocation]);
         sellerList[iSellerLocation] = newSeller;
     }
+    // Adds a new Seller to the vector
+    sellerInMap.push_back(*newSeller);
     numSeller++;
 }
 
@@ -330,5 +336,53 @@ ReturnDijkstra Map::cptDijkstra(int v0) {
     result->parents = parents;
     result->minDistance = 0;
     return *result;
+}
+
+ReturnDijkstra Map::FindRoute(Order order, DeliveryMan deliveryman){
+    // Obtaining the positions of the deliveryman, seller and customer
+    int deliverymanPosition = deliveryman.getLocation();
+    int sellerPosition = order.getOrigin();
+    int customerPosition = order.getDestination();
+
+    // Calculating the routes from the deliveryman to the seller and from the seller to the customer
+    ReturnDijkstra routeDeliverymanToSeller = cptDijkstra(deliverymanPosition);
+    ReturnDijkstra routeSellerToCustomer = cptDijkstra(sellerPosition);
+
+    // Creating the arrays to store the full route
+    int* DeliverymanToSeller = routeDeliverymanToSeller.parents;
+    int* SellerToCustomer = routeSellerToCustomer.parents;
+    int* fullRoute = new int[getNumVertices()];
+    int* distances = new int[getNumVertices()];
+    int* minDistance = 0;
+    
+    // Calculing the route from the seller to the customer
+    int current = customerPosition;
+    while (current != sellerPosition){
+        minDistance += routeSellerToCustomer.distances[current];
+        fullRoute[current] = SellerToCustomer[current];
+        distances[current] = routeSellerToCustomer.distances[current];
+        current = SellerToCustomer[current];
+    }
+
+    // Calculing the route from the deliveryman to the seller
+    while (current != deliverymanPosition){
+        minDistance += routeSellerToCustomer.distances[current];
+        fullRoute[current] = DeliverymanToSeller[current];
+        distances[current] = routeDeliverymanToSeller.distances[current];
+        current = DeliverymanToSeller[current];
+    }
+
+    fullRoute[deliverymanPosition] = deliverymanPosition;
+    minDistance += routeDeliverymanToSeller.distances[deliverymanPosition];
+    distances[deliverymanPosition] = 0;
+
+    // Returning the full route
+    ReturnDijkstra fullRouteReturn;
+    fullRouteReturn.distances = distances;
+    fullRouteReturn.parents = fullRoute;
+    fullRouteReturn.minDistance = minDistance;
+
+    return fullRouteReturn;
+
 }
 

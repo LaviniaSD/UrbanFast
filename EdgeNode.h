@@ -1,8 +1,5 @@
 // EdgeNode.h
 
-#include "DeliveryMan.h"
-#include "Warehouse.h"
-
 #pragma once
 
 class EdgeNode {

@@ -20,7 +20,7 @@ class DeliveryMan {
         Order* oOrders;
         
         // Constructor for the DeliveryMan class
-        DeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapacity, int iQuantity, DeliveryMan* next);
+        DeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapacity, DeliveryMan* next);
 
         // Destructor for the DeliveryMan class
         ~DeliveryMan();
