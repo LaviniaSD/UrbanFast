@@ -372,11 +372,11 @@ ReturnDijkstra Map::FindRoute(Order order, DeliveryMan deliveryman){
     // Calculing the route from the seller to the customer
     int current = customerPosition;
     while (current != sellerPosition){
-        minDistance += routeSellerToCustomer.distances[current];
         fullRoute[current] = SellerToCustomer[current];
-        distances[current] = routeSellerToCustomer.distances[current];
+        distances[current] = routeSellerToCustomer.distances[current] + routeDeliverymanToSeller.distances[sellerPosition];
         current = SellerToCustomer[current];
     }
+    minDistance += routeSellerToCustomer.distances[customerPosition];
 
     // Calculing the route from the deliveryman to the seller
     while (current != deliverymanPosition){
@@ -385,9 +385,8 @@ ReturnDijkstra Map::FindRoute(Order order, DeliveryMan deliveryman){
         distances[current] = routeDeliverymanToSeller.distances[current];
         current = DeliverymanToSeller[current];
     }
-
+    minDistance += routeDeliverymanToSeller.distances[sellerPosition];
     fullRoute[deliverymanPosition] = deliverymanPosition;
-    minDistance += routeDeliverymanToSeller.distances[deliverymanPosition];
     distances[deliverymanPosition] = 0;
 
     // Returning the full route
