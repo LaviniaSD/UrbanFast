@@ -1,34 +1,63 @@
-// Class Customer
+/**
+ * @file Customer.h
+ * @brief Header file for the Customer class.
+ */
 
 #ifndef CUSTOMER_H
 #define CUSTOMER_H
 
-// Class representing a customer
+/**
+ * @class Customer
+ * @brief Class representing a customer.
+ * 
+ * This class stores information about a customer, including their unique identifier and location.
+ */
 class Customer {
     private:
         int iCustomerID;  // Unique identifier for the customer
         int iLocation; // Location of the customer
 
     public:
-        // Constructor to initialize the customer with an ID and location
+        /**
+         * @brief Constructor to initialize the customer with an ID and location.
+         * 
+         * @param iCustomerID The unique identifier for the customer.
+         * @param iLocation The location of the customer.
+         */
         Customer(int iCustomerID, int iLocation):iCustomerID(iCustomerID),iLocation(iLocation){}
 
-        // Setter method to set the customer ID
+        /**
+         * @brief Setter method to set the customer ID.
+         * 
+         * @param iCustomerID The customer ID to be set.
+         */
         void setCustomerID(int iCustomerID){
             iCustomerID = iCustomerID;
         }
 
-        // Getter method to retrieve the customer ID
+        /**
+         * @brief Getter method to retrieve the customer ID.
+         * 
+         * @return int The customer ID.
+         */
         int getCustomerID(){
             return iCustomerID;
         }
 
-        // Setter method to set the location of the customer
+        /**
+         * @brief Setter method to set the location of the customer.
+         * 
+         * @param iLocation The location to be set.
+         */
         void setLocation(int iLocation){
             iLocation = iLocation;
         }
         
-        // Getter method to retrieve the location of the customer
+        /**
+         * @brief Getter method to retrieve the location of the customer.
+         * 
+         * @return int The location of the customer.
+         */
         int getLocation(){
             return iLocation;
         }

@@ -1,5 +1,9 @@
-#include "Warehouse.h"
+/**
+ * @file Warehouse.cpp
+ * @brief Implementation file for the Warehouse class.
+ */
 
+#include "Warehouse.h"
 #include <iostream>
 
 using namespace std;
