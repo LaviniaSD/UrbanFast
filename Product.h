@@ -26,8 +26,7 @@ class Product {
          * @param iWeight The weight of the product
          * @param next Pointer to the next product
          */
-        Product(int iProductID, int iPrice, int iQuantity, int iWeight, Product* next):iProductID(iProductID),iPrice(iPrice),iQuantity(iQuantity),iWeight(iWeight){}
-
+        Product(int iProductID, int iPrice, int iQuantity, int iWeight, Product* next);
 
         /**
          * @brief Set the product ID
