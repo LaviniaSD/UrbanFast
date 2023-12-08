@@ -349,7 +349,7 @@ ReturnDijkstra Map::FindRoute(Order order, DeliveryMan deliveryman){
     int* SellerToCustomer = routeSellerToCustomer.parents;
     int* fullRoute = new int[getNumVertices()];
     int* distances = new int[getNumVertices()];
-    int* minDistance = 0;
+    int minDistance = 0;
     
     // Calculing the route from the seller to the customer
     int current = customerPosition;
@@ -377,6 +377,10 @@ ReturnDijkstra Map::FindRoute(Order order, DeliveryMan deliveryman){
     fullRouteReturn.distances = distances;
     fullRouteReturn.parents = fullRoute;
     fullRouteReturn.minDistance = minDistance;
+
+    // Freeing the memory
+    delete[] DeliverymanToSeller;
+    delete[] SellerToCustomer;
 
     return fullRouteReturn;
 
@@ -632,6 +636,7 @@ vector<int> Map::DFS(vector<int> route, int maxDistance){
             }
         }
     }
+    return warehousesAndSellers;
 }
 
 // Function to check which orders can be delivered in the neighborhood of the route

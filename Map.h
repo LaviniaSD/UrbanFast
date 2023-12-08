@@ -46,7 +46,7 @@ struct OrderAgregation {
 struct ReturnDijkstra{
     int* distances;
     int* parents;
-    int* minDistance;
+    int minDistance;
 };
 
 /**
