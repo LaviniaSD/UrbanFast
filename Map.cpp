@@ -458,7 +458,7 @@ void Map::initializePRIM(int origin, int* parent, bool* inTree, int* verticeDist
     // Update distances for vertices connected to vertex origin
     while(edge) {
         int v2 = edge->getOtherVertex(); // Get the other end of the edge
-        parent[v2] = 0; // Vertex 0 is the parent of v2
+        parent[v2] = origin; // Vertex origin is the parent of v2
         verticeDistance[v2] = edge->getDistance(); // Update distance to v2
         edge = edge->getNext(); // Move to the next edge
     }
