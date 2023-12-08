@@ -694,7 +694,7 @@ int knapSackMax(int i, vector<OrderAgregation>& orders, vector<vector<int>>& dp,
 }
 
 // Main function to knapsack
-static vector<int> knapSack(vector<OrderAgregation> orders, int iCapacity) {
+vector<int> knapSack(vector<OrderAgregation> orders, int iCapacity) {
     // Create a matrix to store the results
     int n = orders.size();
     vector<vector<int>> dp(n + 1, vector<int>(iCapacity + 1, -1));

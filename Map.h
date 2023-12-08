@@ -286,7 +286,7 @@ class Map {
         vector<int> knapSack(vector<OrderAgregation> orders, int iCapacity);
 
         // Select the orders to be delivered based on the knapsack algorithm
-        static vector<int> selectedOrders(vector<OrderAgregation>& orders, vector<vector<int>>& dp, int iCapacity);
+        vector<int> selectedOrders(vector<OrderAgregation>& orders, vector<vector<int>>& dp, int iCapacity);
 
         // Function to order the suggestions
         vector<int> OrderSuggestions(vector<int> route, vector<Order> orders, int maxDistance, DeliveryMan deliveryman);
