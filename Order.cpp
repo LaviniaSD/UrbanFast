@@ -39,9 +39,9 @@ void Order::addProducts(int iProductID, int iPrice, int iQuantity, int iWeight) 
         }
         currentProduct = currentProduct->getNext();
     }
-
+    delete currentProduct;
     // If the product doesn't exist, create a new product and add it to the order
-    Product newProduct(iProductID, iPrice, iQuantity, iWeight, nullptr);
+    Product newProduct(iProductID, iPrice, iQuantity, iWeight);
     
     ProductQuantity* newProductQuantity = new ProductQuantity(newProduct, iQuantity);
     iPrice += newProduct.getPrice() * iQuantity;
