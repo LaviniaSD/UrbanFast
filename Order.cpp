@@ -48,14 +48,15 @@ void Order::addProducts(int iProductID, int iPrice, int iQuantity, int iWeight) 
     iWeight += newProduct.getWeight() * iQuantity;
 
     // Link the new product to the existing products in the order
-    if (pProducts != nullptr) {
-        newProductQuantity->setNext(pProducts);
+    if (pProducts == nullptr) {
+        newProductQuantity==pProducts;
     }
-    pProducts = newProductQuantity;
+    else{
+        newProductQuantity->setNext(pProducts);
+        pProducts = newProductQuantity;
+    }
+    
 }
-
-
-
 
 
 
