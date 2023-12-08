@@ -7,7 +7,7 @@
 
 using namespace std;
 
-vector<int> Map::nearestDMen(int origin, int numDMen) {
+ReturnNearestDMen* Map::nearestDMen(int origin, int numDMen) {
     // First, get the CPT
     ReturnDijkstra dijkstra = cptDijkstra(origin);
     
@@ -18,7 +18,7 @@ vector<int> Map::nearestDMen(int origin, int numDMen) {
     } else {
         maxSize = numDMen;
     }
-    vector<int> nearestDMen(maxSize);
+    vector<int> nearList(maxSize);
 
     // Now, get the n-nearest Deliverymen with a heap (n = maxSize)
     Heap heap(1);
@@ -36,11 +36,16 @@ vector<int> Map::nearestDMen(int origin, int numDMen) {
 
     // Finally, add the n-nearest Deliverymen to the vector in the correct order
     for (int i=0; i<maxSize; i++) {
-        nearestDMen[i] = heap.getTop().id;
+        nearList[i] = heap.getTop().id;
         heap.pop();
     }
 
-    return nearestDMen;
+    ReturnNearestDMen* result = new ReturnNearestDMen;
+    result->distances = dijkstra.distances;
+    result->parents = dijkstra.parents;
+    result->nearDMen = nearList;
+
+    return result;
 }
 
 Map* generateMapQ1() {
@@ -84,8 +89,8 @@ int main() {
     Map* map = generateMapQ1();
     // map->print();
 
-    vector<int> nearestDMen = map->nearestDMen(8, 1);
-    cout << "Nearest Deliverymen is in vertex: " << map->deliveryManInMap[nearestDMen[0]].getLocation() << endl;
+    ReturnNearestDMen nearDMen = *map->nearestDMen(1, 1);
+    cout << "Nearest Deliverymen is in vertex: " << map->deliveryManInMap[nearDMen.nearDMen[0]].getLocation() << endl;
 
     return 0;
 }

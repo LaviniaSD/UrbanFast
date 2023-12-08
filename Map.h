@@ -16,6 +16,12 @@ struct ReturnDijkstra{
     int* minDistance;
 };
 
+struct ReturnNearestDMen {
+    int* distances;
+    int* parents;
+    vector<int> nearDMen;
+};
+
 class Map {
     private:
         int numVertices; // Number of vertices in the map
@@ -93,7 +99,7 @@ class Map {
 
         ReturnDijkstra cptDijkstra(int v0);
 
-        vector<int> nearestDMen(int origin, int numDMen);   
+        ReturnNearestDMen* nearestDMen(int origin, int numDMen);   
 
         // Additional method to find the route
         ReturnDijkstra FindRoute(Order order,DeliveryMan deliveryman);
