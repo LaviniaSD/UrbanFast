@@ -268,7 +268,7 @@ void Map::print() {
 
 // Checks if the current Map is a subgraph of the otherMap
 bool Map::isSubGraph(Map & otherMap) {
-    vector hEdges = otherMap.edgesList;
+    std::vector<EdgeNode*> hEdges = otherMap.edgesList;
 
     for (int v1 = 0; v1 < numVertices; v1++) {
         EdgeNode* hEdge = hEdges[v1];
