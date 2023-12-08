@@ -11,7 +11,6 @@
 
 #include <iostream>
 #include <vector>
-
 using namespace std;
 
 Map::Map(int numVertices): 
@@ -266,23 +265,6 @@ void Map::print() {
     }
 }
 
-// Checks if the current Map is a subgraph of the otherMap
-bool Map::isSubGraph(Map & otherMap) {
-    vector hEdges = otherMap.edgesList;
-
-    for (int v1 = 0; v1 < numVertices; v1++) {
-        EdgeNode* hEdge = hEdges[v1];
-
-        while (hEdge) {
-            int v2 = hEdge->getOtherVertex();
-            if (!hasEdge(v1, v2)) return false;  // Edge not found in the current Map
-             
-            hEdge = hEdge->getNext();
-        }
-    }
-    return true; // All edges in otherMap are found in the current Map
-}
-
 ReturnDijkstra Map::cptDijkstra(int v0) {
     // Inicializa os vetores de distâncias, pais e visitados
     int V = getNumVertices();
@@ -367,7 +349,7 @@ ReturnDijkstra Map::FindRoute(Order order, DeliveryMan deliveryman){
     int* SellerToCustomer = routeSellerToCustomer.parents;
     int* fullRoute = new int[getNumVertices()];
     int* distances = new int[getNumVertices()];
-    int* minDistance = 0;
+    int minDistance = 0;
     
     // Calculing the route from the seller to the customer
     int current = customerPosition;
@@ -395,6 +377,10 @@ ReturnDijkstra Map::FindRoute(Order order, DeliveryMan deliveryman){
     fullRouteReturn.distances = distances;
     fullRouteReturn.parents = fullRoute;
     fullRouteReturn.minDistance = minDistance;
+
+    // Freeing the memory
+    delete[] DeliverymanToSeller;
+    delete[] SellerToCustomer;
 
     return fullRouteReturn;
 
@@ -608,6 +594,165 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
     result->routeMin = routeMin;
     result->nearestDMan = ptrBestDeliveryMan;
     return result;
+} 
+
+// DFS algorithm for finding warehouses and sellers near the route
+vector<int> Map::DFS(vector<int> route, int maxDistance){
+    // Create a vector to store the visited vertices
+    vector<bool> visited(numVertices, false);
+    // Create a vector to store the warehouses and sellers found
+    vector<int> warehousesAndSellers;
+    // Create a queue to store the vertices to be visited
+    queue<int> queue; 
+    // Push the first vertex to the queue
+    queue.push(route[0]);
+    // While the stack is not empty
+    while(!queue.empty()){
+        // Pop the front vertex
+        int current = queue.front();
+        queue.pop();
+        // If the vertex is not visited
+        if(!visited[current]){
+            // Mark the vertex as visited
+            visited[current] = true;
+            // If the vertex is a warehouse or a seller
+            if(warehouseList[current] || sellerList[current]){
+                // Add the vertex to the vector
+                warehousesAndSellers.push_back(current);
+            }
+            // Get the edges connected to the vertex
+            EdgeNode* edge = edgesList[current];
+            // While there are edges connected to the vertex
+            while(edge){
+                // Get the other vertex
+                 int otherVertex = edge->getOtherVertex();
+                // If the other vertex is not visited and the distance between the vertices is less than the maximum distance
+                if(!visited[otherVertex] && edge->getDistance() <= maxDistance){
+                    // Push the other vertex to the queue
+                    queue.push(otherVertex);
+                }
+                // Move to the next edge
+                edge = edge->getNext();
+            }
+        }
+    }
+    return warehousesAndSellers;
+}
+
+// Function to check which orders can be delivered in the neighborhood of the route
+vector<Order> Map::checkNeighborhood(vector<Order> orders, vector<int> warehousesAndSellers){
+    // Create a vector to store the orders that can be delivered
+    vector<Order> ordersToDeliver;
+    // Iterate through the orders
+    for(int i = 0; i < orders.size(); i++){
+        // Get the origin of the order
+        int origin = orders[i].getOrigin();
+        // Iterate through the warehouses and sellers
+        for(int j = 0; j < warehousesAndSellers.size(); j++){
+            // If the origin or destination of the order is a warehouse or a seller
+            if(origin == warehousesAndSellers[j]){
+                // Add the order to the vector
+                ordersToDeliver.push_back(orders[i]);
+                // Break the loop
+                break;
+            }
+        }
+    }
+    // Return the vector
+    return ordersToDeliver;
+}
+
+// Function to agregate the weight and value of the items in a order
+OrderAgregation Map::agregateOrder(Order order){
+    // Create a new OrderAgregation
+    OrderAgregation orderAgregation;
+    // Set the order number
+    orderAgregation.iIDNumber = order.getOrderNumber();
+    // Set the weight and price to 0
+    orderAgregation.iWeight = 0;
+    orderAgregation.iPrice = 0;
+    // Iterate through the products in the order
+    ProductQuantity* pProducts = order.pProducts;
+    while(pProducts!=nullptr){
+        // Add the weight and price of the product to the orderAgregation
+        orderAgregation.iWeight += pProducts->getProduct().getWeight();
+        orderAgregation.iPrice += pProducts->getProduct().getPrice();
+        // Move to the next product
+        pProducts = pProducts->getNext();
+    }
+    // Return the orderAgregation
+    return orderAgregation;
+}
+
+// Auxiliar function to knapsack
+int knapSackMax(int i, vector<OrderAgregation>& orders, vector<vector<int>>& dp, int iCapacity) {
+    if(dp[i][iCapacity] == -1){
+        if (orders[i].iWeight > iCapacity) {
+            dp[i][iCapacity] = knapSackMax(i - 1, orders, dp, iCapacity);
+        } else {
+            int inKnapsack = orders[i].iPrice + knapSackMax(i - 1, orders, dp, iCapacity - orders[i].iWeight);
+            int notinKnapsack = knapSackMax(i - 1, orders, dp, iCapacity);
+            dp[i][iCapacity] = max(inKnapsack, notinKnapsack);
+        }
+    }
+    return dp[i][iCapacity];
+}
+
+// Main function to knapsack
+vector<int> knapSack(vector<OrderAgregation> orders, int iCapacity) {
+    // Create a matrix to store the results
+    int n = orders.size();
+    vector<vector<int>> dp(n + 1, vector<int>(iCapacity + 1, -1));
+
+    // Set the elements of the first row to 0
+    for (int i = 0; i <= iCapacity; i++) {
+        dp[0][i] = 0;
+        for (int j = 1; j <= n; j++) {
+            dp[j][0] = 0;
+            dp[j][i] = -1;
+        }
+    }
+
+    knapSackMax(n, orders, dp, iCapacity);
+
+    int i = iCapacity;
+    int j = n;
+    vector<int> selectedItems;
+
+    while (j >= 1) {
+        if (dp[j][i] != dp[j - 1][i]) {
+            selectedItems.push_back(orders[j - 1].iIDNumber); // Adiciona o ID do item selecionado
+            i -= orders[j - 1].iWeight;
+        }
+        --j;
+    }
+
+    return selectedItems;
+
+}
+
+
+vector<int> Map::OrderSuggestions(vector<int> route, vector<Order> orders, int maxDistance, DeliveryMan deliveryman){
+    // Get the capacity of the deliveryman
+    int iCapacity = deliveryman.getCapacity();
+
+    // Create a vector to store the locations of the warehouses and sellers near the route
+    vector<int> warehousesAndSellers = DFS(route, maxDistance);
+
+    // Create a vector to store the orders that can be delivered in the neighborhood of the route
+    vector<Order> ordersToDeliver = checkNeighborhood(orders, warehousesAndSellers);
+
+    // Create a vector to store the orders agregated by weight and price
+    vector<OrderAgregation> ordersAgregation;
+    for (int i = 0; i < ordersToDeliver.size(); i++){
+        ordersAgregation.push_back(agregateOrder(ordersToDeliver[i]));
+    }
+
+    // Create a vector to store the selected orders
+    vector<int> selectedOrders = knapSack(ordersAgregation, iCapacity);
+
+    // Return the vector with the selected orders
+    return selectedOrders;
 }
 
 Map* generateMapQ1() {
