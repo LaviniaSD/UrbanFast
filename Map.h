@@ -74,7 +74,7 @@ class Map {
         int numSeller; // Number of sellers in the map
 
     public:
-        
+
         vector<DeliveryMan> deliveryManInMap; // Vector of deliverymen 
         vector<Warehouse> warehouseInMap; // Vector of warehouses 
         vector<Seller> sellerInMap; // Vector of sellers 
@@ -260,16 +260,41 @@ class Map {
          */
         ReturnDijkstra FindRoute(Order order, DeliveryMan deliveryman);
 
-        // Additional method initialize to PRIM
+        /**
+         * @brief Method to initialize the parent, inTree, and verticeCost arrays for PRIM's algorithm.
+         * 
+         * @param origin The origin vertex.
+         * @param parent The parent array.
+         * @param inTree The inTree array.
+         * @param verticeCost The verticeCost array.
+         */
         void initializePRIM(int origin, int* parent, bool* inTree,int* verticeCost);
 
-        // Get the path by parrent array
+        /**
+         * @brief Method to get the path from the parent array.
+         * 
+         * @param parent The parent array.
+         * @param origin The origin vertex.
+         * @param start The starting vertex.
+         * @return The path as a vector of vertices.
+         */
         vector<int> getPathParent(int* parent, int origin, int start);
 
-        // Additional method to create a MST 
+        /**
+         * @brief Method to find the minimum spanning tree (MST) using PRIM's algorithm.
+         * 
+         * @param origin The origin vertex.
+         * @param parent The parent array.
+         * @return The result of finding the MST.
+         */
         ReturnMstPRIM* mstPrim(int origin, int* parent);
         
-        // Additional method to find the optimized route
+        /**
+         * @brief Method to find the optimized route for an order.
+         * 
+         * @param order The order to be delivered.
+         * @return The result of finding the optimized route.
+         */
         ReturnFindRoutOpt* FindRouteOpt(Order order);
 };
 

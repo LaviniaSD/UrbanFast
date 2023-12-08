@@ -1,4 +1,7 @@
-// Class DeliveryMan
+/**
+ * @file DeliveryMan.h
+ * @brief Defines the DeliveryMan class and its member functions.
+ */
 
 #pragma once
 
@@ -7,58 +10,113 @@
 
 using namespace std;
 
-// Class representing a DeliveryMan
+/**
+ * @class DeliveryMan
+ * @brief Represents a delivery man with their ID, location, capacity, and list of orders.
+ */
 class DeliveryMan {
     private:
-        int iDeliveryManID;
-        int iDeliveryManLocation;
-        int iCapacity;
-        int iQuantity;
-        int iPrice;
-        DeliveryMan* next;
+        int iDeliveryManID; // ID of the delivery man
+        int iDeliveryManLocation; // Current location of the delivery man
+        int iCapacity; // Capacity of the delivery man's vehicle
+        int iQuantity; // Quantity of orders in the delivery man's list
+        int iPrice; // Price of the delivery man's service
+        DeliveryMan* next; // Pointer to the next delivery man in the list
     public:
-        Order* oOrders;
+        Order* oOrders; // Pointer to the first order in the delivery man's list
         
-        // Constructor for the DeliveryMan class
+        /**
+         * @brief Constructor for the DeliveryMan class
+         * 
+         * @param iDeliveryManID The ID of the delivery man
+         * @param iDeliveryManLocation The current location of the delivery man
+         * @param iCapacity The capacity of the delivery man's vehicle
+         * @param next Pointer to the next delivery man in the list
+         */
         DeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapacity, DeliveryMan* next);
 
-        // Destructor for the DeliveryMan class
+        /**
+         * @brief Destructor for the DeliveryMan class
+         */
         ~DeliveryMan();
         
-        // Setter and getter methods for the DeliveryManID
+        /**
+         * @brief Setter method for the DeliveryManID
+         * 
+         * @param newID The new ID of the delivery man
+         */
         void setDeliveryManID(int newID){
             iDeliveryManID = iDeliveryManID;
         }
+
+        /**
+         * @brief Getter method for the DeliveryManID
+         * 
+         * @return The ID of the delivery man
+         */
         int getDeliveryManID(){
             return iDeliveryManID;
         }
 
-        // Setter and getter methods for the DeliveryMan's location
+        /**
+         * @brief Setter method for the DeliveryMan's location
+         * 
+         * @param newLocation The new location of the delivery man
+         */
         void setLocation(int newLocation){
             iDeliveryManLocation = newLocation;
         }
+
+        /**
+         * @brief Getter method for the DeliveryMan's location
+         * 
+         * @return The current location of the delivery man
+         */
         int getLocation(){
             return iDeliveryManLocation;
         }
 
-        // Setter and getter methods for the DeliveryMan's capacity
+        /**
+         * @brief Setter method for the DeliveryMan's capacity
+         * 
+         * @param newCapacity The new capacity of the delivery man's vehicle
+         */
         void setCapacity(int newCapacity){
             iCapacity = newCapacity;
         }
+
+        /**
+         * @brief Getter method for the DeliveryMan's capacity
+         * 
+         * @return The capacity of the delivery man's vehicle
+         */
         int getCapacity(){
             return iCapacity;
         }
 
-        // Getter methods for the DeliveryMan's quantity and price
+        /**
+         * @brief Getter method for the DeliveryMan's quantity
+         * 
+         * @return The quantity of orders in the delivery man's list
+         */
         int getQuantity(){
             return iQuantity;
         }
         
+        /**
+         * @brief Getter method for the DeliveryMan's price
+         * 
+         * @return The price of the delivery man's service
+         */
         int getPrice(){
             return iPrice;
         }
         
-        // Setter and getter methods for the next DeliveryMan in the list
+        /**
+         * @brief Setter method for the next DeliveryMan in the list
+         * 
+         * @param newNext Pointer to the next delivery man in the list
+         */
         void setNext(DeliveryMan* newNext){
             next = newNext;
         }
@@ -66,11 +124,32 @@ class DeliveryMan {
             return next;
         }
 
-        // Method to add an order to the DeliveryMan's list
+        /**
+         * @brief Getter method for the next DeliveryMan in the list
+         * 
+         * @return Pointer to the next delivery man in the list
+         */
+        DeliveryMan* getNext();
+
+        /**
+         * @brief Method to add an order to the DeliveryMan's list
+         * 
+         * @param oOrder Pointer to the order to be added
+         */
         void addOrder(Order* oOrder);
 
+        /**
+         * @brief Method to mark an order as delivered
+         * 
+         * @param iOrderNumber The order number to be marked as delivered
+         */
         void orderDelivered(int iOrderNumber);
 
-        // Method to see the route of an order (commented out as it is not implemented)
+        /**
+         * @brief Method to see the route of an order
+         * 
+         * @param order The order for which to see the route
+         * @return A queue of integers representing the route of the order
+         */
         //queue<int> SeeRoute(Order order);
 };
