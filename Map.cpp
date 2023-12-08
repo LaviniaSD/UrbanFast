@@ -74,7 +74,7 @@ Map::~Map() {
 void Map::addDeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapacity) {
     // Adds a new DeliveryMan to the list
     DeliveryMan* newDeliveryMan = new DeliveryMan(iDeliveryManID, iDeliveryManLocation, iCapacity, nullptr);
-    if(!deliveryManList[iDeliveryManLocation]){
+    if(deliveryManList[iDeliveryManLocation]==nullptr){
         deliveryManList[iDeliveryManLocation] = newDeliveryMan;
     }
     else{
@@ -90,7 +90,7 @@ void Map::addDeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapa
 void Map::addWarehouse(int iWarehouseID, int iWarehouseLocation) {
     // Adds a new Warehouse to the list
     Warehouse* newWarehouse = new Warehouse(iWarehouseID, iWarehouseLocation, nullptr);
-    if(!warehouseList[iWarehouseLocation]){
+    if(warehouseList[iWarehouseLocation]==nullptr){
         warehouseList[iWarehouseLocation] = newWarehouse;
     }
     else{
@@ -106,7 +106,7 @@ void Map::addWarehouse(int iWarehouseID, int iWarehouseLocation) {
 void Map::addSeller(int iSellerID,int iSellerLocation) {
     // Adds a new Seller to the list
     Seller* newSeller = new Seller(iSellerID, iSellerLocation, nullptr);
-    if(!sellerList[iSellerLocation]){
+    if(sellerList[iSellerLocation]==nullptr){
         sellerList[iSellerLocation] = newSeller;
     }
     else{
