@@ -1,6 +1,6 @@
 # UrbanFast
 
-Repositório do trabalho avaliatico de A2 para a disciplina de Projetos e Análise de Algoritmos. O trabalho foi desenvolvido pelo grupo de alunos:
+Repositório do trabalho avaliativo de A2 para a disciplina de Projetos e Análise de Algoritmos. O trabalho foi desenvolvido pelo grupo de alunos:
 
 - [Lavínia Silva](https://github.com/LaviniaSD)
 - [Isabela Yabe](https://github.com/IsabelaYabe)
