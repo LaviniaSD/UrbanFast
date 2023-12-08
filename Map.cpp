@@ -578,7 +578,9 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
     
 
     int indiceBestWarehouse = heap.getTop().id; // Posição no vetor warehouseAvaible
+    Warehouse* ptrBestWarehouse;
     Warehouse bestWarehouse = warehouseAvaible[indiceBestWarehouse];
+    ptrBestWarehouse = &bestWarehouse;
     int* ptrBestDistance;
     int bestDistance = heap.getTop().value; 
     ptrBestDistance = &bestDistance;
@@ -607,6 +609,7 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
     result->distanceTotal = ptrBestDistance; 
     result->routeMin = routeMin;
     result->nearestDMan = ptrBestDeliveryMan;
+    result->bestWarehouse = ptrBestWarehouse;
     return result;
 }
 
