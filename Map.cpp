@@ -1,4 +1,8 @@
-// GraphAdjList.cpp
+/**
+ * @file Map.cpp
+ * @brief Implementation file for the Map class.
+ */
+
 #include "Map.h"
 #include "EdgeNode.h"
 #include "limits.h"

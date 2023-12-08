@@ -1,7 +1,14 @@
-// EdgeNode.h
+/**
+ * @file EdgeNode.h
+ * @brief Defines the EdgeNode class, which represents an edge in a graph.
+ */
 
 #pragma once
 
+/**
+ * @class EdgeNode
+ * @brief Represents an edge in a graph.
+ */
 class EdgeNode {
     private:
         int originVertex; // Origin vertex of the edge
@@ -10,37 +17,84 @@ class EdgeNode {
         EdgeNode* next; // Pointer to the next edge in the list
 
     public:
-        // Constructor for the EdgeNode class
+        /**
+         * @brief Constructor for the EdgeNode class
+         * 
+         * @param originVertex The origin vertex of the edge
+         * @param otherVertex The other vertex connected by the edge
+         * @param distance The distance or weight associated with the edge
+         * @param next Pointer to the next edge in the list
+         */
         EdgeNode(int originVertex, int otherVertex, int distance, EdgeNode* next);
         
-        // Setter and getter for the origin vertex of the edge
+        /**
+         * @brief Setter for the origin vertex of the edge
+         * 
+         * @param newOrigin The new origin vertex value
+         */
         void setOriginVertex(int newOrigin){
             originVertex = newOrigin;
         }
+        
+        /**
+         * @brief Getter for the origin vertex of the edge
+         * 
+         * @return The origin vertex of the edge
+         */
         int getOriginVertex(){
             return originVertex;
         }
 
-        // Setter and getter for the other vertex connected by the edge
+        /**
+         * @brief Setter for the other vertex connected by the edge
+         * 
+         * @param newOther The new other vertex value
+         */
         void setOtherVertex(int newOther){
             otherVertex = newOther;
         }
+        
+        /**
+         * @brief Getter for the other vertex connected by the edge
+         * 
+         * @return The other vertex connected by the edge
+         */
         int getOtherVertex(){
             return otherVertex;
         }
 
-        // Setter and getter for the distance or weight associated with the edge
+        /**
+         * @brief Setter for the distance or weight associated with the edge
+         * 
+         * @param newDistance The new distance or weight value
+         */
         void setDistance(int newDistance){
             distance = newDistance;
         }
+        
+        /**
+         * @brief Getter for the distance or weight associated with the edge
+         * 
+         * @return The distance or weight associated with the edge
+         */
         int getDistance(){
             return distance;
         }
         
-        // Setter and getter for the pointer to the next edge in the list
+        /**
+         * @brief Setter for the pointer to the next edge in the list
+         * 
+         * @param newNext The new pointer to the next edge
+         */
         void setNext(EdgeNode* newNext){
             next = newNext;
         }
+        
+        /**
+         * @brief Getter for the pointer to the next edge in the list
+         * 
+         * @return The pointer to the next edge in the list
+         */
         EdgeNode* getNext(){
             return next;
         }

@@ -1,4 +1,7 @@
-// EdgeNode.cpp
+/**
+ * @file EdgeNode.cpp
+ * @brief Implementation file for the EdgeNode class.
+ */
 
 #include "EdgeNode.h"
 
