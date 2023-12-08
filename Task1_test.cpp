@@ -1,22 +1,51 @@
 #include <gtest/gtest.h>
 #include "Map.h"
 
-// Test Fixture for Map class
+Map* generateMapQ1() {
+    Map* map = new Map(16);
+    
+    map->addEdge(0,1, 61);
+    map->addEdge(0,4, 98);
+    map->addEdge(1,2, 114);
+    map->addEdge(1,5, 115);
+    map->addEdge(2,3, 93);
+    map->addEdge(2,6, 87);
+    map->addEdge(3,7, 107);
+    map->addEdge(4,5, 105);
+    map->addEdge(4,8, 128);
+    map->addEdge(5,6, 70);
+    map->addEdge(5,9, 74);
+    map->addEdge(6,7, 103);
+    map->addEdge(6,10, 115);
+    map->addEdge(7,11, 116);
+    map->addEdge(8,9, 127);
+    map->addEdge(8,12, 96);
+    map->addEdge(9,10, 97);
+    map->addEdge(9,13, 116);
+    map->addEdge(10,11, 99);
+    map->addEdge(10,14, 104);
+    map->addEdge(11,15, 95);
+    map->addEdge(12,13, 123);
+    map->addEdge(13,14, 63);
+    map->addEdge(14,15, 127);
+
+    map->addDeliveryMan(1, 5, 10);
+    map->addDeliveryMan(2, 12, 10);
+    map->addDeliveryMan(2, 15, 10);
+
+    map->addSeller(1, 7);
+
+    return map;
+}
+
+
 class MapTest : public ::testing::Test {
 protected:
     Map* mapa;
 
+    // Setup method to initialize a Map instance using generateMapQ1
     void SetUp() override {
-        mapa = new Map(6);
-        mapa->addEdge(0, 1, 10);
-        mapa->addEdge(0, 2, 20);
-        mapa->addEdge(1, 3, 30);
-        mapa->addEdge(1, 4, 20);
-        mapa->addEdge(2, 4, 90);
-        mapa->addEdge(3, 4, 100);
-        mapa->addEdge(4, 1, 40);
-        mapa->addEdge(4, 5, 60);
-        // Setup DeliveryMen locations and other necessary setups
+        mapa = generateMapQ1();
     }
 
     // Teardown method to cleanup resources
@@ -25,82 +54,68 @@ protected:
     }
 };
 
-// Test case for nearestDMen with valid inputs
-TEST_F(MapTest, NearestDMen_ValidInput) {
-    vector<int> expected = { /* expected delivery men IDs */ };
-    
-    vector<int> result = mapa->nearestDMen(/* origin */, /* numDMen */);
-
-    ASSERT_EQ(result, expected);
-}
-
-// Test case for nearestDMen with edge cases, like no delivery men
-TEST_F(MapTest, NearestDMen_NoDeliveryMen) {
-    vector<int> expected = {};
-
-    vector<int> result = mapa->nearestDMen(/* origin */, /* numDMen */);
-
-    ASSERT_EQ(result, expected);
-}
-
-// Test case for nearestDMen when only one delivery man is significantly closer than others
+// Test case when one delivery man is significantly closer than others
 TEST_F(MapTest, NearestDMen_OneClosestDeliveryMan) {
-    // Set up delivery men locations such that only one is significantly closer to the origin
-    // For example, deliveryManList[0] is the closest to the origin point
-    // The exact locations depend on your Map and DeliveryMan class implementations
+    vector<int> expected = {5}; // Assuming deliveryManList[0] is at vertex 5
 
-    int origin = /* choose an origin point */;
-    int numDMen = /* number of delivery men to return, e.g., 1 */;
+    ReturnNearestDMen* resultStruct = mapa->nearestDMen(1, 1);
+    vector<int> result = resultStruct->nearDMen;
 
-    vector<int> expected = { /* ID of the closest delivery man */ };
+    ASSERT_EQ(result.size(), 1);
+    ASSERT_EQ(result[0], expected[0]);
 
-    vector<int> result = mapa->nearestDMen(origin, numDMen);
-
-    ASSERT_EQ(result.size(), 1); // Check if only one delivery man is returned
-    ASSERT_EQ(result[0], expected[0]); // Check if the returned delivery man is the expected closest one
+    delete resultStruct;
 }
 
-// Test case for nearestDMen when all delivery men are at the same distance from the origin
+
+// Test case when all delivery men are at the same distance from the origin
 TEST_F(MapTest, NearestDMen_AllDeliveryMenAtSameDistance) {
-    // Set up delivery men locations so that all are at the same distance from the origin
-    // For instance, if there are 5 delivery men, set them all at a distance that makes them equidistant from the origin
-    // The exact setup will depend on your Map and DeliveryMan class implementations
+    vector<int> expected = {5, 12, 15};
 
-    int origin = /* choose an origin point */;
-    int numDMen = /* number of delivery men to return, e.g., total number of delivery men */;
+    ReturnNearestDMen* resultStruct = mapa->nearestDMen(0, 3);
+    vector<int> result = resultStruct->nearDMen;
 
-    // Since all delivery men are at the same distance, we expect the IDs of all delivery men, in any order
-    vector<int> expected = { /* IDs of all delivery men */ };
+    delete resultStruct;
 
-    vector<int> result = mapa->nearestDMen(origin, numDMen);
-
-    ASSERT_EQ(result.size(), expected.size()); // Check if the number of returned delivery men matches the expected number
-
-    // Additional checks can be performed to ensure that all IDs in the result are present in the expected list
-    // This is necessary as the order may not be guaranteed
+    ASSERT_EQ(result.size(), expected.size());
     for (int id : result) {
         ASSERT_NE(find(expected.begin(), expected.end(), id), expected.end());
     }
 }
 
-// Test case for nearestDMen with an invalid origin that is not in the graph
+
+// Test case with an invalid origin
 TEST_F(MapTest, NearestDMen_InvalidOrigin) {
-    // Define an invalid origin that is not in the graph
-    // The choice of invalid origin should be such that it is not a part of the graph's node set
-    int invalidOrigin = /* choose an invalid origin point */;
+    int invalidOrigin = 16;
 
-    int numDMen = /* number of delivery men to return, e.g., 1 or more */;
+    ReturnNearestDMen* resultStruct = mapa->nearestDMen(invalidOrigin, 1);
+    vector<int> result = resultStruct->nearDMen;
 
-    vector<int> result = mapa->nearestDMen(invalidOrigin, numDMen);
-
-    // Depending on how nearestDMen handles invalid origins, this might be an empty vector
-    // or the method might throw an exception which should be caught and asserted
-    vector<int> expected = {}; // Assuming the method returns an empty vector for an invalid origin
+    // This assumes that the function returns an empty vector in case of an invalid origin
+    vector<int> expected = {};
     ASSERT_EQ(result, expected);
+
+    delete resultStruct;
 }
 
+// Test case where the number of delivery men requested is more than available
+TEST_F(MapTest, NearestDMen_MoreDeliveryMenRequestedThanAvailable) {
+    int origin = 1;
+    int numDMenRequested = mapa->getNumDeliveryMan() + 1;
 
-// Main function to run all tests
+    ReturnNearestDMen* resultStruct = mapa->nearestDMen(origin, numDMenRequested);
+    vector<int> result = resultStruct->nearDMen;
+
+    // This assumes that the function returns all delivery men if the requested number is too high
+    vector<int> expected = {5, 12, 15};
+    ASSERT_EQ(result.size(), expected.size());
+    for (int id : result) {
+        ASSERT_NE(find(expected.begin(), expected.end(), id), expected.end());
+    }
+
+    delete resultStruct;
+}
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
