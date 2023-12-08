@@ -51,4 +51,5 @@ class Warehouse {
         // Method to remove products from the warehouse's product list
         void removeProducts(int iProductID, int iQuantity);
 
+        bool hasProduct(Product pProduct, int iQuantity);
 };

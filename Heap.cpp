@@ -1,3 +1,8 @@
+/**
+ * @file Heap.cpp
+ * @brief Implementation file for the Heap class.
+ */
+
 #include <vector>
 #include <iostream>
 #include <cmath>
@@ -95,7 +100,11 @@ void Heap::replace(int id, int value) {
 void Heap::print() {
     for (int i = 1; i <= size; i++) {
         cout << body[i].id << " ";
-        if (i == 1 || i == 3 || i == 7 || i == 15 || i == 31 || i == 63 || i == 127) cout << endl;
+        
+        // Check if i+1 is a power of 2
+        if (log2(i + 1) == floor(log2(i + 1))) {
+            cout << endl;
+        }
     }
     cout << endl;
 }
