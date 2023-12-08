@@ -265,23 +265,6 @@ void Map::print() {
     }
 }
 
-// Checks if the current Map is a subgraph of the otherMap
-bool Map::isSubGraph(Map & otherMap) {
-    vector hEdges = otherMap.edgesList;
-
-    for (int v1 = 0; v1 < numVertices; v1++) {
-        EdgeNode* hEdge = hEdges[v1];
-
-        while (hEdge) {
-            int v2 = hEdge->getOtherVertex();
-            if (!hasEdge(v1, v2)) return false;  // Edge not found in the current Map
-             
-            hEdge = hEdge->getNext();
-        }
-    }
-    return true; // All edges in otherMap are found in the current Map
-}
-
 ReturnDijkstra Map::cptDijkstra(int v0) {
     // Inicializa os vetores de distâncias, pais e visitados
     int V = getNumVertices();
@@ -679,7 +662,7 @@ int knapSackMax(int i, vector<OrderAgregation>& orders, vector<vector<int>>& dp,
 }
 
 // Main function to knapsack
-int knapSack(vector<OrderAgregation> orders, int iCapacity) {
+static vector<int> knapSack(vector<OrderAgregation> orders, int iCapacity) {
     // Create a matrix to store the results
     int n = orders.size();
     vector<vector<int>> dp(n + 1, vector<int>(iCapacity + 1, -1));
@@ -692,23 +675,45 @@ int knapSack(vector<OrderAgregation> orders, int iCapacity) {
             dp[j][i] = -1;
         }
     }
-    return knapSackMax(n, orders, dp, iCapacity);
 
-}
+    knapSackMax(n, orders, dp, iCapacity);
 
-static vector<int> selectedOrders(vector<OrderAgregation>& orders, vector<vector<int>>& dp, int iCapacity) {
-    vector<int> selectedItems;
     int i = iCapacity;
-    int j = orders.size();
+    int j = n;
+    vector<int> selectedItems;
 
     while (j >= 1) {
-        if (dp[j][i] = dp[j - 1][i]+orders[j].iPrice) {
-            selectedItems.push_back(orders[j].iIDNumber); // Adiciona o índice do item selecionado
-            i -= orders[j].iWeight;
+        if (dp[j][i] != dp[j - 1][i]) {
+            selectedItems.push_back(orders[j - 1].iIDNumber); // Adiciona o ID do item selecionado
+            i -= orders[j - 1].iWeight;
         }
         --j;
     }
 
     return selectedItems;
+
+}
+
+
+vector<int> Map::OrderSuggestions(vector<int> route, vector<Order> orders, int maxDistance, DeliveryMan deliveryman){
+    int iCapacity = deliveryman.getCapacity();
+
+    // Create a vector to store the locations of the warehouses and sellers near the route
+    vector<int> warehousesAndSellers = DFS(route, maxDistance);
+
+    // Create a vector to store the orders that can be delivered
+    vector<Order> ordersToDeliver = checkNeighborhood(orders, warehousesAndSellers);
+
+    vector<OrderAgregation> ordersAgregation;
+
+    for (int i = 0; i < ordersToDeliver.size(); i++){
+        ordersAgregation.push_back(agregateOrder(ordersToDeliver[i]));
+    }
+
+    // Create a vector to store the selected orders
+    vector<int> selectedOrders = knapSack(ordersAgregation, iCapacity);
+
+    // Return the vector
+    return selectedOrders;
 }
 

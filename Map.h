@@ -233,14 +233,6 @@ class Map {
         void print();
 
         /**
-         * @brief Method to check if the current Map is a subgraph of another Map.
-         * 
-         * @param otherMap The other map to compare with.
-         * @return True if the current map is a subgraph of the other map, false otherwise.
-         */
-        bool isSubGraph(Map &otherMap);
-
-        /**
          * @brief Method to perform Dijkstra's algorithm starting from a given vertex.
          * 
          * @param v0 The starting vertex.
@@ -288,10 +280,11 @@ class Map {
         int knapSackMax(int i, vector<OrderAgregation>& orders, vector<vector<int>>& dp, int iCapacity);
 
         // Main function to knapsack
-        int knapSack(vector<OrderAgregation> orders, int iCapacity);
+        vector<int> knapSack(vector<OrderAgregation> orders, int iCapacity);
 
         // Select the orders to be delivered based on the knapsack algorithm
-        static vector<int> selectedOrders(vector<OrderAgregation>& orders, vector<vector<int>>& dp, int iCapacity) {
+        static vector<int> selectedOrders(vector<OrderAgregation>& orders, vector<vector<int>>& dp, int iCapacity);
 
+        // Function to order the suggestions
+        vector<int> Map::OrderSuggestions(vector<int> route, vector<Order> orders, int maxDistance, DeliveryMan deliveryman);
 };
-
