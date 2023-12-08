@@ -685,7 +685,7 @@ OrderAgregation Map::agregateOrder(Order order){
 }
 
 // Auxiliar function to knapsack
-int knapSackMax(int i, vector<OrderAgregation>& orders, vector<vector<int>>& dp, int iCapacity) {
+int  Map::knapSackMax(int i, vector<OrderAgregation>& orders, vector<vector<int>>& dp, int iCapacity) {
     if(dp[i][iCapacity] == -1){
         if (orders[i].iWeight > iCapacity) {
             dp[i][iCapacity] = knapSackMax(i - 1, orders, dp, iCapacity);
@@ -699,7 +699,7 @@ int knapSackMax(int i, vector<OrderAgregation>& orders, vector<vector<int>>& dp,
 }
 
 // Main function to knapsack
-vector<int> knapSack(vector<OrderAgregation> orders, int iCapacity) {
+vector<int>  Map::knapSack(vector<OrderAgregation> orders, int iCapacity) {
     // Create a matrix to store the results
     int n = orders.size();
     vector<vector<int>> dp(n + 1, vector<int>(iCapacity + 1, -1));
