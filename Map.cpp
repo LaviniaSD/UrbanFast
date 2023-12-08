@@ -451,25 +451,25 @@ ReturnNearestDMen* Map::nearestDMen(int origin, int numDMen) {
     return result;
 }
 
-void Map::initializePRIM(int origin, int* parent, bool* inTree, int* verticeDistance){
+void Map::initializePRIM(int origin, int* parent, bool* inTree, int* verticeDistance) {
     // Initialize arrays for parent, inTree, and verticeDistance
-    for (int v=0; v < numVertices; v++) {
-        parent[v] = -1; // No parent assigned yet
-        inTree[v] = false; // No parent assigned yet
+    for (int v = 0; v < numVertices; v++) {
+        parent[v] = -1;         // No parent assigned yet
+        inTree[v] = false;      // Not included in the MST yet
         verticeDistance[v] = INT_MAX; // Initialize distances to infinity
     }
 
     // Starting from vertex origin
-    parent[origin] = origin; // Vertex origin is the root of the MST
-    inTree[origin] = true; // Vertex origin is already included
+    parent[origin] = origin;    // Vertex origin is the root of the MST
+    inTree[origin] = true;       // Vertex origin is already included
     EdgeNode* edge = edgesList[origin]; // Get the edges connected to vertex origin
 
     // Update distances for vertices connected to vertex origin
-    while(edge) {
+    while (edge) {
         int v2 = edge->getOtherVertex(); // Get the other end of the edge
-        parent[v2] = origin; // Vertex origin is the parent of v2
+        parent[v2] = origin;             // Vertex origin is the parent of v2
         verticeDistance[v2] = edge->getDistance(); // Update distance to v2
-        edge = edge->getNext(); // Move to the next edge
+        edge = edge->getNext();           // Move to the next edge
     }
 }
 
