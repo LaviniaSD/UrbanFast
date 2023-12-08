@@ -268,13 +268,13 @@ class Map {
         ReturnFindRoutOpt* FindRouteOpt(Order order);
 
         // DFS algorithm for finding warehouses and sellers near the route
-        vector<int> Map::DFS(vector<int> route, int maxDistance);
+        vector<int> DFS(vector<int> route, int maxDistance);
 
         // Function to check which orders can be delivered in the neighborhood of the route
-        vector<Order> Map::checkNeighborhood(vector<Order> orders, vector<int> warehousesAndSellers);
+        vector<Order> checkNeighborhood(vector<Order> orders, vector<int> warehousesAndSellers);
 
         // Function to agregate the weight and value of the items in a order
-        OrderAgregation Map::agregateOrder(Order order);
+        OrderAgregation agregateOrder(Order order);
 
         // Auxiliar function to knapsack
         int knapSackMax(int i, vector<OrderAgregation>& orders, vector<vector<int>>& dp, int iCapacity);
@@ -286,5 +286,5 @@ class Map {
         static vector<int> selectedOrders(vector<OrderAgregation>& orders, vector<vector<int>>& dp, int iCapacity);
 
         // Function to order the suggestions
-        vector<int> Map::OrderSuggestions(vector<int> route, vector<Order> orders, int maxDistance, DeliveryMan deliveryman);
+        vector<int> OrderSuggestions(vector<int> route, vector<Order> orders, int maxDistance, DeliveryMan deliveryman);
 };

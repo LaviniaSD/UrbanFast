@@ -696,16 +696,17 @@ static vector<int> knapSack(vector<OrderAgregation> orders, int iCapacity) {
 
 
 vector<int> Map::OrderSuggestions(vector<int> route, vector<Order> orders, int maxDistance, DeliveryMan deliveryman){
+    // Get the capacity of the deliveryman
     int iCapacity = deliveryman.getCapacity();
 
     // Create a vector to store the locations of the warehouses and sellers near the route
     vector<int> warehousesAndSellers = DFS(route, maxDistance);
 
-    // Create a vector to store the orders that can be delivered
+    // Create a vector to store the orders that can be delivered in the neighborhood of the route
     vector<Order> ordersToDeliver = checkNeighborhood(orders, warehousesAndSellers);
 
+    // Create a vector to store the orders agregated by weight and price
     vector<OrderAgregation> ordersAgregation;
-
     for (int i = 0; i < ordersToDeliver.size(); i++){
         ordersAgregation.push_back(agregateOrder(ordersToDeliver[i]));
     }
@@ -713,7 +714,7 @@ vector<int> Map::OrderSuggestions(vector<int> route, vector<Order> orders, int m
     // Create a vector to store the selected orders
     vector<int> selectedOrders = knapSack(ordersAgregation, iCapacity);
 
-    // Return the vector
+    // Return the vector with the selected orders
     return selectedOrders;
 }
 
