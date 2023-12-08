@@ -65,15 +65,13 @@ TEST_F(MapOptRouteTest, FindRouteOpt_ValidRouteAndDistance) {
 
     ReturnFindRoutOpt* result = map->FindRouteOpt(order);
 
-    // aqui valida apenas se o resultado é diferente de nullptr, seria melhor validar se o resultado é igual ao esperado
     ASSERT_NE(result, nullptr);
-    ASSERT_NE(result->distanceTotal, nullptr);
+    ASSERT_EQ(*(result->distanceTotal), 388);
     ASSERT_NE(result->nearestDMan, nullptr);
     ASSERT_FALSE(result->routeMin.empty());
+    ASSERT_EQ(result->routeMin, std::vector<int>({7, 11, 10}));
     ASSERT_EQ(result->routeMin.back(), order.getDestination());
 
-    // checks whether the total distance calculated by FindRouteOpt matches the expected distance of 388 units
-    ASSERT_EQ(*(result->distanceTotal), 388);
 
     delete result;
 }
