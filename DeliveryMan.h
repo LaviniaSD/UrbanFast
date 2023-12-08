@@ -139,17 +139,9 @@ class DeliveryMan {
         void addOrder(Order* oOrder);
 
         /**
-         * @brief Method to mark an order as delivered
+         * @brief Method to remove a order
          * 
          * @param iOrderNumber The order number to be marked as delivered
          */
         void orderDelivered(int iOrderNumber);
-
-        /**
-         * @brief Method to see the route of an order
-         * 
-         * @param order The order for which to see the route
-         * @return A queue of integers representing the route of the order
-         */
-        //queue<int> SeeRoute(Order order);
 };
