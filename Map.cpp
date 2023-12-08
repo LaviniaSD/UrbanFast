@@ -400,8 +400,18 @@ ReturnDijkstra Map::FindRoute(Order order, DeliveryMan deliveryman){
 
 }
 
-
 ReturnNearestDMen* Map::nearestDMen(int origin, int numDMen) {
+    ReturnNearestDMen* result = new ReturnNearestDMen;
+
+    // Verify exceptional cases
+    if (numDMen <= 0 || origin < 0 || origin >= numVertices) {
+        result->distances = nullptr;
+        result->parents = nullptr;
+        result->nearDMen = vector<int>();
+
+        return result;
+    }
+
     // First, get the CPT
     ReturnDijkstra dijkstra = cptDijkstra(origin);
     
@@ -434,7 +444,6 @@ ReturnNearestDMen* Map::nearestDMen(int origin, int numDMen) {
         heap.pop();
     }
 
-    ReturnNearestDMen* result = new ReturnNearestDMen;
     result->distances = dijkstra.distances;
     result->parents = dijkstra.parents;
     result->nearDMen = nearList;
