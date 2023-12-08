@@ -49,14 +49,11 @@ void Order::addProducts(int iProductID, int iPrice, int iQuantity, int iWeight) 
 
     // Link the new product to the existing products in the order
     if (pProducts == nullptr) {
-        newProductQuantity==pProducts;
-    }
-    else{
+        pProducts = newProductQuantity;
+    } else {
         newProductQuantity->setNext(pProducts);
         pProducts = newProductQuantity;
     }
-    
 }
-
 
 
