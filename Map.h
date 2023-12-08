@@ -29,6 +29,12 @@ struct ReturnMstPRIM {
     int* parents;
 };
 
+struct OrderAgregation {
+    int iIDNumber;
+    int iWeight;
+    int iPrice;
+};
+
 /**
  * @brief Struct that represents the return values of Dijkstra's algorithm.
  * 
@@ -268,5 +274,14 @@ class Map {
         
         // Additional method to find the optimized route
         ReturnFindRoutOpt* FindRouteOpt(Order order);
+
+        // DFS algorithm for finding warehouses and sellers near the route
+        vector<int> Map::DFS(vector<int> route, int maxDistance);
+
+        // Function to check which orders can be delivered in the neighborhood of the route
+        vector<Order> Map::checkNeighborhood(vector<Order> orders, vector<int> warehousesAndSellers);
+
+        // Function to agregate the weight and value of the items in a order
+        OrderAgregation Map::agregateOrder(Order order);
 };
 
