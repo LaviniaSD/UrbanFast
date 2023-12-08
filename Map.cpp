@@ -1,70 +1,123 @@
-// GraphAdjList.cpp
+/**
+ * @file Map.cpp
+ * @brief Implementation file for the Map class.
+ */
+
 #include "Map.h"
 #include "EdgeNode.h"
 #include "limits.h"
+#include "DeliveryMan.h"
+#include "Heap.h"
+
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-Map::Map(int numVertices): numVertices(numVertices), numEdges(0),deliveryManList(numVertices),warehouseList(numVertices),sellerList(numVertices), edgesList(numVertices) {
+Map::Map(int numVertices): 
+numVertices(numVertices), 
+numEdges(0),
+numDeliveryMan(0),
+numWarehouse(0),
+numSeller(0),
+deliveryManList(numVertices),
+warehouseList(numVertices),
+sellerList(numVertices), 
+edgesList(numVertices) {
     for (int i = 0; i < numVertices; ++i) {
         edgesList[i] = nullptr;
     }
 }
 
 Map::~Map() {
+    // Clean up the DeliveryMan list
+    for (int i = 0; i < numVertices; ++i) {
+        DeliveryMan* deliveryMan = deliveryManList[i];
+        while (deliveryMan) {
+            DeliveryMan* nextDeliveryMan = deliveryMan->getNext();
+            delete deliveryMan;
+            deliveryMan = nextDeliveryMan;
+        }
+    }
+
+    // Clean up the Warehouse list
+    for (int i = 0; i < numVertices; ++i) {
+        Warehouse* warehouse = warehouseList[i];
+        while (warehouse) {
+            Warehouse* nextWarehouse = warehouse->getNext();
+            delete warehouse;
+            warehouse = nextWarehouse;
+        }
+    }
+
+    // Clean up the Seller list
+    for (int i = 0; i < numVertices; ++i) {
+        Seller* seller = sellerList[i];
+        while (seller) {
+            Seller* nextSeller = seller->getNext();
+            delete seller;
+            seller = nextSeller;
+        }
+    }
+
+    // Clean up the EdgeNode list
     for (int i = 0; i < numVertices; ++i) {
         EdgeNode* edge = edgesList[i];
         while (edge) {
-            EdgeNode* next = edge->getNext();
+            EdgeNode* nextEdge = edge->getNext();
             delete edge;
-            edge = next;
+            edge = nextEdge;
         }
     }
 }
 
-void Map::addDeliveryMan(DeliveryMan* newDeliveryMan) {
-    DeliveryMan* vertice = deliveryManList[newDeliveryMan->getLocation()];
-    if(vertice!=nullptr){
-        while(vertice->getNext()!=nullptr){
-            vertice = vertice->getNext();
-        }
-        vertice->setNext(newDeliveryMan);
+void Map::addDeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapacity) {
+    // Adds a new DeliveryMan to the list
+    DeliveryMan* newDeliveryMan = new DeliveryMan(iDeliveryManID, iDeliveryManLocation, iCapacity, nullptr);
+    if(deliveryManList[iDeliveryManLocation]==nullptr){
+        deliveryManList[iDeliveryManLocation] = newDeliveryMan;
     }
     else{
-        deliveryManList[newDeliveryMan->getLocation()] = newDeliveryMan;
+        newDeliveryMan->setNext(deliveryManList[iDeliveryManLocation]);
+        deliveryManList[iDeliveryManLocation] = newDeliveryMan;
     }
+    // Adds a new DeliveryMan to the vector
+    deliveryManInMap.push_back(*newDeliveryMan);
     numDeliveryMan++;
 }
 
-void Map::addWarehouse(Warehouse* newWarehouse) {
-    Warehouse* vertice = warehouseList[newWarehouse->getLocation()];
-    if(vertice!=nullptr){
-        while(vertice->getNext()!=nullptr){
-            vertice = vertice->getNext();
-        }
-        vertice->setNext(newWarehouse);
+
+void Map::addWarehouse(int iWarehouseID, int iWarehouseLocation) {
+    // Adds a new Warehouse to the list
+    Warehouse* newWarehouse = new Warehouse(iWarehouseID, iWarehouseLocation, nullptr);
+    if(warehouseList[iWarehouseLocation]==nullptr){
+        warehouseList[iWarehouseLocation] = newWarehouse;
     }
     else{
-        warehouseList[newWarehouse->getLocation()] = newWarehouse;
+        newWarehouse->setNext(warehouseList[iWarehouseLocation]);
+        warehouseList[iWarehouseLocation] = newWarehouse;
     }
+    // Adds a new Warehouse to the vector
+    warehouseInMap.push_back(*newWarehouse);
     numWarehouse++;
 }
 
-void Map::addSeller(Seller* newSeller) {
-    Seller* vertice = sellerList[newSeller->getSellerLocation()];
-    if(vertice!=nullptr){
-        while(vertice->getNext()!=nullptr){
-            vertice = vertice->getNext();
-        }
-        vertice->setNext(newSeller);
+
+void Map::addSeller(int iSellerID,int iSellerLocation) {
+    // Adds a new Seller to the list
+    Seller* newSeller = new Seller(iSellerID, iSellerLocation, nullptr);
+    if(sellerList[iSellerLocation]==nullptr){
+        sellerList[iSellerLocation] = newSeller;
     }
     else{
-        sellerList[newSeller->getSellerLocation()] = newSeller;
+        newSeller->setNext(sellerList[iSellerLocation]);
+        sellerList[iSellerLocation] = newSeller;
     }
+    // Adds a new Seller to the vector
+    sellerInMap.push_back(*newSeller);
     numSeller++;
 }
+
 
 void Map::addEdge(int v1, int v2, int distance) {
     // Adds one side of the edge
@@ -155,6 +208,52 @@ bool Map::hasEdge(int v1, int v2) {
     return false;
 }
 
+// Checks if a DeliveryMan with the given ID and location exists in the Map
+bool Map::hasDeliveryMan(int iDeliveryManID, int iDeliveryManLocation) {
+    DeliveryMan* deliveryMan = deliveryManList[iDeliveryManLocation];
+
+    while (deliveryMan) {
+        if (deliveryMan->getDeliveryManID() == iDeliveryManID) {
+            return true;  // Found a DeliveryMan with the specified ID and location
+        }
+
+        deliveryMan = deliveryMan->getNext();
+    }
+
+    return false; // DeliveryMan not found
+}
+
+// Checks if a Warehouse with the given ID and location exists in the Map
+bool Map::hasWarehouse(int iWarehouseID, int iWarehouseLocation) {
+    Warehouse* warehouse = warehouseList[iWarehouseLocation];
+
+    while (warehouse) {
+        if (warehouse->getWarehouseID() == iWarehouseID) {
+            return true; // Found a Warehouse with the specified ID and location
+        }
+
+        warehouse = warehouse->getNext();
+    }
+
+    return false; // Warehouse not found
+}
+
+// Checks if a Seller with the given ID and location exists in the Map
+bool Map::hasSeller(int iSellerID, int iSellerLocation) {
+    Seller* seller = sellerList[iSellerLocation];
+
+    while (seller) {
+        if (seller->getSellerID() == iSellerID) {
+            return true; // Found a Seller with the specified ID and location
+        }
+
+        seller = seller->getNext();
+    }
+
+    return false; // Seller not found
+}
+
+// Prints the adjacency list representation of the Map
 void Map::print() {
     for (int i = 0; i < numVertices; ++i) {
         EdgeNode* edge = edgesList[i];
@@ -167,20 +266,21 @@ void Map::print() {
     }
 }
 
+// Checks if the current Map is a subgraph of the otherMap
 bool Map::isSubGraph(Map & otherMap) {
-    vector hEdges = otherMap.edgesList;
+    std::vector<EdgeNode*> hEdges = otherMap.edgesList;
 
     for (int v1 = 0; v1 < numVertices; v1++) {
         EdgeNode* hEdge = hEdges[v1];
 
         while (hEdge) {
             int v2 = hEdge->getOtherVertex();
-            if (!hasEdge(v1, v2)) return false;
-            
+            if (!hasEdge(v1, v2)) return false;  // Edge not found in the current Map
+             
             hEdge = hEdge->getNext();
         }
     }
-    return true;
+    return true; // All edges in otherMap are found in the current Map
 }
 
 ReturnDijkstra Map::cptDijkstra(int v0) {
@@ -252,3 +352,311 @@ ReturnDijkstra Map::cptDijkstra(int v0) {
     return *result;
 }
 
+ReturnDijkstra Map::FindRoute(Order order, DeliveryMan deliveryman){
+    // Obtaining the positions of the deliveryman, seller and customer
+    int deliverymanPosition = deliveryman.getLocation();
+    int sellerPosition = order.getOrigin();
+    int customerPosition = order.getDestination();
+
+    // Calculating the routes from the deliveryman to the seller and from the seller to the customer
+    ReturnDijkstra routeDeliverymanToSeller = cptDijkstra(deliverymanPosition);
+    ReturnDijkstra routeSellerToCustomer = cptDijkstra(sellerPosition);
+
+    // Creating the arrays to store the full route
+    int* DeliverymanToSeller = routeDeliverymanToSeller.parents;
+    int* SellerToCustomer = routeSellerToCustomer.parents;
+    int* fullRoute = new int[getNumVertices()];
+    int* distances = new int[getNumVertices()];
+    int minDistance = 0;
+    
+    // Calculing the route from the seller to the customer
+    int current = customerPosition;
+    while (current != sellerPosition){
+        fullRoute[current] = SellerToCustomer[current];
+        distances[current] = routeSellerToCustomer.distances[current] + routeDeliverymanToSeller.distances[sellerPosition];
+        current = SellerToCustomer[current];
+    }
+    minDistance += routeSellerToCustomer.distances[customerPosition];
+
+    // Calculing the route from the deliveryman to the seller
+    while (current != deliverymanPosition){
+        fullRoute[current] = DeliverymanToSeller[current];
+        distances[current] = routeDeliverymanToSeller.distances[current];
+        current = DeliverymanToSeller[current];
+    }
+    minDistance += routeDeliverymanToSeller.distances[sellerPosition];
+    fullRoute[deliverymanPosition] = deliverymanPosition;
+    distances[deliverymanPosition] = 0;
+
+    // Returning the full route
+    ReturnDijkstra fullRouteReturn;
+    fullRouteReturn.distances = distances;
+    fullRouteReturn.parents = fullRoute;
+    fullRouteReturn.minDistance = minDistance;
+
+    // Deleting the arrays
+    delete[] DeliverymanToSeller;
+    delete[] SellerToCustomer;
+
+    return fullRouteReturn;
+
+}
+
+ReturnNearestDMen* Map::nearestDMen(int origin, int numDMen) {
+    ReturnNearestDMen* result = new ReturnNearestDMen;
+
+    // Verify exceptional cases
+    if (numDMen <= 0 || origin < 0 || origin >= numVertices) {
+        result->distances = nullptr;
+        result->parents = nullptr;
+        result->nearDMen = vector<int>();
+
+        return result;
+    }
+
+    // First, get the CPT
+    ReturnDijkstra dijkstra = cptDijkstra(origin);
+    
+    // Then, define the vector to return
+    int maxSize;
+    if (getNumDeliveryMan() < numDMen) {
+        maxSize = getNumDeliveryMan();
+    } else {
+        maxSize = numDMen;
+    }
+    vector<int> nearList(maxSize);
+
+    // Now, get the n-nearest Deliverymen with a heap (n = maxSize)
+    Heap heap(1);
+    for (int i=0; i<getNumDeliveryMan(); i++) {
+        int dManLoc = deliveryManInMap[i].getLocation();
+
+        if (heap.getSize() < numDMen) {
+            heap.push(i, dijkstra.distances[dManLoc]);
+        } else {
+            if (heap.getTop().value > dijkstra.distances[dManLoc]) {
+                heap.replace(i, dijkstra.distances[dManLoc]);
+            }
+        }
+    }
+
+    // Finally, add the n-nearest Deliverymen to the vector in the correct order
+    for (int i=0; i<maxSize; i++) {
+        nearList[i] = heap.getTop().id;
+        heap.pop();
+    }
+
+    result->distances = dijkstra.distances;
+    result->parents = dijkstra.parents;
+    result->nearDMen = nearList;
+
+    return result;
+}
+
+void Map::initializePRIM(int origin, int* parent, bool* inTree, int* verticeDistance) {
+    // Initialize arrays for parent, inTree, and verticeDistance
+    for (int v = 0; v < numVertices; v++) {
+        parent[v] = -1;         // No parent assigned yet
+        inTree[v] = false;      // Not included in the MST yet
+        verticeDistance[v] = INT_MAX; // Initialize distances to infinity
+    }
+
+    // Starting from vertex origin
+    parent[origin] = origin;    // Vertex origin is the root of the MST
+    inTree[origin] = true;       // Vertex origin is already included
+    EdgeNode* edge = edgesList[origin]; // Get the edges connected to vertex origin
+
+    // Update distances for vertices connected to vertex origin
+    while (edge) {
+        int v2 = edge->getOtherVertex(); // Get the other end of the edge
+        parent[v2] = origin;             // Vertex origin is the parent of v2
+        verticeDistance[v2] = edge->getDistance(); // Update distance to v2
+        edge = edge->getNext();           // Move to the next edge
+    }
+}
+
+vector<int> Map::getPathParent(int* parent, int origin, int start){
+    vector<int> path;
+    while (start != origin) {
+        path.insert(path.begin(),start);
+        start = parent[start];
+    }
+
+    // Adicione o vértice de origem ao caminho
+    path.insert(path.begin(),origin);
+
+    return path;
+}
+
+ReturnMstPRIM* Map::mstPrim(int origin, int* parents){
+    // Arrays to track whether a vertex is in the MST and its distance from the MST
+    bool inTree[numVertices];
+    int distances[numVertices];
+
+    // Initialize the arrays using the helper function
+    initializePRIM(origin, parents, inTree, distances);
+    Heap heap(-1); // Create the heapmin
+
+    // Push all vertices (except the root) into the heap with their initial distances
+    for (int v = 1; v < numVertices; v++) { heap.push(v, distances[v]); }
+    
+    // Continue until all vertices are included in the MST
+    while (heap.getSize()!=0) {
+
+        // Extract the vertex with the minimum distance from the heap
+        int v1 = heap.getTop().id; 
+
+        // If the distance to v1 is still infinite, break the loop
+        heap.pop(); // Remove from heap
+        if (distances[v1] == INT_MAX) { break; }
+
+        // Mark v1 as included in the MST
+        inTree[v1] = true;
+
+        // Explore edges connected to v1
+        EdgeNode * edge = edgesList[v1];
+        while(edge) {
+            int v2 = edge->getOtherVertex();
+            int distance = edge->getDistance();
+
+            // If v2 is not in the MST and the distance is less than its current distance
+            if (!inTree[v2] && distance < distances[v2]) {
+                
+                // Update the distance and parent, then push v2 into the heap
+                distances[v2] = distance;
+                parents[v2] = v1;
+                heap.push(v2,distances[v2]);
+            }
+
+            // Move to the next edge
+            edge = edge->getNext();
+        }
+    }
+    ReturnMstPRIM* result = new ReturnMstPRIM;
+    result->distances = distances;
+    result->parents = parents;
+
+    return result;
+
+}
+
+ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
+    // Initialize the array parent and verticeDistance
+    int parent[numVertices];
+    int origin = order.getDestination(); // Obter destinatário
+    ReturnMstPRIM* Prim = mstPrim(origin, parent);
+    int numWarehouseAvaible = 0;
+    vector<Warehouse> warehouseAvaible; // warehouseAvaible
+    vector<DeliveryMan> deliveryManAvaible; //  Primeiro delivery, mais perto da warehouseAvaible (com posições correspondentes), está no vector deliveryManInMap
+    vector<int*> parentsAvaible; // array de parents do deliveryManAvaible até warehouseAvaible;
+    ProductQuantity* pProducts = order.pProducts;
+    
+    // Avaliando warehouses
+    for(int i = 0; i < numWarehouse; i++){
+        // Avaliando se a warehouse contém todos os itens e ad quantidades necessárias do pedido;
+        bool hasAllProducts = true;
+        while(pProducts!=nullptr){
+            if(!warehouseInMap[i].hasProduct(pProducts->getProduct(),pProducts->getQuantity())){
+                    hasAllProducts = false;
+                    break;
+                }
+            else{
+                pProducts->getNext();
+            }
+        }
+        // Se temm todos os produtos adicionar warehouse na lista de warehouses avaibles
+        if(hasAllProducts){
+            warehouseAvaible.push_back(warehouseInMap[i]);
+            numWarehouseAvaible++;
+        }
+    }
+
+    Heap heap(-1);
+    for(int i=0; i < numWarehouseAvaible; i++){
+        // Obtendo o delivery mais próximo
+        ReturnNearestDMen* nearestDMan = nearestDMen(warehouseAvaible[i].getWarehouseLocation(),1);
+        // Distância do destino até warehouse
+        int distanceDestinyWarehouse = Prim->distances[warehouseAvaible[i].getWarehouseLocation()];
+        // Distância da warehouse até delivery
+        int distanceWarehouseDelivery = nearestDMan->distances[nearestDMan->nearDMen[0]]; 
+        // Add delivery no vetor de deliverys avaibles
+        deliveryManAvaible.push_back(deliveryManInMap[nearestDMan->nearDMen[0]]);
+        // Add vector parents para o delivery até a warehouse
+        parentsAvaible.push_back(nearestDMan->parents);
+        // Add no heap o índice da warehouse avaible com a distância total
+        heap.push(i, distanceDestinyWarehouse+distanceWarehouseDelivery);
+    }
+    
+
+    int indiceBestWarehouse = heap.getTop().id; // Posição no vetor warehouseAvaible
+    Warehouse* ptrBestWarehouse;
+    Warehouse bestWarehouse = warehouseAvaible[indiceBestWarehouse];
+    ptrBestWarehouse = &bestWarehouse;
+    int* ptrBestDistance;
+    int bestDistance = heap.getTop().value; 
+    ptrBestDistance = &bestDistance;
+    DeliveryMan* ptrBestDeliveryMan;
+    DeliveryMan bestDeliveryMan = deliveryManAvaible[indiceBestWarehouse]; // Obtendo delivery mais próximo
+    ptrBestDeliveryMan = &bestDeliveryMan;
+    int* parentToDelivery = parentsAvaible[indiceBestWarehouse]; // Vetor de parents do delivery até warehouse
+    vector<int> routeMin;
+    
+    int start = bestDeliveryMan.getLocation();
+    // Add route do delivery até warehouse
+    while (start != bestWarehouse.getWarehouseLocation()) {
+        routeMin.insert(routeMin.begin(),start);
+        start = parent[start];
+    }
+    // Add route da warehouse até destino
+    while (start != origin) {
+        routeMin.insert(routeMin.begin(),start);
+        start = parent[start];
+    }
+
+    // Adicione o vértice de origem ao caminho
+    routeMin.insert(routeMin.begin(),origin);
+
+    ReturnFindRoutOpt* result = new ReturnFindRoutOpt;
+    result->distanceTotal = ptrBestDistance; 
+    result->routeMin = routeMin;
+    result->nearestDMan = ptrBestDeliveryMan;
+    result->bestWarehouse = ptrBestWarehouse;
+    return result;
+}
+
+Map* generateMapQ1() {
+    Map* map = new Map(16);
+    
+    map->addEdge(0,1, 61);
+    map->addEdge(0,4, 98);
+    map->addEdge(1,2, 114);
+    map->addEdge(1,5, 115);
+    map->addEdge(2,3, 93);
+    map->addEdge(2,6, 87);
+    map->addEdge(3,7, 107);
+    map->addEdge(4,5, 105);
+    map->addEdge(4,8, 128);
+    map->addEdge(5,6, 70);
+    map->addEdge(5,9, 74);
+    map->addEdge(6,7, 103);
+    map->addEdge(6,10, 115);
+    map->addEdge(7,11, 116);
+    map->addEdge(8,9, 127);
+    map->addEdge(8,12, 96);
+    map->addEdge(9,10, 97);
+    map->addEdge(9,13, 116);
+    map->addEdge(10,11, 99);
+    map->addEdge(10,14, 104);
+    map->addEdge(11,15, 95);
+    map->addEdge(12,13, 123);
+    map->addEdge(13,14, 63);
+    map->addEdge(14,15, 127);
+
+    map->addDeliveryMan(1, 5, 10);
+    map->addDeliveryMan(2, 12, 10);
+    map->addDeliveryMan(2, 15, 10);
+
+    map->addSeller(1, 7);
+
+    return map;
+}
