@@ -11,7 +11,6 @@
 
 #include <iostream>
 #include <vector>
-#include <algorithm> // para std::reverse
 using namespace std;
 
 Map::Map(int numVertices): 
@@ -664,3 +663,52 @@ OrderAgregation Map::agregateOrder(Order order){
     // Return the orderAgregation
     return orderAgregation;
 }
+
+// Auxiliar function to knapsack
+int knapSackMax(int i, vector<OrderAgregation>& orders, vector<vector<int>>& dp, int iCapacity) {
+    if(dp[i][iCapacity] == -1){
+        if (orders[i].iWeight > iCapacity) {
+            dp[i][iCapacity] = knapSackMax(i - 1, orders, dp, iCapacity);
+        } else {
+            int inKnapsack = orders[i].iPrice + knapSackMax(i - 1, orders, dp, iCapacity - orders[i].iWeight);
+            int notinKnapsack = knapSackMax(i - 1, orders, dp, iCapacity);
+            dp[i][iCapacity] = max(inKnapsack, notinKnapsack);
+        }
+    }
+    return dp[i][iCapacity];
+}
+
+// Main function to knapsack
+int knapSack(vector<OrderAgregation> orders, int iCapacity) {
+    // Create a matrix to store the results
+    int n = orders.size();
+    vector<vector<int>> dp(n + 1, vector<int>(iCapacity + 1, -1));
+
+    // Set the elements of the first row to 0
+    for (int i = 0; i <= iCapacity; i++) {
+        dp[0][i] = 0;
+        for (int j = 1; j <= n; j++) {
+            dp[j][0] = 0;
+            dp[j][i] = -1;
+        }
+    }
+    return knapSackMax(n, orders, dp, iCapacity);
+
+}
+
+static vector<int> selectedOrders(vector<OrderAgregation>& orders, vector<vector<int>>& dp, int iCapacity) {
+    vector<int> selectedItems;
+    int i = iCapacity;
+    int j = orders.size();
+
+    while (j >= 1) {
+        if (dp[j][i] = dp[j - 1][i]+orders[j].iPrice) {
+            selectedItems.push_back(orders[j].iIDNumber); // Adiciona o índice do item selecionado
+            i -= orders[j].iWeight;
+        }
+        --j;
+    }
+
+    return selectedItems;
+}
+

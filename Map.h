@@ -283,5 +283,15 @@ class Map {
 
         // Function to agregate the weight and value of the items in a order
         OrderAgregation Map::agregateOrder(Order order);
+
+        // Auxiliar function to knapsack
+        int knapSackMax(int i, vector<OrderAgregation>& orders, vector<vector<int>>& dp, int iCapacity);
+
+        // Main function to knapsack
+        int knapSack(vector<OrderAgregation> orders, int iCapacity);
+
+        // Select the orders to be delivered based on the knapsack algorithm
+        static vector<int> selectedOrders(vector<OrderAgregation>& orders, vector<vector<int>>& dp, int iCapacity) {
+
 };
 
