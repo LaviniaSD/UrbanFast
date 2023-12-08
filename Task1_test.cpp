@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 #include "Map.h"
 
-Map* generateMapQ1() {
+Map* generateMapTest() {
     Map* map = new Map(16);
     
     map->addEdge(0,1, 61);
@@ -47,7 +47,7 @@ protected:
 
     // Setup method to initialize a Map instance using generateMapQ1
     void SetUp() override {
-        mapa = generateMapQ1();
+        mapa = generateMapTest();
     }
 
     // Teardown method to cleanup resources
