@@ -15,7 +15,6 @@ class Product {
         int iPrice; // Price of the product
         int iQuantity; // Quantity of the product
         int iWeight; // Weight of the product
-        Product* next; // Pointer to the next product
     public:
         /**
          * @brief Constructor for the Product class
@@ -26,7 +25,7 @@ class Product {
          * @param iWeight The weight of the product
          * @param next Pointer to the next product
          */
-        Product(int iProductID, int iPrice, int iQuantity, int iWeight, Product* next):iProductID(iProductID),iPrice(iPrice),iQuantity(iQuantity),iWeight(iWeight){}
+        Product(int iProductID, int iPrice, int iQuantity, int iWeight):iProductID(iProductID),iPrice(iPrice),iQuantity(iQuantity),iWeight(iWeight){}
 
 
         /**
@@ -106,16 +105,4 @@ class Product {
          * 
          * @return Product* Pointer to the next product
          */
-        Product* getNext() const {
-            return next;
-        }
-
-        /**
-         * @brief Set the pointer to the next product
-         * 
-         * @param newNext Pointer to the next product
-         */
-        void setNext(Product* newNext){
-            next = newNext;
-        }
 };
