@@ -314,5 +314,5 @@ class Map {
         vector<int> selectedOrders(vector<OrderAgregation>& orders, vector<vector<int>>& dp, int iCapacity);
 
         // Function to order the suggestions
-        vector<int> OrderSuggestions(vector<int> route, vector<Order> orders, int maxDistance, DeliveryMan deliveryman);
+        vector<int> OrderSuggestions(vector<int> route, vector<Order> orders, DeliveryMan deliveryman, int iMaxDistance = 100);
 };

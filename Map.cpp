@@ -732,7 +732,7 @@ vector<int> knapSack(vector<OrderAgregation> orders, int iCapacity) {
 }
 
 
-vector<int> Map::OrderSuggestions(vector<int> route, vector<Order> orders, int maxDistance, DeliveryMan deliveryman){
+vector<int> Map::OrderSuggestions(vector<int> route, vector<Order> orders,DeliveryMan deliveryman, int maxDistance){
     // Get the capacity of the deliveryman
     int iCapacity = deliveryman.getCapacity();
 
