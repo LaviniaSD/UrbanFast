@@ -18,6 +18,16 @@
 #include "Seller.h"
 
 using namespace std;
+struct ReturnFindRoutOpt {
+    int* distanceTotal; // Distância total da rota otimizada
+    std::vector<int> routeMin; // Rota mínima otimizada
+    DeliveryMan* nearestDMan; // Entregador mais próximo
+};
+
+struct ReturnMstPRIM {
+    int* distances;
+    int* parents;
+};
 
 /**
  * @brief Struct that represents the return values of Dijkstra's algorithm.
@@ -249,5 +259,14 @@ class Map {
          * @return The result of finding the route.
          */
         ReturnDijkstra FindRoute(Order order, DeliveryMan deliveryman);
+
+        // Additional method initialize to PRIM
+        void initializePRIM(int* origin, int* parent, bool* inTree,int* verticeCost);
+
+        // Additional method to create a MST 
+        ReturnMstPRIM* mstPrim(int* origin, int* parent);
+        
+        // Additional method to find the optimized route
+        ReturnFindRoutOpt* FindRouteOpt(Order order);
 };
 

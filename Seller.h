@@ -51,4 +51,6 @@ class Seller {
         // Method to remove products from the seller's product list
         void removeProducts(int iProductID, int iQuantity);
 
+        bool hasProduct(Product pProduct, int iQuantity);
+
 };

@@ -7,47 +7,6 @@
 
 using namespace std;
 
-ReturnNearestDMen* Map::nearestDMen(int origin, int numDMen) {
-    // First, get the CPT
-    ReturnDijkstra dijkstra = cptDijkstra(origin);
-    
-    // Then, define the vector to return
-    int maxSize;
-    if (getNumDeliveryMan() < numDMen) {
-        maxSize = getNumDeliveryMan();
-    } else {
-        maxSize = numDMen;
-    }
-    vector<int> nearList(maxSize);
-
-    // Now, get the n-nearest Deliverymen with a heap (n = maxSize)
-    Heap heap(1);
-    for (int i=0; i<getNumDeliveryMan(); i++) {
-        int dManLoc = deliveryManInMap[i].getLocation();
-
-        if (heap.getSize() < numDMen) {
-            heap.push(i, dijkstra.distances[dManLoc]);
-        } else {
-            if (heap.getTop().value > dijkstra.distances[dManLoc]) {
-                heap.replace(i, dijkstra.distances[dManLoc]);
-            }
-        }
-    }
-
-    // Finally, add the n-nearest Deliverymen to the vector in the correct order
-    for (int i=0; i<maxSize; i++) {
-        nearList[i] = heap.getTop().id;
-        heap.pop();
-    }
-
-    ReturnNearestDMen* result = new ReturnNearestDMen;
-    result->distances = dijkstra.distances;
-    result->parents = dijkstra.parents;
-    result->nearDMen = nearList;
-
-    return result;
-}
-
 Map* generateMapQ1() {
     Map* map = new Map(16);
     
@@ -86,6 +45,8 @@ Map* generateMapQ1() {
 }
 
 int main() {
+
+    
     Map* map = generateMapQ1();
     // map->print();
 

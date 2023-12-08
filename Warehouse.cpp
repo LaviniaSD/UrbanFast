@@ -62,3 +62,22 @@ void Warehouse::removeProducts(int iProductID, int iQuantity) {
     // If the product is not found, display a message
     cout << "Produto não encontrado na lista do centro de distribuição." << endl;
 }
+
+bool Warehouse::hasProduct(Product pProduct, int iQuantity) {
+    // Iterate through the list of products
+    Product* currentProduct = pProductsList;
+
+    while (currentProduct) {
+        // Check if the current product matches the specified product
+        if (currentProduct->getProductID() == pProduct.getProductID() &&
+            currentProduct->getPrice() == pProduct.getPrice() &&
+            currentProduct->getQuantity() >= iQuantity &&
+            currentProduct->getWeight() == pProduct.getWeight()) {
+            return true;  // Product found with sufficient quantity
+        }
+
+        currentProduct = currentProduct->getNext();
+    }
+
+    return false;  // Product not found or quantity insufficient
+}

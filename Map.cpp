@@ -7,6 +7,7 @@
 #include "EdgeNode.h"
 #include "limits.h"
 #include "DeliveryMan.h"
+#include "Heap.h"
 
 #include <iostream>
 #include <vector>
@@ -399,3 +400,180 @@ ReturnDijkstra Map::FindRoute(Order order, DeliveryMan deliveryman){
 
 }
 
+
+ReturnNearestDMen* Map::nearestDMen(int origin, int numDMen) {
+    // First, get the CPT
+    ReturnDijkstra dijkstra = cptDijkstra(origin);
+    
+    // Then, define the vector to return
+    int maxSize;
+    if (getNumDeliveryMan() < numDMen) {
+        maxSize = getNumDeliveryMan();
+    } else {
+        maxSize = numDMen;
+    }
+    vector<int> nearList(maxSize);
+
+    // Now, get the n-nearest Deliverymen with a heap (n = maxSize)
+    Heap heap(1);
+    for (int i=0; i<getNumDeliveryMan(); i++) {
+        int dManLoc = deliveryManInMap[i].getLocation();
+
+        if (heap.getSize() < numDMen) {
+            heap.push(i, dijkstra.distances[dManLoc]);
+        } else {
+            if (heap.getTop().value > dijkstra.distances[dManLoc]) {
+                heap.replace(i, dijkstra.distances[dManLoc]);
+            }
+        }
+    }
+
+    // Finally, add the n-nearest Deliverymen to the vector in the correct order
+    for (int i=0; i<maxSize; i++) {
+        nearList[i] = heap.getTop().id;
+        heap.pop();
+    }
+
+    ReturnNearestDMen* result = new ReturnNearestDMen;
+    result->distances = dijkstra.distances;
+    result->parents = dijkstra.parents;
+    result->nearDMen = nearList;
+
+    return result;
+}
+
+void Map::initializePRIM(int* origin, int* parent, bool* inTree, int* verticeDistance){
+    // Initialize arrays for parent, inTree, and verticeDistance
+    for (int v=0; v < numVertices; v++) {
+        parent[v] = -1; // No parent assigned yet
+        inTree[v] = false; // No parent assigned yet
+        verticeDistance[v] = INT_MAX; // Initialize distances to infinity
+    }
+
+    // Starting from vertex 0
+    parent[*origin] = *origin; // Vertex 0 is the root of the MST
+    inTree[*origin] = true; // Vertex 0 is already included
+    EdgeNode* edge = edgesList[*origin]; // Get the edges connected to vertex origin
+
+    // Update distances for vertices connected to vertex 0
+    while(edge) {
+        int v2 = edge->getOtherVertex(); // Get the other end of the edge
+        parent[v2] = 0; // Vertex 0 is the parent of v2
+        verticeDistance[v2] = edge->getDistance(); // Update distance to v2
+        edge = edge->getNext(); // Move to the next edge
+    }
+}
+
+ReturnMstPRIM* Map::mstPrim(int* origin, int* parents){
+    // Arrays to track whether a vertex is in the MST and its distance from the MST
+    bool inTree[numVertices];
+    int distances[numVertices];
+
+    // Initialize the arrays using the helper function
+    initializePRIM(origin, parents, inTree, distances);
+    Heap heap(-1); // Create the heapmin
+
+    // Push all vertices (except the root) into the heap with their initial distances
+    for (int v = 1; v < numVertices; v++) { heap.push(v, distances[v]); }
+    
+    // Continue until all vertices are included in the MST
+    while (heap.getSize()!=0) {
+
+        // Extract the vertex with the minimum distance from the heap
+        int v1 = heap.getTop().id; 
+
+        // If the distance to v1 is still infinite, break the loop
+        heap.pop(); // Remove from heap
+        if (distances[v1] == INT_MAX) { break; }
+
+        // Mark v1 as included in the MST
+        inTree[v1] = true;
+
+        // Explore edges connected to v1
+        EdgeNode * edge = edgesList[v1];
+        while(edge) {
+            int v2 = edge->getOtherVertex();
+            int distance = edge->getDistance();
+
+            // If v2 is not in the MST and the distance is less than its current distance
+            if (!inTree[v2] && distance < distances[v2]) {
+                
+                // Update the distance and parent, then push v2 into the heap
+                distances[v2] = distance;
+                parents[v2] = v1;
+                heap.push(v2,distances[v2]);
+            }
+
+            // Move to the next edge
+            edge = edge->getNext();
+        }
+    }
+    ReturnMstPRIM* result = new ReturnMstPRIM;
+    result->distances = distances;
+    result->parents = parents;
+
+    return result;
+
+}
+
+ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
+    // Initialize the array parent and verticeDistance
+    int parent[numVertices];
+    int* origin;
+    int destination = order.getDestination();
+    origin = &destination;
+    ReturnMstPRIM* Prim = mstPrim(origin, parent);
+    int numWarehouseAvaible = 0;
+    vector<Warehouse> warehouseAvaible; // warehouseAvaible
+    vector<DeliveryMan> deliveryManAvaible; //  Primeiro delivery, mais perto da warehouseAvaible (com posições correspondentes), está no vector deliveryManInMap
+    vector<int*> parentsAvaible; // array de parents do deliveryManAvaible até warehouseAvaible;
+    ProductQuantity* pProducts = order.pProducts;
+    for(int i = 0; i < numWarehouse; i++){
+        while(pProducts!=nullptr){
+            if(!warehouseInMap[i].hasProduct(pProducts->getProduct(),pProducts->getQuantity())){break;}
+            else{
+                pProducts->getNext();
+            }
+        warehouseAvaible.push_back(warehouseInMap[i]);
+        numWarehouseAvaible++;
+        }
+    }
+
+    Heap heap(-1);
+    for(int i=0; i < numWarehouseAvaible; i++){
+        ReturnNearestDMen* nearestDMan = nearestDMen(warehouseAvaible[i].getWarehouseLocation(),numDeliveryMan);
+        int distanceDestinyWarehouse = Prim->distances[warehouseAvaible[i].getWarehouseLocation()];
+        int distanceWarehouseDelivery = nearestDMan->distances[nearestDMan->nearDMen[0]]; 
+        deliveryManAvaible.push_back(deliveryManInMap[nearestDMan->nearDMen[0]]);
+        parentsAvaible.push_back(nearestDMan->parents);
+        heap.push(i, distanceDestinyWarehouse+distanceWarehouseDelivery);
+    }
+    
+    int bestWarehousePos = heap.getTop().id; // Posição no vetor warehouseAvaible
+    Warehouse bestWarehouse = warehouseAvaible[bestWarehousePos];
+    int* ptrBestDistance;
+    int bestDistance = heap.getTop().value; // Posição no vetor deliveryManAvaible
+    ptrBestDistance = &bestDistance;
+    DeliveryMan* ptrBestDeliveryMan;
+    DeliveryMan bestDeliveryMan = deliveryManAvaible[bestWarehousePos];
+    ptrBestDeliveryMan = &bestDeliveryMan;
+    int* parentToDelivery = parentsAvaible[bestWarehousePos];
+    vector<int> routeMin;
+
+    int current = bestDeliveryMan.getLocation();
+    routeMin.push_back(current);
+    while(current != bestDeliveryMan.getLocation()){
+        current = parentToDelivery[current];
+        routeMin.push_back(current);
+    }
+    while(current != order.getDestination()){
+        current = parent[current];
+        routeMin.push_back(current);
+    }
+
+    ReturnFindRoutOpt* result = new ReturnFindRoutOpt;
+    result->distanceTotal = ptrBestDistance; 
+    result->routeMin = routeMin;
+    result->nearestDMan = ptrBestDeliveryMan;
+    return result;
+} 
