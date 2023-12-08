@@ -1,10 +1,22 @@
-// Class Seller
+/**
+ * @file Seller.h
+ * @brief Header file for the Seller class.
+ * 
+ * This file contains the definition of the Seller class, its attributes, and its methods.
+ * The Seller class represents a seller and contains information about the seller's ID, location, and products.
+ * It also provides methods to add and remove products from the seller's product list.
+ */
 
 #pragma once
 
 #include "Product.h"
 
-// Class representing a seller
+/**
+ * @brief Class representing a seller.
+ * 
+ * This class represents a seller and contains information about the seller's ID, location, and products.
+ * It also provides methods to add and remove products from the seller's product list.
+ */
 class Seller {
     private:
         int iSellerID; // Seller ID
@@ -14,43 +26,99 @@ class Seller {
     public:
         Product* pProductsList; // Pointer to the list of products
         
-        // Constructor for the Seller class
+        /**
+         * @brief Constructor for the Seller class.
+         * 
+         * @param iSellerID The ID of the seller.
+         * @param iSellerLocation The location of the seller.
+         * @param next Pointer to the next seller.
+         */
         Seller(int iSellerID, int iSellerLocation, Seller* next);
 
-        // Destructor for the Seller class
+        /**
+         * @brief Destructor for the Seller class.
+         */
         ~Seller();
 
-        // Setter and getter methods for Seller ID
+        /**
+         * @brief Setter method for Seller ID.
+         * 
+         * @param iSellerID The ID of the seller.
+         */
         void setSellerID(int iSellerID){
             iSellerID = iSellerID;
         }
+
+        /**
+         * @brief Getter method for Seller ID.
+         * 
+         * @return The ID of the seller.
+         */
         int getSellerID(){
             return iSellerID;
         }
 
-        // Setter and getter methods for Seller location
+        /**
+         * @brief Setter method for Seller location.
+         * 
+         * @param SellerLocation The location of the seller.
+         */
         void setSellerLocation(int SellerLocation){
             SellerLocation = SellerLocation;
         }
+
+        /**
+         * @brief Getter method for Seller location.
+         * 
+         * @return The location of the seller.
+         */
         int getSellerLocation(){
             return iSellerLocation;
         }
 
-        // Setter and getter methods for the next seller
+        /**
+         * @brief Setter method for the next seller.
+         * 
+         * @param newNext Pointer to the next seller.
+         */
         void setNext(Seller* newNext){
             next = newNext;
         }
 
+        /**
+         * @brief Getter method for the next seller.
+         * 
+         * @return Pointer to the next seller.
+         */
         Seller* getNext(){
             return next;
         }
 
-        // Method to add products to the seller's product list
+        /**
+         * @brief Method to add products to the seller's product list.
+         * 
+         * @param iProductNumber The product number.
+         * @param iPrice The price of the product.
+         * @param iQuantity The quantity of the product.
+         * @param iWeight The weight of the product.
+         */
         void addProducts(int iProductNumber, int iPrice, int iQuantity, int iWeight);
 
-        // Method to remove products from the seller's product list
+        /**
+         * @brief Method to remove products from the seller's product list.
+         * 
+         * @param iProductID The ID of the product to be removed.
+         * @param iQuantity The quantity of the product to be removed.
+         */
         void removeProducts(int iProductID, int iQuantity);
 
+        /**
+         * @brief Method to check if the seller has a specific product in a certain quantity.
+         * 
+         * @param pProduct The product to be checked.
+         * @param iQuantity The quantity of the product to be checked.
+         * @return True if the seller has the product in the specified quantity, false otherwise.
+         */
         bool hasProduct(Product pProduct, int iQuantity);
 
 };

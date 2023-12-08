@@ -1,3 +1,8 @@
+/**
+ * @file Seller.cpp
+ * @brief Implementation file for the Seller class.
+ */
+
 #include "Seller.h"
 
 #include <iostream>
