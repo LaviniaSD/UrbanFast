@@ -367,27 +367,25 @@ ReturnDijkstra Map::FindRoute(Order order, DeliveryMan deliveryman){
     int* SellerToCustomer = routeSellerToCustomer.parents;
     int* fullRoute = new int[getNumVertices()];
     int* distances = new int[getNumVertices()];
-    int* minDistance = 0;
+    int minDistance = 0;
     
     // Calculing the route from the seller to the customer
     int current = customerPosition;
     while (current != sellerPosition){
-        minDistance += routeSellerToCustomer.distances[current];
         fullRoute[current] = SellerToCustomer[current];
-        distances[current] = routeSellerToCustomer.distances[current];
+        distances[current] = routeSellerToCustomer.distances[current] + routeDeliverymanToSeller.distances[sellerPosition];
         current = SellerToCustomer[current];
     }
+    minDistance += routeSellerToCustomer.distances[customerPosition];
 
     // Calculing the route from the deliveryman to the seller
     while (current != deliverymanPosition){
-        minDistance += routeSellerToCustomer.distances[current];
         fullRoute[current] = DeliverymanToSeller[current];
         distances[current] = routeDeliverymanToSeller.distances[current];
         current = DeliverymanToSeller[current];
     }
-
+    minDistance += routeDeliverymanToSeller.distances[sellerPosition];
     fullRoute[deliverymanPosition] = deliverymanPosition;
-    minDistance += routeDeliverymanToSeller.distances[deliverymanPosition];
     distances[deliverymanPosition] = 0;
 
     // Returning the full route
@@ -395,6 +393,10 @@ ReturnDijkstra Map::FindRoute(Order order, DeliveryMan deliveryman){
     fullRouteReturn.distances = distances;
     fullRouteReturn.parents = fullRoute;
     fullRouteReturn.minDistance = minDistance;
+
+    // Deleting the arrays
+    delete[] DeliverymanToSeller;
+    delete[] SellerToCustomer;
 
     return fullRouteReturn;
 
