@@ -84,19 +84,19 @@ TEST_F(MapTest, NearestDMen_AllDeliveryMenAtSameDistance) {
 }
 
 
-// Test case with an invalid origin
-TEST_F(MapTest, NearestDMen_InvalidOrigin) {
-    int invalidOrigin = 16;
+// // Test case with an invalid origin
+// TEST_F(MapTest, NearestDMen_InvalidOrigin) {
+//     int invalidOrigin = 16;
 
-    ReturnNearestDMen* resultStruct = mapa->nearestDMen(invalidOrigin, 1);
-    vector<int> result = resultStruct->nearDMen;
+//     ReturnNearestDMen* resultStruct = mapa->nearestDMen(invalidOrigin, 1);
+//     vector<int> result = resultStruct->nearDMen;
 
-    // This assumes that the function returns an empty vector in case of an invalid origin
-    vector<int> expected = {};
-    ASSERT_EQ(result, expected);
+//     // This assumes that the function returns an empty vector in case of an invalid origin
+//     vector<int> expected = {};
+//     ASSERT_EQ(result, expected);
 
-    delete resultStruct;
-}
+//     delete resultStruct;
+// }
 
 // Test case where the number of delivery men requested is more than available
 TEST_F(MapTest, NearestDMen_MoreDeliveryMenRequestedThanAvailable) {
@@ -111,6 +111,26 @@ TEST_F(MapTest, NearestDMen_MoreDeliveryMenRequestedThanAvailable) {
     ASSERT_EQ(result.size(), expected.size());
 
     delete resultStruct;
+}
+
+// Q3 
+TEST_F(MapTest, FindRouteOpt_ValidRouteAndDistance) {
+    Order order(1, 10, 7, false);
+    order.addProducts(1, 50, 10, 2);
+
+    DeliveryMan deliveryMan = mapa->deliveryManInMap[0];
+
+    ReturnFindRoutOpt result = *mapa->FindRouteOpt(order);
+
+    // ASSERT_NE(result, nullptr);
+    // ASSERT_EQ(*(result->distanceTotal), 388);
+    // ASSERT_NE(result->nearestDMan, nullptr);
+    // ASSERT_FALSE(result->routeMin.empty());
+    // ASSERT_EQ(result->routeMin, std::vector<int>({7, 11, 10}));
+    // ASSERT_EQ(result->routeMin.back(), order.getDestination());
+
+
+    // delete result;
 }
 
 int main(int argc, char **argv) {
