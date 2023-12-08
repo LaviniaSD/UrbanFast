@@ -74,7 +74,7 @@ Map::~Map() {
 void Map::addDeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapacity) {
     // Adds a new DeliveryMan to the list
     DeliveryMan* newDeliveryMan = new DeliveryMan(iDeliveryManID, iDeliveryManLocation, iCapacity, nullptr);
-    if(!deliveryManList[iDeliveryManLocation]){
+    if(deliveryManList[iDeliveryManLocation]==nullptr){
         deliveryManList[iDeliveryManLocation] = newDeliveryMan;
     }
     else{
@@ -90,7 +90,7 @@ void Map::addDeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapa
 void Map::addWarehouse(int iWarehouseID, int iWarehouseLocation) {
     // Adds a new Warehouse to the list
     Warehouse* newWarehouse = new Warehouse(iWarehouseID, iWarehouseLocation, nullptr);
-    if(!warehouseList[iWarehouseLocation]){
+    if(warehouseList[iWarehouseLocation]==nullptr){
         warehouseList[iWarehouseLocation] = newWarehouse;
     }
     else{
@@ -106,7 +106,7 @@ void Map::addWarehouse(int iWarehouseID, int iWarehouseLocation) {
 void Map::addSeller(int iSellerID,int iSellerLocation) {
     // Adds a new Seller to the list
     Seller* newSeller = new Seller(iSellerID, iSellerLocation, nullptr);
-    if(!sellerList[iSellerLocation]){
+    if(sellerList[iSellerLocation]==nullptr){
         sellerList[iSellerLocation] = newSeller;
     }
     else{
@@ -268,7 +268,7 @@ void Map::print() {
 
 // Checks if the current Map is a subgraph of the otherMap
 bool Map::isSubGraph(Map & otherMap) {
-    vector hEdges = otherMap.edgesList;
+    std::vector<EdgeNode*> hEdges = otherMap.edgesList;
 
     for (int v1 = 0; v1 < numVertices; v1++) {
         EdgeNode* hEdge = hEdges[v1];
@@ -402,8 +402,18 @@ ReturnDijkstra Map::FindRoute(Order order, DeliveryMan deliveryman){
 
 }
 
-
 ReturnNearestDMen* Map::nearestDMen(int origin, int numDMen) {
+    ReturnNearestDMen* result = new ReturnNearestDMen;
+
+    // Verify exceptional cases
+    if (numDMen <= 0 || origin < 0 || origin >= numVertices) {
+        result->distances = nullptr;
+        result->parents = nullptr;
+        result->nearDMen = vector<int>();
+
+        return result;
+    }
+
     // First, get the CPT
     ReturnDijkstra dijkstra = cptDijkstra(origin);
     
@@ -436,7 +446,6 @@ ReturnNearestDMen* Map::nearestDMen(int origin, int numDMen) {
         heap.pop();
     }
 
-    ReturnNearestDMen* result = new ReturnNearestDMen;
     result->distances = dijkstra.distances;
     result->parents = dijkstra.parents;
     result->nearDMen = nearList;
@@ -444,25 +453,25 @@ ReturnNearestDMen* Map::nearestDMen(int origin, int numDMen) {
     return result;
 }
 
-void Map::initializePRIM(int origin, int* parent, bool* inTree, int* verticeDistance){
+void Map::initializePRIM(int origin, int* parent, bool* inTree, int* verticeDistance) {
     // Initialize arrays for parent, inTree, and verticeDistance
-    for (int v=0; v < numVertices; v++) {
-        parent[v] = -1; // No parent assigned yet
-        inTree[v] = false; // No parent assigned yet
+    for (int v = 0; v < numVertices; v++) {
+        parent[v] = -1;         // No parent assigned yet
+        inTree[v] = false;      // Not included in the MST yet
         verticeDistance[v] = INT_MAX; // Initialize distances to infinity
     }
 
     // Starting from vertex origin
-    parent[origin] = origin; // Vertex origin is the root of the MST
-    inTree[origin] = true; // Vertex origin is already included
+    parent[origin] = origin;    // Vertex origin is the root of the MST
+    inTree[origin] = true;       // Vertex origin is already included
     EdgeNode* edge = edgesList[origin]; // Get the edges connected to vertex origin
 
     // Update distances for vertices connected to vertex origin
-    while(edge) {
+    while (edge) {
         int v2 = edge->getOtherVertex(); // Get the other end of the edge
-        parent[v2] = 0; // Vertex 0 is the parent of v2
+        parent[v2] = origin;             // Vertex origin is the parent of v2
         verticeDistance[v2] = edge->getDistance(); // Update distance to v2
-        edge = edge->getNext(); // Move to the next edge
+        edge = edge->getNext();           // Move to the next edge
     }
 }
 
@@ -580,7 +589,9 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
     
 
     int indiceBestWarehouse = heap.getTop().id; // Posição no vetor warehouseAvaible
+    Warehouse* ptrBestWarehouse;
     Warehouse bestWarehouse = warehouseAvaible[indiceBestWarehouse];
+    ptrBestWarehouse = &bestWarehouse;
     int* ptrBestDistance;
     int bestDistance = heap.getTop().value; 
     ptrBestDistance = &bestDistance;
@@ -609,6 +620,7 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
     result->distanceTotal = ptrBestDistance; 
     result->routeMin = routeMin;
     result->nearestDMan = ptrBestDeliveryMan;
+    result->bestWarehouse = ptrBestWarehouse;
     return result;
 }
 

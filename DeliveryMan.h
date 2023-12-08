@@ -120,16 +120,15 @@ class DeliveryMan {
         void setNext(DeliveryMan* newNext){
             next = newNext;
         }
-        DeliveryMan* getNext(){
-            return next;
-        }
-
+        
         /**
          * @brief Getter method for the next DeliveryMan in the list
          * 
          * @return Pointer to the next delivery man in the list
          */
-        DeliveryMan* getNext();
+        DeliveryMan* getNext(){
+            return next;
+        }
 
         /**
          * @brief Method to add an order to the DeliveryMan's list

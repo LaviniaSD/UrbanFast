@@ -31,7 +31,7 @@ struct ProductQuantity{
      * @param pProduct The product information.
      * @param iQuantity The quantity of the product.
      */
-    ProductQuantity(Product pProduct, int iQuantity): pProduct(pProduct), iQuantity(iQuantity), next(nullptr){}
+    ProductQuantity(Product const& pProduct, int iQuantity) : pProduct(pProduct), iQuantity(iQuantity), next(nullptr) {}
 
     /**
      * @brief Destructor for ProductQuantity.
