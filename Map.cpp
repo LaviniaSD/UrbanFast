@@ -424,7 +424,7 @@ ReturnNearestDMen* Map::nearestDMen(int origin, int numDMen) {
     return result;
 }
 
-void Map::initializePRIM(int* origin, int* parent, bool* inTree, int* verticeDistance){
+void Map::initializePRIM(int origin, int* parent, bool* inTree, int* verticeDistance){
     // Initialize arrays for parent, inTree, and verticeDistance
     for (int v=0; v < numVertices; v++) {
         parent[v] = -1; // No parent assigned yet
@@ -432,12 +432,12 @@ void Map::initializePRIM(int* origin, int* parent, bool* inTree, int* verticeDis
         verticeDistance[v] = INT_MAX; // Initialize distances to infinity
     }
 
-    // Starting from vertex 0
-    parent[*origin] = *origin; // Vertex 0 is the root of the MST
-    inTree[*origin] = true; // Vertex 0 is already included
-    EdgeNode* edge = edgesList[*origin]; // Get the edges connected to vertex origin
+    // Starting from vertex origin
+    parent[origin] = origin; // Vertex origin is the root of the MST
+    inTree[origin] = true; // Vertex origin is already included
+    EdgeNode* edge = edgesList[origin]; // Get the edges connected to vertex origin
 
-    // Update distances for vertices connected to vertex 0
+    // Update distances for vertices connected to vertex origin
     while(edge) {
         int v2 = edge->getOtherVertex(); // Get the other end of the edge
         parent[v2] = 0; // Vertex 0 is the parent of v2
@@ -446,7 +446,20 @@ void Map::initializePRIM(int* origin, int* parent, bool* inTree, int* verticeDis
     }
 }
 
-ReturnMstPRIM* Map::mstPrim(int* origin, int* parents){
+vector<int> Map::getPathParent(int* parent, int origin, int start){
+    vector<int> path;
+    while (start != origin) {
+        path.insert(path.begin(),start);
+        start = parent[start];
+    }
+
+    // Adicione o vértice de origem ao caminho
+    path.insert(path.begin(),origin);
+
+    return path;
+}
+
+ReturnMstPRIM* Map::mstPrim(int origin, int* parents){
     // Arrays to track whether a vertex is in the MST and its distance from the MST
     bool inTree[numVertices];
     int distances[numVertices];
@@ -501,57 +514,76 @@ ReturnMstPRIM* Map::mstPrim(int* origin, int* parents){
 ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
     // Initialize the array parent and verticeDistance
     int parent[numVertices];
-    int* origin;
-    int destination = order.getDestination();
-    origin = &destination;
+    int origin = order.getDestination(); // Obter destinatário
     ReturnMstPRIM* Prim = mstPrim(origin, parent);
     int numWarehouseAvaible = 0;
     vector<Warehouse> warehouseAvaible; // warehouseAvaible
     vector<DeliveryMan> deliveryManAvaible; //  Primeiro delivery, mais perto da warehouseAvaible (com posições correspondentes), está no vector deliveryManInMap
     vector<int*> parentsAvaible; // array de parents do deliveryManAvaible até warehouseAvaible;
     ProductQuantity* pProducts = order.pProducts;
+    
+    // Avaliando warehouses
     for(int i = 0; i < numWarehouse; i++){
+        // Avaliando se a warehouse contém todos os itens e ad quantidades necessárias do pedido;
+        bool hasAllProducts = true;
         while(pProducts!=nullptr){
-            if(!warehouseInMap[i].hasProduct(pProducts->getProduct(),pProducts->getQuantity())){break;}
+            if(!warehouseInMap[i].hasProduct(pProducts->getProduct(),pProducts->getQuantity())){
+                    hasAllProducts = false;
+                    break;
+                }
             else{
                 pProducts->getNext();
             }
-        warehouseAvaible.push_back(warehouseInMap[i]);
-        numWarehouseAvaible++;
+        }
+        // Se temm todos os produtos adicionar warehouse na lista de warehouses avaibles
+        if(hasAllProducts){
+            warehouseAvaible.push_back(warehouseInMap[i]);
+            numWarehouseAvaible++;
         }
     }
 
     Heap heap(-1);
     for(int i=0; i < numWarehouseAvaible; i++){
-        ReturnNearestDMen* nearestDMan = nearestDMen(warehouseAvaible[i].getWarehouseLocation(),numDeliveryMan);
+        // Obtendo o delivery mais próximo
+        ReturnNearestDMen* nearestDMan = nearestDMen(warehouseAvaible[i].getWarehouseLocation(),1);
+        // Distância do destino até warehouse
         int distanceDestinyWarehouse = Prim->distances[warehouseAvaible[i].getWarehouseLocation()];
+        // Distância da warehouse até delivery
         int distanceWarehouseDelivery = nearestDMan->distances[nearestDMan->nearDMen[0]]; 
+        // Add delivery no vetor de deliverys avaibles
         deliveryManAvaible.push_back(deliveryManInMap[nearestDMan->nearDMen[0]]);
+        // Add vector parents para o delivery até a warehouse
         parentsAvaible.push_back(nearestDMan->parents);
+        // Add no heap o índice da warehouse avaible com a distância total
         heap.push(i, distanceDestinyWarehouse+distanceWarehouseDelivery);
     }
     
-    int bestWarehousePos = heap.getTop().id; // Posição no vetor warehouseAvaible
-    Warehouse bestWarehouse = warehouseAvaible[bestWarehousePos];
+
+    int indiceBestWarehouse = heap.getTop().id; // Posição no vetor warehouseAvaible
+    Warehouse bestWarehouse = warehouseAvaible[indiceBestWarehouse];
     int* ptrBestDistance;
-    int bestDistance = heap.getTop().value; // Posição no vetor deliveryManAvaible
+    int bestDistance = heap.getTop().value; 
     ptrBestDistance = &bestDistance;
     DeliveryMan* ptrBestDeliveryMan;
-    DeliveryMan bestDeliveryMan = deliveryManAvaible[bestWarehousePos];
+    DeliveryMan bestDeliveryMan = deliveryManAvaible[indiceBestWarehouse]; // Obtendo delivery mais próximo
     ptrBestDeliveryMan = &bestDeliveryMan;
-    int* parentToDelivery = parentsAvaible[bestWarehousePos];
+    int* parentToDelivery = parentsAvaible[indiceBestWarehouse]; // Vetor de parents do delivery até warehouse
     vector<int> routeMin;
+    
+    int start = bestDeliveryMan.getLocation();
+    // Add route do delivery até warehouse
+    while (start != bestWarehouse.getWarehouseLocation()) {
+        routeMin.insert(routeMin.begin(),start);
+        start = parent[start];
+    }
+    // Add route da warehouse até destino
+    while (start != origin) {
+        routeMin.insert(routeMin.begin(),start);
+        start = parent[start];
+    }
 
-    int current = bestDeliveryMan.getLocation();
-    routeMin.push_back(current);
-    while(current != bestDeliveryMan.getLocation()){
-        current = parentToDelivery[current];
-        routeMin.push_back(current);
-    }
-    while(current != order.getDestination()){
-        current = parent[current];
-        routeMin.push_back(current);
-    }
+    // Adicione o vértice de origem ao caminho
+    routeMin.insert(routeMin.begin(),origin);
 
     ReturnFindRoutOpt* result = new ReturnFindRoutOpt;
     result->distanceTotal = ptrBestDistance; 

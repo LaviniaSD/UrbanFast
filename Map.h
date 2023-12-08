@@ -20,7 +20,7 @@
 using namespace std;
 struct ReturnFindRoutOpt {
     int* distanceTotal; // Distância total da rota otimizada
-    std::vector<int> routeMin; // Rota mínima otimizada
+    vector<int> routeMin; // Rota mínima otimizada
     DeliveryMan* nearestDMan; // Entregador mais próximo
 };
 
@@ -259,10 +259,13 @@ class Map {
         ReturnDijkstra FindRoute(Order order, DeliveryMan deliveryman);
 
         // Additional method initialize to PRIM
-        void initializePRIM(int* origin, int* parent, bool* inTree,int* verticeCost);
+        void initializePRIM(int origin, int* parent, bool* inTree,int* verticeCost);
+
+        // Get the path by parrent array
+        vector<int> getPathParent(int* parent, int origin, int start);
 
         // Additional method to create a MST 
-        ReturnMstPRIM* mstPrim(int* origin, int* parent);
+        ReturnMstPRIM* mstPrim(int origin, int* parent);
         
         // Additional method to find the optimized route
         ReturnFindRoutOpt* FindRouteOpt(Order order);
