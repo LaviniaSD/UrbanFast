@@ -6,25 +6,35 @@
 using namespace std;
 
 int main(){
-    cout<<"Testando a funcao FindRoute"<<endl;
-
+    cout<<"Teste Q4"<<endl;
     // Generate map
     Map* map = generateMapQ4();
     Map mapClass = *map;
 
     //Generate a route
-    vector<int> route = {0, 1, 2, 3, 4, 5, 6, 7};
+    vector<int> route = {0, 1, 5,9,10};
 
     // Generate deliveryman
-    DeliveryMan deliveryman = DeliveryMan(0, 0, 10, nullptr);
+    DeliveryMan deliveryman = DeliveryMan(0, 0, 20, nullptr);
+
+    // Generate the orders
+    Order order1 = Order(0, 7, 14, 1);
+    Order order2 = Order(1, 7, 4, 1);
+    Order order3 = Order(2, 7, 11, 1);
+    Order order4 = Order(3, 7, 13, 1);
+    Order order5 = Order(4, 7, 6, 0);
+
+    // Add products to the orders
+    order1.addProducts(0,1000,1,30);
+    order2.addProducts(1,110,1,1);
+    order3.addProducts(2,700,1,18);
+    order4.addProducts(3,800,1,20);
+    order5.addProducts(4,1000,1,30);
 
     // Generate a orders array
-    vector<Order> order = {Order(0, 5, 1, 0), Order(1, 5, 1, 0), Order(2, 5, 1, 0), Order(3, 5, 1, 0), Order(4, 5, 1, 0), Order(5, 5, 1, 0), Order(6, 5, 1, 0), Order(7, 5, 1, 0)};
-
-    // Generate a route
-    ReturnDijkstra rd;
-
-    rd = mapClass.FindRoute(order, deliveryman);
-    cout << rd.minDistance << endl;
-
+    vector<Order> orders = {order1,order2,order3,order4,order5};
+    cout<<"prepare to sugest"<<endl;
+    // Sugest new orders
+    vector<int> sugestions = mapClass.OrderSuggestions(route,orders,deliveryman,110);
+    cout<<"sugestions ok"<<endl;
 }

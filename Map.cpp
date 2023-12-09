@@ -652,10 +652,12 @@ vector<Order> Map::checkNeighborhood(vector<Order> orders, vector<int> warehouse
     vector<Order> ordersToDeliver;
     // Iterate through the orders
     for(int i = 0; i < orders.size(); i++){
+        cout<<"primeiro loop"<<endl;
         // Get the origin of the order
         int origin = orders[i].getOrigin();
         // Iterate through the warehouses and sellers
         for(int j = 0; j < warehousesAndSellers.size(); j++){
+            cout<<"segundo loop"<<endl;
             // If the origin or destination of the order is a warehouse or a seller
             if(origin == warehousesAndSellers[j]){
                 // Add the order to the vector
@@ -665,6 +667,7 @@ vector<Order> Map::checkNeighborhood(vector<Order> orders, vector<int> warehouse
             }
         }
     }
+    cout<<"fim dos loops"<<endl;
     // Return the vector
     return ordersToDeliver;
 }
@@ -740,24 +743,28 @@ vector<int>  Map::knapSack(vector<OrderAgregation> orders, int iCapacity) {
 
 
 vector<int> Map::OrderSuggestions(vector<int> route, vector<Order> orders,DeliveryMan deliveryman, int maxDistance){
+    cout << "Order Suggestions" << endl;
     // Get the capacity of the deliveryman
     int iCapacity = deliveryman.getCapacity();
+    cout << "Capacity " << iCapacity << endl;
 
     // Create a vector to store the locations of the warehouses and sellers near the route
     vector<int> warehousesAndSellers = DFS(route, maxDistance);
+    cout<<"Warehouses and Sellers near the route: "<<endl;
 
     // Create a vector to store the orders that can be delivered in the neighborhood of the route
     vector<Order> ordersToDeliver = checkNeighborhood(orders, warehousesAndSellers);
-
+    cout<<"Orders that can be delivered in the neighborhood of the route: "<<endl;
     // Create a vector to store the orders agregated by weight and price
     vector<OrderAgregation> ordersAgregation;
     for (int i = 0; i < ordersToDeliver.size(); i++){
         ordersAgregation.push_back(agregateOrder(ordersToDeliver[i]));
     }
+    cout<<"Orders agregated by weight and price: "<<endl;
 
     // Create a vector to store the selected orders
     vector<int> selectedOrders = knapSack(ordersAgregation, iCapacity);
-
+    cout<<"Selected orders: "<<endl;
     // Return the vector with the selected orders
     return selectedOrders;
 }
@@ -838,10 +845,19 @@ Map* generateMapQ4() {
     map->addDeliveryMan(2, 12, 10);
     map->addDeliveryMan(2, 15, 10);
 
-    map->addWarehouse(0,7);
-    map->addWarehouse(1,6);
+    map->addWarehouse(0,4);
+    map->addWarehouse(1,13);
+    map->addWarehouse(2,14);
+    map->addWarehouse(3,6);
+    map->addWarehouse(4,11);
 
+    //Add itens to the warehouses
+    map->warehouseInMap[0].addProducts(0,1000,1,30);
+    map->warehouseInMap[0].addProducts(1,110,1,1);
+    map->warehouseInMap[0].addProducts(2,700,1,18);
+    map->warehouseInMap[0].addProducts(3,800,1,20);
     map->addSeller(1, 7);
+    map->sellerInMap[1].addProducts(4,1000,1,30);
 
 
 
