@@ -380,4 +380,4 @@ Map* generateMapQ1();
 Map* generateMapQ4();
 
 
-Map* generateMapQ1();
+Map* generateMapQ2();
