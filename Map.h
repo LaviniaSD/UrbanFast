@@ -42,7 +42,7 @@ struct ReturnMstPRIM {
 struct ReturnDijkstra{
     int* distances;
     int* parents;
-    int* minDistance;
+    int minDistance;
 };
 
 /**
@@ -299,5 +299,8 @@ class Map {
          */
         ReturnFindRoutOpt* FindRouteOpt(Order order);
 };
+// Generate a map for Q1
+Map* generateMapQ1();
+
 
 Map* generateMapQ1();
