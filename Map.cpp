@@ -544,24 +544,20 @@ ReturnMstPRIM* Map::mstPrim(int origin, int* parents){
 
 ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
     cout<<"Testando a funcao FindRouteOpt"<<endl;
-    // Initialize the array parent and verticeDistance
-    int parent[numVertices];
+    // Inicializa os veotres de 
     int origin = order.getDestination(); // Obter destinatário
-    cout<<"Gerou arrays"<<endl;
-    int numWarehouseAvaible = 0;
+
+    int numWarehouseAvaible = 0; // Contador para warehouses com produtos disponíveis
     vector<Warehouse> warehouseAvaible; // warehouseAvaible
     vector<DeliveryMan> deliveryManAvaible; //  Primeiro delivery, mais perto da warehouseAvaible (com posições correspondentes), está no vector deliveryManInMap
-    vector<int*> routeAvaible; // array de parents do deliveryManAvaible até warehouseAvaible;
-    ProductQuantity* pProducts = order.pProducts;
-    cout<<"Gerou variaveis"<<endl;
+    vector<int*> routeAvaible; // array de rotas do entregador até o destino;
+    ProductQuantity* pProducts = order.pProducts; // Obtendo lista encadeada de produtos
     
     // Avaliando warehouses
     for(int i = 0; i < numWarehouse; i++){
-        cout<<"Entrou no for"<<endl;
         // Avaliando se a warehouse contém todos os itens e ad quantidades necessárias do pedido;
         bool hasAllProducts = true;
         while(pProducts!=nullptr){
-            cout<<"Entrou no while"<<endl;
             if(!warehouseInMap[i].hasProduct(pProducts->getProduct(),pProducts->getQuantity())){
                     hasAllProducts = false;
                     break;
@@ -576,10 +572,10 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
             numWarehouseAvaible++;
         }
     }
-    int bestComp = INT_MAX;
+
+    int bestComp = INT_MAX; // Guardando comprimento da menor rota
     int idBestComp = -1;
     for(int i=0; i < numWarehouseAvaible; i++){
-        cout<<"Entrou no outro for"<<endl;
         // Obtendo o delivery mais próximo
         ReturnNearestDMen* nearestDMan = nearestDMen(warehouseAvaible[i].getWarehouseLocation(),1);
         // Distância do destino até warehouse
@@ -592,25 +588,28 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
         routeAvaible.push_back(routeDestinationWarehouse.parents);
         // Add no heap o índice da warehouse avaible com a distância total
         int tamRouteTemp = routeDestinationWarehouse.minDistance+distanceWarehouseDelivery;
+        // Atualizando se necessário
         if(tamRouteTemp<tamRouteTemp){
             idBestComp = i;
             bestComp = tamRouteTemp;
         }
     }
-    cout<<"Saiu do outro for"<<endl;
     
+    // Obtendo ponteiros para o centro de distribuição escolhido e entregador
     Warehouse* ptrBestWarehouse;
-    Warehouse bestWarehouse = warehouseAvaible[idBestComp];
+    Warehouse bestWarehouse = warehouseAvaible[idBestComp]; // Obtendo warehouse
     ptrBestWarehouse = &bestWarehouse;
     DeliveryMan* ptrBestDeliveryMan;
     DeliveryMan bestDeliveryMan = deliveryManAvaible[idBestComp]; // Obtendo delivery mais próximo
     ptrBestDeliveryMan = &bestDeliveryMan;
-    int* routeMin = routeAvaible[idBestComp];
+    int* routeMin = routeAvaible[idBestComp]; // Obtendo parents com o caminho
 
+    // Adicionando resultados na estruct de retorno
     ReturnFindRoutOpt* result = new ReturnFindRoutOpt;
     result->parents = routeMin;
     result->nearestDMan = ptrBestDeliveryMan;
     result->bestWarehouse = ptrBestWarehouse;
+    
     return result;
 }
 
