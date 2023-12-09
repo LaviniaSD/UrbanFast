@@ -28,7 +28,7 @@ ADD . .
 
 # Compile your test
 RUN g++ -std=c++14 -o my_test \
-    Task1_test.cpp \ 
+    Tests.cpp \ 
     Map.cpp \
     Order.cpp \
     DeliveryMan.cpp \
