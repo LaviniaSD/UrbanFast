@@ -548,7 +548,6 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
 
 // DFS algorithm for finding warehouses and sellers near the route
 void Map::DFS(vector<int> route, int maxDistance, vector<int>& warehousesAndSellers){
-    cout<<"=============================================="<<endl;
     // Create a vector to store the visited vertices
     vector<bool> visited(numVertices, false);
     // Create a queue to store the vertices to be visited
@@ -559,7 +558,6 @@ void Map::DFS(vector<int> route, int maxDistance, vector<int>& warehousesAndSell
     while(!queue.empty()){
         // Pop the front vertex
         int current = queue.front();
-        cout<<current<<endl;
         queue.pop();
         // If the vertex is not visited
         if(!visited[current]){
@@ -576,7 +574,6 @@ void Map::DFS(vector<int> route, int maxDistance, vector<int>& warehousesAndSell
             while(edge!=nullptr){
                 // Get the other vertex
                  int otherVertex = edge->getOtherVertex();
-                 cout<<"Outro vertice: "<<otherVertex<<endl;
                 // If the other vertex is not visited and the distance between the vertices is less than the maximum distance
                 if(!visited[otherVertex] && edge->getDistance() <= maxDistance){
                     // Push the other vertex to the queue
@@ -592,7 +589,6 @@ void Map::DFS(vector<int> route, int maxDistance, vector<int>& warehousesAndSell
 
 // Function to check which orders can be delivered in the neighborhood of the route
 void Map::checkNeighborhood(vector<Order> orders, vector<int> warehousesAndSellers, vector<Order>& ordersToDeliver){
-    cout<<"=============================================="<<endl;
     int origin;
     // Iterate through the orders
     for(int i = 0; i < orders.size(); i++){
@@ -623,11 +619,12 @@ OrderAgregation Map::agregateOrder(Order order){
     orderAgregation.iWeight = 0;
     orderAgregation.iPrice = 0;
     // Iterate through the products in the order
-    ProductQuantity* pProducts = order.pProducts;
-    while(pProducts!=nullptr){
+
+    Product* pProducts = order.pProducts;
+    while(pProducts != nullptr){
         // Add the weight and price of the product to the orderAgregation
-        orderAgregation.iWeight += pProducts->getProduct().getWeight();
-        orderAgregation.iPrice += pProducts->getProduct().getPrice();
+        orderAgregation.iWeight += pProducts->getWeight();
+        orderAgregation.iPrice += pProducts->getPrice();
         // Move to the next product
         pProducts = pProducts->getNext();
     }
@@ -678,6 +675,28 @@ void  Map::knapSack(vector<OrderAgregation> orders, int iCapacity, vector<int>& 
         --j;
     }
 
+}
+
+void Map::OrdersSugestion(vector<int> route, vector<Order> orders,DeliveryMan deliveryman ,vector<int>& selectedItems,int maxDistance){
+    //DeliveryMan bag's capacity
+    deliveryman.getCapacity();
+
+    //DFS
+    vector<int> warehousesAndSellers;
+    DFS(route,maxDistance,warehousesAndSellers);
+
+    //Check Neighborhood
+    vector<Order> ordersToDeliverAux;
+    checkNeighborhood(orders,warehousesAndSellers,ordersToDeliverAux);
+
+    // Order Agregation
+    vector<OrderAgregation> ordersAgregation;
+    for(int i = 0; i < ordersToDeliverAux.size(); i++){
+        ordersAgregation.push_back(agregateOrder(ordersToDeliverAux[i]));
+    }
+
+    // Knapsack
+    knapSack(ordersAgregation,deliveryman.getCapacity(),selectedItems);
 }
 
 
@@ -779,15 +798,11 @@ Map* generateMapQ4() {
             // Check if it's a warehouse
             if (map->warehouseList[current] != nullptr) {
                 Warehouse* currentWarehouse = map->warehouseList[current];
-                cout << "Warehouse at vertex " << current << " - Position: (" << currentWarehouse->getWarehouseLocation()<< ")" << endl;
-
             }
 
             // Check if it's a seller
             if (map->sellerList[current] != nullptr) {
                 Seller* currentSeller = map->sellerList[current];
-                cout << "Seller at vertex " << current << " - Position: (" << currentSeller->getSellerLocation() <<  ")" << endl;
-                
             }
         }
         

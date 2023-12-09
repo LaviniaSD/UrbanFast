@@ -335,6 +335,16 @@ class Map {
         */
         void knapSack(vector<OrderAgregation> orders, int iCapacity, vector<int>& selectedItems);
 
+        /**
+         * @brief Method to find the best route to a set of orders.
+         * 
+         * @param route The current route.
+         * @param orders The vector of orders.
+         * @param deliveryman The deliveryman to assign the orders to.
+         * @param selectedOrders The vector of selected orders.
+        */
+        void OrdersSugestion(vector<int> route,vector<Order> orders, DeliveryMan deliveryman,vector<int>& selectedOrders,int maxDistance=100);
+
 };
 // Generate a map for Q1
 Map* generateMapQ1();
