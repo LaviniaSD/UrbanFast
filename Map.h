@@ -317,3 +317,6 @@ class Map {
 };
 // Generate a map for Q1
 Map* generateMapQ1();
+
+// Generate a map for Q1
+Map* generateMapQ4();
