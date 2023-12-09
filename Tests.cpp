@@ -33,7 +33,7 @@ struct caseData {
 };
 
 // Function to read a case from a txt file and return a caseData struct
-bool readCaseData(caseData* data, string fileName) {
+bool readCaseData(caseData data, string fileName) {
 
     ifstream file(fileName);
 
@@ -151,8 +151,9 @@ bool readCaseData(caseData* data, string fileName) {
 Map* LoadMap(string fileName) {
 
     caseData data;
+    string filename;
 
-    if (!readCaseData(&data, filename)) {
+    if (!readCaseData(data, filename)) {
         return nullptr;
     }
 
