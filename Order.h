@@ -16,86 +16,6 @@
 using namespace std;
 
 /**
- * @struct ProductQuantity
- * @brief Represents the quantity of a product in an order.
- * 
- * The ProductQuantity struct contains information about the product, the quantity, and a pointer to the next product quantity node.
- */
-struct ProductQuantity{
-    Product pProduct; // Product information
-    int iQuantity; // Quantity of the product
-    ProductQuantity* next; // Pointer to the next product quantity node
-
-    /**
-     * @brief Constructor for ProductQuantity.
-     * @param pProduct The product information.
-     * @param iQuantity The quantity of the product.
-     */
-    ProductQuantity(Product const& pProduct, int iQuantity) : pProduct(pProduct), iQuantity(iQuantity), next(nullptr) {}
-
-    /**
-     * @brief Destructor for ProductQuantity.
-     */
-    ~ProductQuantity() {
-        // Free the dynamically allocated memory for the next nodes
-        while (next != nullptr) {
-            ProductQuantity* temp = next;
-            next = next->getNext();
-            delete temp;
-        }
-    }
-
-    /**
-     * @brief Get the product information.
-     * @return The product information.
-     */
-    Product getProduct() const {
-        return pProduct;
-    }
-
-    /**
-     * @brief Get the quantity of the product.
-     * @return The quantity of the product.
-     */
-    int getQuantity() const {
-        return iQuantity;
-    }
-
-    /**
-     * @brief Get the pointer to the next product quantity node.
-     * @return The pointer to the next product quantity node.
-     */
-    ProductQuantity* getNext() const {
-        return next;
-    }
-
-    /**
-     * @brief Set the product information.
-     * @param product The product information to set.
-     */
-    void setProduct(Product& product) {
-        pProduct = product;
-    }
-
-    /**
-     * @brief Set the quantity of the product.
-     * @param quantity The quantity of the product to set.
-     */
-    void setQuantity(int quantity) {
-        iQuantity = quantity;
-    }
-
-    /**
-     * @brief Set the pointer to the next product quantity node.
-     * @param nextNode The pointer to the next product quantity node to set.
-     */
-    void setNext(ProductQuantity* nextNode) {
-        next = nextNode;
-    }
-
-};
-
-/**
  * @class Order
  * @brief Represents an order in the UrbanFast system.
  * 
@@ -112,7 +32,7 @@ class Order {
         Order* next; // Pointer to the next order
  
     public:
-        ProductQuantity* pProducts; // Pointer to the linked list of product quantities in the order
+        Product* pProducts; // Pointer to the linked list of product quantities in the order
 
         /**
          * @brief Constructor for the Order class.
@@ -231,6 +151,6 @@ class Order {
          * @param iQuantity The quantity of the product.
          * @param iWeight The weight of the product.
          */
-        void addProducts(int iProductID, int iPriceProduct, int iQuantityProduct, int iWeightProduct);
+        void addProducts(int iProductID, int iPrice, int iQuantity, int iWeight);
 
 };
