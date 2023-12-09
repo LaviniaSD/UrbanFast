@@ -13,9 +13,7 @@ int main(){
     cout<< "AAAAAAAH"<<endl;
     ReturnFindRoutOpt* result =  mapClass.FindRouteOpt(pedido);
     cout << "OLA" << endl;
-    for(int i; i<result->numVerticeRoute;i++){
-        cout << result->routeMin[i] << endl;
-    }
+
 
     return 0;
 }

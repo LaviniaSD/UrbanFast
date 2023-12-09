@@ -605,10 +605,10 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
     DeliveryMan* ptrBestDeliveryMan;
     DeliveryMan bestDeliveryMan = deliveryManAvaible[idBestComp]; // Obtendo delivery mais próximo
     ptrBestDeliveryMan = &bestDeliveryMan;
-    int* routeMin = routeAvaible[idBestComp]
+    int* routeMin = routeAvaible[idBestComp];
 
     ReturnFindRoutOpt* result = new ReturnFindRoutOpt;
-    result->routeMin = routeMin;
+    result->parents = routeMin;
     result->nearestDMan = ptrBestDeliveryMan;
     result->bestWarehouse = ptrBestWarehouse;
     return result;

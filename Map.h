@@ -20,7 +20,7 @@
 
 using namespace std;
 struct ReturnFindRoutOpt {
-    vector<int> routeMin; // Rota mínima otimizada
+    int* parents; // Rota mínima otimizada
     DeliveryMan* nearestDMan; // Entregador mais próximo
     Warehouse* bestWarehouse; // Warehouse escolhida
 };
