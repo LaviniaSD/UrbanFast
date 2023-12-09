@@ -20,6 +20,7 @@
 
 using namespace std;
 struct ReturnFindRoutOpt {
+    int numVerticeRoute;
     int* distanceTotal; // Distância total da rota otimizada
     vector<int> routeMin; // Rota mínima otimizada
     DeliveryMan* nearestDMan; // Entregador mais próximo

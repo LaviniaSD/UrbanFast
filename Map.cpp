@@ -602,22 +602,26 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
     int* parentToDelivery = parentsAvaible[indiceBestWarehouse]; // Vetor de parents do delivery até warehouse
     vector<int> routeMin;
     
+    int numVerticesRoute = 1;
     int start = bestDeliveryMan.getLocation();
     // Add route do delivery até warehouse
     while (start != bestWarehouse.getWarehouseLocation()) {
         routeMin.insert(routeMin.begin(),start);
         start = parent[start];
+        numVerticesRoute++;
     }
     // Add route da warehouse até destino
     while (start != origin) {
         routeMin.insert(routeMin.begin(),start);
         start = parent[start];
+        numVerticesRoute++;
     }
 
     // Adicione o vértice de origem ao caminho
     routeMin.insert(routeMin.begin(),origin);
 
     ReturnFindRoutOpt* result = new ReturnFindRoutOpt;
+    result->numVerticeRoute = numVerticesRoute;
     result->distanceTotal = ptrBestDistance; 
     result->routeMin = routeMin;
     result->nearestDMan = ptrBestDeliveryMan;
