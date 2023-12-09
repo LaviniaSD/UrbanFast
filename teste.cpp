@@ -7,7 +7,7 @@ int main(){
     Map* map = generateMapQ1();
     Map mapClass = *map;
 
-    Order pedido(0,16,0,true);
+    Order pedido(0,15,0,true);
 
     cout<< "OI"<< endl;
     cout<< "AAAAAAAH"<<endl;

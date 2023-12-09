@@ -468,12 +468,13 @@ void Map::initializePRIM(int origin, int* parent, bool* inTree, int* verticeDist
     EdgeNode* edge = edgesList[origin]; // Get the edges connected to vertex origin
 
     // Update distances for vertices connected to vertex origin
-    while (edge) {
+    while (edge!=nullptr) {
         int v2 = edge->getOtherVertex(); // Get the other end of the edge
         parent[v2] = origin;             // Vertex origin is the parent of v2
         verticeDistance[v2] = edge->getDistance(); // Update distance to v2
         edge = edge->getNext();           // Move to the next edge
     }
+    cout<<"Saiu do while no initializePRIM"<<endl;
 }
 
 vector<int> Map::getPathParent(int* parent, int origin, int start){
@@ -489,10 +490,10 @@ vector<int> Map::getPathParent(int* parent, int origin, int start){
     return path;
 }
 
-ReturnMstPRIM* Map::mstPrim(int origin, int* parents){
+ReturnMstPRIM Map::mstPrim(int origin, int* parents){
     // Arrays to track whether a vertex is in the MST and its distance from the MST
-    bool inTree[numVertices];
-    int distances[numVertices];
+    bool* inTree = new bool[numVertices];
+    int* distances = new int[numVertices];
 
     // Initialize the arrays using the helper function
     initializePRIM(origin, parents, inTree, distances);
@@ -500,7 +501,6 @@ ReturnMstPRIM* Map::mstPrim(int origin, int* parents){
 
     // Push all vertices (except the root) into the heap with their initial distances
     for (int v = 1; v < numVertices; v++) { heap.push(v, distances[v]); }
-    
     // Continue until all vertices are included in the MST
     while (heap.getSize()!=0) {
 
@@ -533,30 +533,37 @@ ReturnMstPRIM* Map::mstPrim(int origin, int* parents){
             edge = edge->getNext();
         }
     }
-    ReturnMstPRIM* result = new ReturnMstPRIM;
-    result->distances = distances;
-    result->parents = parents;
+    ReturnMstPRIM result;
+    result.distances = distances;
+    result.parents = parents;
+    cout<<"Terminou o mstPrim"<<endl;
 
     return result;
 
 }
 
 ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
+    cout<<"Testando a funcao FindRouteOpt"<<endl;
     // Initialize the array parent and verticeDistance
     int parent[numVertices];
     int origin = order.getDestination(); // Obter destinatário
-    ReturnMstPRIM* Prim = mstPrim(origin, parent);
+    cout<<"Gerou arrays"<<endl;
+    ReturnMstPRIM Prim = mstPrim(origin, parent);
+    cout<<"Gerou Prim"<<endl;
     int numWarehouseAvaible = 0;
     vector<Warehouse> warehouseAvaible; // warehouseAvaible
     vector<DeliveryMan> deliveryManAvaible; //  Primeiro delivery, mais perto da warehouseAvaible (com posições correspondentes), está no vector deliveryManInMap
     vector<int*> parentsAvaible; // array de parents do deliveryManAvaible até warehouseAvaible;
     ProductQuantity* pProducts = order.pProducts;
+    cout<<"Gerou variaveis"<<endl;
     
     // Avaliando warehouses
     for(int i = 0; i < numWarehouse; i++){
+        cout<<"Entrou no for"<<endl;
         // Avaliando se a warehouse contém todos os itens e ad quantidades necessárias do pedido;
         bool hasAllProducts = true;
         while(pProducts!=nullptr){
+            cout<<"Entrou no while"<<endl;
             if(!warehouseInMap[i].hasProduct(pProducts->getProduct(),pProducts->getQuantity())){
                     hasAllProducts = false;
                     break;
@@ -571,13 +578,14 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
             numWarehouseAvaible++;
         }
     }
-
+    cout<<"Saiu do for"<<endl;
     Heap heap(-1);
     for(int i=0; i < numWarehouseAvaible; i++){
+        cout<<"Entrou no outro for"<<endl;
         // Obtendo o delivery mais próximo
         ReturnNearestDMen* nearestDMan = nearestDMen(warehouseAvaible[i].getWarehouseLocation(),1);
         // Distância do destino até warehouse
-        int distanceDestinyWarehouse = Prim->distances[warehouseAvaible[i].getWarehouseLocation()];
+        int distanceDestinyWarehouse = Prim.distances[warehouseAvaible[i].getWarehouseLocation()];
         // Distância da warehouse até delivery
         int distanceWarehouseDelivery = nearestDMan->distances[nearestDMan->nearDMen[0]]; 
         // Add delivery no vetor de deliverys avaibles
@@ -587,6 +595,7 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
         // Add no heap o índice da warehouse avaible com a distância total
         heap.push(i, distanceDestinyWarehouse+distanceWarehouseDelivery);
     }
+    cout<<"Saiu do outro for"<<endl;
     
 
     int indiceBestWarehouse = heap.getTop().id; // Posição no vetor warehouseAvaible
