@@ -54,6 +54,20 @@ struct ReturnNearestDMen {
 };
 
 /**
+ * @brief Struct that represents an aggregated order.
+ * 
+ * This struct contains three integers: iIDNumber, iWeight, and iPrice.
+ * - iIDNumber: the ID number of the order.
+ * - iWeight: the weight of the order.
+ * - iPrice: the price of the order.
+ */
+struct OrderAgregation {
+    int iIDNumber;
+    int iWeight;
+    int iPrice;
+};
+
+/**
  * @brief Class representing a city map as a graph, through an adjacency list.
  * 
  * This class stores information about a map, including the number of vertices, edges, deliverymen, warehouses, and sellers.
@@ -273,9 +287,60 @@ class Map {
          * @return The result of finding the optimized route.
          */
         ReturnFindRoutOpt* FindRouteOpt(Order order);
+
+        /**
+         * @brief Method to find the warehouses and sellers that are within a given distance from a given route.
+         * 
+         * @param route The current route.
+         * @param maxDistance The maximum distance allowed.
+         * @param warehousesAndSellers The vector of warehouses and sellers.
+         */
+        void DFS(vector<int> route, int maxDistance, vector<int>& warehousesAndSellers);
+
+
+        /**
+         * @brief Method to check if a given order is within the neighborhood of a given route.
+         * 
+         * @param orders The vector of orders.
+         * @param warehousesAndSellers The vector of warehouses and sellers.
+         * @param possibleOrders The vector of possible orders.
+        */
+        void checkNeighborhood(vector<Order> orders, vector<int> warehousesAndSellers, vector<Order>& ordersToDeliver);
+
+        /**
+         * @brief Method to aggregate an order by its products.
+         * 
+         * @param order The order to aggregate.
+         * @return The aggregated order.
+         */
+        OrderAgregation agregateOrder(Order order);
+
+        /**
+         * @brief Method to support the knapsack algorithm.
+         * 
+         * @param i The current index.
+         * @param orders The vector of orders.
+         * @param dp The knapsack matrix.
+         * @param iCapacity The capacity of the knapsack.
+         * @return The result of the knapsack algorithm.
+        */
+        int knapSackMax(int i,vector<OrderAgregation> orders, vector<vector<int>>& dp, int iCapacity);
+
+        /**
+         * @brief Method to perform the knapsack algorithm.
+         *  
+         * @param orders The vector of orders.
+         * @param iCapacity The capacity of the knapsack.
+         * @param possibleOrders The vector of possible orders.
+        */
+        void knapSack(vector<OrderAgregation> orders, int iCapacity, vector<int>& selectedItems);
+
 };
 // Generate a map for Q1
 Map* generateMapQ1();
+
+// Generate a map for Q1
+Map* generateMapQ4();
 
 
 Map* generateMapQ1();
