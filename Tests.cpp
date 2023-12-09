@@ -1,7 +1,196 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <string>
 #include <algorithm>
+#include <filesystem>
 #include <gtest/gtest.h>
 #include "Map.h"
+
+using namespace std;
+namespace fs = std::filesystem;
+
+struct caseData {
+    // Counters
+    int numVertices = 0;
+    int numEdges = 0;
+    int numDeliveryMen = 0;
+    int numItems = 0;
+    int numSellers = 0;
+    int numWarehouses = 0;
+    int numOrders = 0;
+    int noiseLevel = 0;
+    int questionNumber = 0;
+
+    // Definitions
+    vector<vector<int>> edges;
+    vector<vector<int>> deliveryMen;
+    vector<vector<int>> items;
+    vector<vector<int>> sellers;
+    vector<vector<int>> warehouses;
+    vector<vector<int>> orders;
+};
+
+// Function to read a case from a txt file and return a caseData struct
+bool readCaseData(caseData* data, string fileName) {
+
+    ifstream file(fileName);
+
+    if (!file.is_open()) {
+        cerr << "Unable to open file: " << fileName << endl;
+        return 1;
+    }
+
+    caseData data;
+
+    string line;
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string marker;
+        ss >> marker;
+
+        // Vertice count
+        if (marker == "VC") {
+            ss >> data.numVertices;
+
+        // Edge count
+        } else if (marker == "EC") {
+            ss >> data.numEdges;
+        }
+
+        // Delivery Men Count
+        else if (marker == "DMC") {
+            ss >> data.numDeliveryMen;
+        }
+
+        // Items Count
+        else if (marker == "IC") {
+            ss >> data.numItems;
+        }
+
+        // Sellers Count
+        else if (marker == "SC") {
+            ss >> data.numSellers;
+        }
+
+        // Warehouses Count
+        else if (marker == "WC") {
+            ss >> data.numWarehouses;
+        }
+
+        // Orders Count
+        else if (marker == "OC") {
+            ss >> data.numOrders;
+        }
+
+        // Noise Level
+        else if (marker == "NL") {
+            ss >> data.noiseLevel;
+        }
+
+        // Question Number
+        else if (marker == "QN") {
+            ss >> data.questionNumber;
+        }
+
+        // Edges Definition
+        else if (marker == "ED") {
+            int a, b, c;
+            ss >> a >> b >> c;
+            data.edges.push_back({a, b, c});
+        }
+
+        // Delivery Men Definition
+        else if (marker == "DM") {
+            int a, b, c;
+            ss >> a >> b >> c;
+            data.edges.push_back({a, b, c});
+        }
+
+        // Items Definition
+        else if (marker == "ID") {
+            int a, b, c;
+            ss >> a >> b >> c;
+            data.items.push_back({a, b, c});
+        }
+
+        // Sellers Definition
+        else if (marker == "SD") {
+            int a, b;
+            ss >> a >> b;
+            data.sellers.push_back({a, b});
+        }
+
+        // Warehouses Definition
+        else if (marker == "DCD") {
+            int a, b;
+            ss >> a >> b;
+            data.warehouses.push_back({a, b});
+        }
+
+        // Orders Definition
+        else if (marker == "OD") {
+            int a, b;
+            ss >> a >> b;
+            data.orders.push_back({a, b});
+        }
+
+        // Unknown marker
+        else {
+            cout << "Unknown marker: " << marker << endl;
+            return false;
+        }
+
+    }
+
+    file.close();
+    return true;
+}
+
+Map* LoadMap(string fileName) {
+
+    caseData data;
+
+    if (!readCaseData(&data, filename)) {
+        return nullptr;
+    }
+
+    // Instantiate map
+    Map* map = new Map(data.numVertices);
+
+    // Add edges
+    for (vector<int> edge : data.edges) {
+        map->addEdge(edge[0], edge[1], edge[2]);
+    }
+
+    // Add Delivery Men
+    for (vector<int> deliveryMan : data.deliveryMen) {
+        map->addDeliveryMan(deliveryMan[0], deliveryMan[1], deliveryMan[2]);
+    }
+
+    // Add Items
+    for (vector<int> item : data.items) {
+        map->addItem(item[0], item[1], item[2]);
+    }
+
+    // Add Sellers
+    for (vector<int> seller : data.sellers) {
+        map->addSeller(seller[0], seller[1]);
+    }
+
+    // Add Warehouses
+    for (vector<int> warehouse : data.warehouses) {
+        map->addWarehouse(warehouse[0], warehouse[1]);
+    }
+
+    // Add Orders
+    for (vector<int> order : data.orders) {
+        map->addOrder(order[0], order[1]);
+    }
+
+    return map;
+}
 
 Map* generateMapTest() {
     Map* map = new Map(16);
@@ -39,7 +228,6 @@ Map* generateMapTest() {
 
     return map;
 }
-
 
 class MapTest : public ::testing::Test {
 protected:
@@ -137,3 +325,24 @@ int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
+
+/*
+
+FILE ITERATOR OVER DIRECTORY EXAMPLE
+
+
+#include <string>
+#include <iostream>
+#include <filesystem>
+namespace fs = std::filesystem;
+ 
+int main() {
+  std::string path = "./cases/";
+
+  for (const auto & entry : fs::directory_iterator(path)) {
+    std::cout << entry.path() << std::endl;
+  }
+}
+
+
+*/
