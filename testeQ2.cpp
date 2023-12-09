@@ -24,4 +24,12 @@ int main(){
     rd = mapClass.FindRoute(order, deliveryman);
     cout << rd.minDistance << endl;
 
+    cout << "Caminho: " << endl;
+    int current = order.getDestination();
+    while (rd.parents[current] != current){
+        cout << current << "<- ";
+        current = rd.parents[current];
+    }
+    cout << current << endl;
+
 }
