@@ -163,12 +163,29 @@ class Map {
         void addDeliveryMan(int iDeliveryManID, int iDeliveryManLocation,int iCapacity);
 
         /**
+         * @brief Method to add a new DeliveryMan to the Map.
+         * 
+         * @param iDeliveryManID The ID of the deliveryman.
+         * @param iDeliveryManLocation The vertice location of the deliveryman.
+         * @param iCapacity The weight capacity of the deliveryman.
+         */
+        void addDeliveryMan(DeliveryMan* newDeliveryMan);
+
+        /**
          * @brief Method to add a new Warehouse to the Map.
          * 
          * @param iWarehouseID The ID of the warehouse.
          * @param iWarehouseLocation The location of the warehouse.
          */
         void addWarehouse(int iWarehouseID, int iWarehouseLocation);
+
+         /**
+         * @brief Method to add a new Warehouse to the Map.
+         * 
+         * @param iWarehouseID The ID of the warehouse.
+         * @param iWarehouseLocation The location of the warehouse.
+         */
+        void addWarehouse(Warehouse* newWarehouse);
 
         /**
          * @brief Method to add a new Seller to the Map.
@@ -177,6 +194,16 @@ class Map {
          * @param iSellerLocation The location of the seller.
          */
         void addSeller(int iSellerID, int iSellerLocation);
+
+        /**
+         * @brief Method to add a new edge between two vertices in the Map.
+         * 
+         * @param v1 The first vertex.
+         * @param v2 The second vertex.
+         * @param distance The distance between the two vertices.
+         */
+
+        void addSeller(Seller* newSeller);
 
         /**
          * @brief Method to add a new edge between two vertices in the Map.

@@ -25,10 +25,11 @@ class Order {
     private:
         bool bType; // Type of the order (0 for simple, 1 for optimized)
         int iOrderNumber; // Order number
-        int iOrigin; // Origin of the order
+        int iOrigin; // Origin of the order 
         int iDestination; // Destination of the order
         int iPrice; // Total price of the order
         int iWeight; // Total weight of the order
+        int numTypeProducts; // Total types of products
         Order* next; // Pointer to the next order
  
     public:
@@ -144,6 +145,14 @@ class Order {
             return next;
         }
 
+                /**
+         * @brief Get the numTypeProducts.
+         * @return numTypeProducts.
+         */
+        int getNumTypeProducts(){
+            return numTypeProducts;
+        }
+
         /**
          * @brief Add products to the order.
          * @param iProductID The ID of the product.
@@ -153,4 +162,12 @@ class Order {
          */
         void addProducts(int iProductID, int iPrice, int iQuantity, int iWeight);
 
+        /**
+         * @brief Add products to the order.
+         * @param iProductID The ID of the product.
+         * @param iPrice The price of the product.
+         * @param iQuantity The quantity of the product.
+         * @param iWeight The weight of the product.
+         */
+        void addProducts(Product* newProduct);
 };

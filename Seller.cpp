@@ -37,6 +37,17 @@ void Seller::addProducts(int iProductID, int iPrice, int iQuantity, int iWeight)
     }
 }
 
+// Method to add products to the seller's product list
+void Seller::addProducts(Product* newProduct){
+    if(!pProductsList){
+        pProductsList = newProduct;
+    }
+    else{
+        newProduct->setNext(pProductsList);
+        pProductsList = newProduct;
+    }
+}
+
 // Method to remove products from the seller's product list
 void Seller::removeProducts(int iProductID, int iQuantity) {
     Product* currentProduct = pProductsList;

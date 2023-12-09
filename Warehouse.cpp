@@ -37,6 +37,17 @@ void Warehouse::addProducts(int iProductID, int iPrice, int iQuantity, int iWeig
     }
 }
 
+// Method to add products to the warehouse's product list
+void Warehouse::addProducts(Product* newProduct){
+    if(!pProductsList){
+        pProductsList = newProduct;
+    }
+    else{
+        newProduct->setNext(pProductsList);
+        pProductsList = newProduct;
+    }
+}
+
 // Method to remove products from the warehouse's product list
 void Warehouse::removeProducts(int iProductID, int iQuantity) {
     Product* currentProduct = pProductsList;

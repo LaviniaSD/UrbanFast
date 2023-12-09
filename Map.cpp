@@ -87,6 +87,21 @@ void Map::addDeliveryMan(int iDeliveryManID, int iDeliveryManLocation, int iCapa
     numDeliveryMan++;
 }
 
+void Map::addDeliveryMan(DeliveryMan* newDeliveryMan) {
+    // Adds a new DeliveryMan to the list
+    if(deliveryManList[newDeliveryMan->getLocation()]==nullptr){
+        deliveryManList[newDeliveryMan->getLocation()] = newDeliveryMan;
+    }
+    else{
+        newDeliveryMan->setNext(deliveryManList[newDeliveryMan->getLocation()]);
+        deliveryManList[newDeliveryMan->getLocation()] = newDeliveryMan;
+    }
+    // Adds a new DeliveryMan to the vector
+    deliveryManInMap.push_back(*newDeliveryMan);
+    numDeliveryMan++;
+}
+
+
 
 void Map::addWarehouse(int iWarehouseID, int iWarehouseLocation) {
     // Adds a new Warehouse to the list
@@ -103,6 +118,20 @@ void Map::addWarehouse(int iWarehouseID, int iWarehouseLocation) {
     numWarehouse++;
 }
 
+void Map::addWarehouse(Warehouse* newWarehouse) {
+    // Adds a new Warehouse to the list
+    if(warehouseList[newWarehouse->getWarehouseLocation()]==nullptr){
+        warehouseList[newWarehouse->getWarehouseLocation()] = newWarehouse;
+    }
+    else{
+        newWarehouse->setNext(warehouseList[newWarehouse->getWarehouseLocation()]);
+        warehouseList[newWarehouse->getWarehouseLocation()] = newWarehouse;
+    }
+    // Adds a new Warehouse to the vector
+    warehouseInMap.push_back(*newWarehouse);
+    numWarehouse++;
+}
+
 
 void Map::addSeller(int iSellerID,int iSellerLocation) {
     // Adds a new Seller to the list
@@ -113,6 +142,20 @@ void Map::addSeller(int iSellerID,int iSellerLocation) {
     else{
         newSeller->setNext(sellerList[iSellerLocation]);
         sellerList[iSellerLocation] = newSeller;
+    }
+    // Adds a new Seller to the vector
+    sellerInMap.push_back(*newSeller);
+    numSeller++;
+}
+
+void Map::addSeller(Seller* newSeller) {
+    // Adds a new Seller to the list
+    if(sellerList[newSeller->getSellerLocation()]==nullptr){
+        sellerList[newSeller->getSellerLocation()] = newSeller;
+    }
+    else{
+        newSeller->setNext(sellerList[newSeller->getSellerLocation()]);
+        sellerList[newSeller->getSellerLocation()] = newSeller;
     }
     // Adds a new Seller to the vector
     sellerInMap.push_back(*newSeller);
@@ -481,7 +524,7 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
     for(int i = 0; i < numWarehouse; i++){
         // Avaliando se a warehouse contém todos os itens e quantidades necessárias do pedido
         bool hasAllProducts = true;
-        Product* currentProduct = order.pProducts;
+        Product* currentProduct = warehouseInMap[i].pProductsList;
         while (currentProduct != nullptr) {
             if (!warehouseInMap[i].hasProduct(*currentProduct, currentProduct->getQuantity())) {
                 hasAllProducts = false;
@@ -815,5 +858,53 @@ Map* generateMapQ4() {
         
     }
     
+    return map;
+}
+
+Map* generateMapQ2() {
+    Map* map = new Map(16);
+    
+    map->addEdge(0,1, 61);
+    map->addEdge(0,4, 98);
+    map->addEdge(1,2, 114);
+    map->addEdge(1,5, 115);
+    map->addEdge(2,3, 93);
+    map->addEdge(2,6, 87);
+    map->addEdge(3,7, 107);
+    map->addEdge(4,5, 105);
+    map->addEdge(4,8, 128);
+    map->addEdge(5,6, 70);
+    map->addEdge(5,9, 74);
+    map->addEdge(6,7, 103);
+    map->addEdge(6,10, 115);
+    map->addEdge(7,11, 116);
+    map->addEdge(8,9, 127);
+    map->addEdge(8,12, 96);
+    map->addEdge(9,10, 97);
+    map->addEdge(9,13, 116);
+    map->addEdge(10,11, 99);
+    map->addEdge(10,14, 104);
+    map->addEdge(11,15, 95);
+    map->addEdge(12,13, 123);
+    map->addEdge(13,14, 63);
+    map->addEdge(14,15, 127);
+
+    map->addDeliveryMan(1, 4, 10);
+    map->addDeliveryMan(2, 11, 10);
+    map->addDeliveryMan(2, 14, 10);
+
+    map->addWarehouse(0,4);
+    map->addWarehouse(1,13);
+    map->addWarehouse(2,14);
+    map->addWarehouse(3,6);
+    map->addWarehouse(4,11);
+
+    map->addSeller(0,8);
+    map->sellerInMap[0].addProducts(0,1,2,1);
+    map->warehouseInMap[0].addProducts(0,1,2,1);
+    map->warehouseInMap[0].addProducts(1,2,3,1);
+    map->warehouseInMap[1].addProducts(0,1,2,1);
+    map->warehouseInMap[1].addProducts(2,2,3,1);
+
     return map;
 }

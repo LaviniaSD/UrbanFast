@@ -104,6 +104,16 @@ class Warehouse {
         void addProducts(int iProductNumber, int iPrice, int iQuantity, int iWeight);
 
         /**
+         * @brief Method to add products to the warehouse's product list.
+         * 
+         * @param iProductNumber The number of the product.
+         * @param iPrice The price of the product.
+         * @param iQuantity The quantity of the product.
+         * @param iWeight The weight of the product.
+         */
+        void addProducts(Product* newProduct);
+
+        /**
          * @brief Method to remove products from the warehouse's product list.
          * 
          * @param iProductID The ID of the product.

@@ -105,6 +105,16 @@ class Seller {
         void addProducts(int iProductNumber, int iPrice, int iQuantity, int iWeight);
 
         /**
+         * @brief Method to add products to the seller's product list.
+         * 
+         * @param iProductNumber The product number.
+         * @param iPrice The price of the product.
+         * @param iQuantity The quantity of the product.
+         * @param iWeight The weight of the product.
+         */
+        void addProducts(Product* newProduct);
+
+        /**
          * @brief Method to remove products from the seller's product list.
          * 
          * @param iProductID The ID of the product to be removed.

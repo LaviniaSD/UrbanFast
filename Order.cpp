@@ -8,7 +8,8 @@ Order::Order(int iOrderNumber, int iDestination, int iOrigin, bool bType)
       pProducts(nullptr),
       bType(bType),
       iPrice(0),
-      iWeight(0) {}
+      iWeight(0),
+      numTypeProducts(0) {}
 
 Order::~Order() {
     // Free the dynamically allocated memory for the product items
@@ -30,5 +31,18 @@ void Order::addProducts(int iProductID, int iPrice, int iQuantity, int iWeight) 
     }
     iPrice += iPrice * iQuantity;
     iWeight += iWeight * iQuantity;
+    numTypeProducts++;
 }
 
+void Order::addProducts(Product* newProduct) {
+    if(!pProducts){
+        pProducts = newProduct;
+    }
+    else{
+        newProduct->setNext(pProducts);
+        pProducts = newProduct;
+    }
+    iPrice += iPrice * newProduct->getQuantity();
+    iWeight += iWeight * newProduct->getQuantity();
+    numTypeProducts++;
+}
