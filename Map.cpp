@@ -624,6 +624,141 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
     return result;
 }
 
+// DFS algorithm for finding warehouses and sellers near the route
+void Map::DFS(vector<int> route, int maxDistance, vector<int>& warehousesAndSellers){
+    cout<<"=============================================="<<endl;
+    // Create a vector to store the visited vertices
+    vector<bool> visited(numVertices, false);
+    // Create a queue to store the vertices to be visited
+    queue<int> queue; 
+    // Push the first vertex to the queue
+    queue.push(route[0]);
+    // While the stack is not empty
+    while(!queue.empty()){
+        // Pop the front vertex
+        int current = queue.front();
+        cout<<current<<endl;
+        queue.pop();
+        // If the vertex is not visited
+        if(!visited[current]){
+            // Mark the vertex as visited
+            visited[current] = true;
+            // If the vertex is a warehouse or a seller
+            if(warehouseList[current] != nullptr || sellerList[current] != nullptr){
+                // Push the vertex to the vector
+                warehousesAndSellers.push_back(current);
+            }
+            // Get the edges connected to the vertex
+            EdgeNode* edge = edgesList[current];
+            // While there are edges connected to the vertex
+            while(edge!=nullptr){
+                // Get the other vertex
+                 int otherVertex = edge->getOtherVertex();
+                 cout<<"Outro vertice: "<<otherVertex<<endl;
+                // If the other vertex is not visited and the distance between the vertices is less than the maximum distance
+                if(!visited[otherVertex] && edge->getDistance() <= maxDistance){
+                    // Push the other vertex to the queue
+                    queue.push(otherVertex);
+                }
+                // Move to the next edge
+                edge = edge->getNext();
+            }
+            visited[current] = true;
+        }
+    }
+}
+
+// Function to check which orders can be delivered in the neighborhood of the route
+void Map::checkNeighborhood(vector<Order> orders, vector<int> warehousesAndSellers, vector<Order>& ordersToDeliver){
+    cout<<"=============================================="<<endl;
+    int origin;
+    // Iterate through the orders
+    for(int i = 0; i < orders.size(); i++){
+        // Get the origin of the order
+        origin = orders[i].getOrigin();
+        // Iterate through the warehouses and sellers
+        for(int j = 0; j < warehousesAndSellers.size(); j++){
+            // If the origin or destination of the order is a warehouse or a seller
+            if(origin == warehousesAndSellers[j]){
+                // Add the order to the vector
+                ordersToDeliver.push_back(orders[i]);
+                // Break the loop
+                break;
+            }
+        }
+    }
+}
+
+
+
+// Function to agregate the weight and value of the items in a order
+OrderAgregation Map::agregateOrder(Order order){
+    // Create a new OrderAgregation
+    OrderAgregation orderAgregation;
+    // Set the order number
+    orderAgregation.iIDNumber = order.getOrderNumber();
+    // Set the weight and price to 0
+    orderAgregation.iWeight = 0;
+    orderAgregation.iPrice = 0;
+    // Iterate through the products in the order
+    ProductQuantity* pProducts = order.pProducts;
+    while(pProducts!=nullptr){
+        // Add the weight and price of the product to the orderAgregation
+        orderAgregation.iWeight += pProducts->getProduct().getWeight();
+        orderAgregation.iPrice += pProducts->getProduct().getPrice();
+        // Move to the next product
+        pProducts = pProducts->getNext();
+    }
+    // Return the orderAgregation
+    return orderAgregation;
+}
+
+
+// Auxiliar function to knapsack
+int  Map::knapSackMax(int i, vector<OrderAgregation> orders, vector<vector<int>>& dp, int iCapacity) {
+    if(dp[i][iCapacity] == -1){
+        if (orders[i].iWeight > iCapacity) {
+            dp[i][iCapacity] = knapSackMax(i - 1, orders, dp, iCapacity);
+        } else {
+            int inKnapsack = orders[i].iPrice + knapSackMax(i - 1, orders, dp, iCapacity - orders[i].iWeight);
+            int notinKnapsack = knapSackMax(i - 1, orders, dp, iCapacity);
+            dp[i][iCapacity] = max(inKnapsack, notinKnapsack);
+        }
+    }
+    return dp[i][iCapacity];
+}
+
+// Main function to knapsack
+void  Map::knapSack(vector<OrderAgregation> orders, int iCapacity, vector<int>& selectedItems) {
+    // Create a matrix to store the results
+    int n = orders.size();
+    vector<vector<int>> dp(n + 1, vector<int>(iCapacity + 1, -1));
+
+    // Set the elements of the first row to 0
+    for (int i = 0; i <= iCapacity; i++) {
+        dp[0][i] = 0;
+        for (int j = 1; j <= n; j++) {
+            dp[j][0] = 0;
+            dp[j][i] = -1;
+        }
+    }
+
+    knapSackMax(n, orders, dp, iCapacity);
+
+    int i = iCapacity;
+    int j = n;
+
+    while (j >= 1) {
+        if (dp[j][i] != dp[j - 1][i]) {
+            selectedItems.push_back(orders[j - 1].iIDNumber); // Adiciona o ID do item selecionado
+            i -= orders[j - 1].iWeight;
+        }
+        --j;
+    }
+
+}
+
+
 Map* generateMapQ1() {
     Map* map = new Map(16);
     
@@ -658,5 +793,79 @@ Map* generateMapQ1() {
 
     map->addSeller(1, 7);
 
+    return map;
+}
+
+
+Map* generateMapQ4() {
+    Map* map = new Map(16);
+    
+    map->addEdge(0,1, 61);
+    map->addEdge(0,4, 98);
+    map->addEdge(1,2, 114);
+    map->addEdge(1,5, 115);
+    map->addEdge(2,3, 93);
+    map->addEdge(2,6, 87);
+    map->addEdge(3,7, 107);
+    map->addEdge(4,5, 105);
+    map->addEdge(4,8, 128);
+    map->addEdge(5,6, 70);
+    map->addEdge(5,9, 74);
+    map->addEdge(6,7, 103);
+    map->addEdge(6,10, 115);
+    map->addEdge(7,11, 116);
+    map->addEdge(8,9, 127);
+    map->addEdge(8,12, 96);
+    map->addEdge(9,10, 97);
+    map->addEdge(9,13, 116);
+    map->addEdge(10,11, 99);
+    map->addEdge(10,14, 104);
+    map->addEdge(11,15, 95);
+    map->addEdge(12,13, 123);
+    map->addEdge(13,14, 63);
+    map->addEdge(14,15, 127);
+
+    map->addDeliveryMan(1, 5, 10);
+    map->addDeliveryMan(2, 12, 10);
+    map->addDeliveryMan(2, 15, 10);
+
+    map->addWarehouse(0,4);
+    map->addWarehouse(1,13);
+    map->addWarehouse(2,14);
+    map->addWarehouse(3,6);
+    map->addWarehouse(4,11);
+
+    // Add sellers
+    map->addSeller(1, 8);
+
+    //Add itens to the warehouses
+    map->warehouseInMap[0].addProducts(0,1000,1,30);
+    map->warehouseInMap[1].addProducts(1,110,1,1);
+    map->warehouseInMap[2].addProducts(2,700,1,18);
+    map->warehouseInMap[3].addProducts(3,800,1,20);
+    map->warehouseInMap[4].addProducts(4,1000,1,30);
+
+    // Add in WarehouseList the warehouses that have products
+    map->sellerInMap[0].addProducts(4,1000,1,30);
+
+    for(int current = 0; current < map->warehouseInMap.size(); current++){
+        if(map->warehouseList[current] != nullptr || map->sellerList[current] != nullptr){
+            // Check if it's a warehouse
+            if (map->warehouseList[current] != nullptr) {
+                Warehouse* currentWarehouse = map->warehouseList[current];
+                cout << "Warehouse at vertex " << current << " - Position: (" << currentWarehouse->getWarehouseLocation()<< ")" << endl;
+
+            }
+
+            // Check if it's a seller
+            if (map->sellerList[current] != nullptr) {
+                Seller* currentSeller = map->sellerList[current];
+                cout << "Seller at vertex " << current << " - Position: (" << currentSeller->getSellerLocation() <<  ")" << endl;
+                
+            }
+        }
+        
+    }
+    
     return map;
 }
