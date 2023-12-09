@@ -551,7 +551,7 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
     int numWarehouseAvaible = 0;
     vector<Warehouse> warehouseAvaible; // warehouseAvaible
     vector<DeliveryMan> deliveryManAvaible; //  Primeiro delivery, mais perto da warehouseAvaible (com posições correspondentes), está no vector deliveryManInMap
-    vector<int*> parentsAvaible; // array de parents do deliveryManAvaible até warehouseAvaible;
+    vector<int*> routeAvaible; // array de parents do deliveryManAvaible até warehouseAvaible;
     ProductQuantity* pProducts = order.pProducts;
     cout<<"Gerou variaveis"<<endl;
     
@@ -576,62 +576,38 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
             numWarehouseAvaible++;
         }
     }
-    cout<<"Saiu do for"<<endl;
-    Heap heap(-1);
+    int bestComp = INT_MAX;
+    int idBestComp = -1;
     for(int i=0; i < numWarehouseAvaible; i++){
         cout<<"Entrou no outro for"<<endl;
         // Obtendo o delivery mais próximo
         ReturnNearestDMen* nearestDMan = nearestDMen(warehouseAvaible[i].getWarehouseLocation(),1);
         // Distância do destino até warehouse
-        
-        int distanceDestinyWarehouse = Prim->distances[warehouseAvaible[i].getWarehouseLocation()];
-
+        ReturnDijkstra routeDestinationWarehouse = FindRoute(order, deliveryManInMap[nearestDMan->nearDMen[0]]);
         // Distância da warehouse até delivery
         int distanceWarehouseDelivery = nearestDMan->distances[nearestDMan->nearDMen[0]]; 
         // Add delivery no vetor de deliverys avaibles
         deliveryManAvaible.push_back(deliveryManInMap[nearestDMan->nearDMen[0]]);
         // Add vector parents para o delivery até a warehouse
-        parentsAvaible.push_back(nearestDMan->parents);
+        routeAvaible.push_back(routeDestinationWarehouse.parents);
         // Add no heap o índice da warehouse avaible com a distância total
-        heap.push(i, distanceDestinyWarehouse+distanceWarehouseDelivery);
+        int tamRouteTemp = routeDestinationWarehouse.minDistance+distanceWarehouseDelivery;
+        if(tamRouteTemp<tamRouteTemp){
+            idBestComp = i;
+            bestComp = tamRouteTemp;
+        }
     }
     cout<<"Saiu do outro for"<<endl;
     
-
-    int indiceBestWarehouse = heap.getTop().id; // Posição no vetor warehouseAvaible
     Warehouse* ptrBestWarehouse;
-    Warehouse bestWarehouse = warehouseAvaible[indiceBestWarehouse];
+    Warehouse bestWarehouse = warehouseAvaible[idBestComp];
     ptrBestWarehouse = &bestWarehouse;
-    int* ptrBestDistance;
-    int bestDistance = heap.getTop().value; 
-    ptrBestDistance = &bestDistance;
     DeliveryMan* ptrBestDeliveryMan;
-    DeliveryMan bestDeliveryMan = deliveryManAvaible[indiceBestWarehouse]; // Obtendo delivery mais próximo
+    DeliveryMan bestDeliveryMan = deliveryManAvaible[idBestComp]; // Obtendo delivery mais próximo
     ptrBestDeliveryMan = &bestDeliveryMan;
-    int* parentToDelivery = parentsAvaible[indiceBestWarehouse]; // Vetor de parents do delivery até warehouse
-    vector<int> routeMin;
-    
-    int numVerticesRoute = 1;
-    int start = bestDeliveryMan.getLocation();
-    // Add route do delivery até warehouse
-    while (start != bestWarehouse.getWarehouseLocation()) {
-        routeMin.insert(routeMin.begin(),start);
-        start = parent[start];
-        numVerticesRoute++;
-    }
-    // Add route da warehouse até destino
-    while (start != origin) {
-        routeMin.insert(routeMin.begin(),start);
-        start = parent[start];
-        numVerticesRoute++;
-    }
-
-    // Adicione o vértice de origem ao caminho
-    routeMin.insert(routeMin.begin(),origin);
+    int* routeMin = routeAvaible[idBestComp]
 
     ReturnFindRoutOpt* result = new ReturnFindRoutOpt;
-    result->numVerticeRoute = numVerticesRoute;
-    result->distanceTotal = ptrBestDistance; 
     result->routeMin = routeMin;
     result->nearestDMan = ptrBestDeliveryMan;
     result->bestWarehouse = ptrBestWarehouse;
