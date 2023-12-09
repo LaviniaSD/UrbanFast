@@ -8,13 +8,14 @@
 #include "limits.h"
 #include "DeliveryMan.h"
 #include "Heap.h"
+#include "Order.h"
 
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-Map::Map(int numVertices): 
+Map::Map(const int numVertices): 
 numVertices(numVertices), 
 numEdges(0),
 numDeliveryMan(0),
@@ -654,7 +655,12 @@ Map* generateMapQ1() {
     map->addDeliveryMan(2, 12, 10);
     map->addDeliveryMan(2, 15, 10);
 
+    map->addWarehouse(0,7);
+    map->addWarehouse(1,6);
+
     map->addSeller(1, 7);
+
+
 
     return map;
 }
