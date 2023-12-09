@@ -490,7 +490,7 @@ vector<int> Map::getPathParent(int* parent, int origin, int start){
     return path;
 }
 
-ReturnMstPRIM Map::mstPrim(int origin, int* parents){
+ReturnMstPRIM* Map::mstPrim(int origin, int* parents){
     // Arrays to track whether a vertex is in the MST and its distance from the MST
     bool* inTree = new bool[numVertices];
     int* distances = new int[numVertices];
@@ -533,9 +533,9 @@ ReturnMstPRIM Map::mstPrim(int origin, int* parents){
             edge = edge->getNext();
         }
     }
-    ReturnMstPRIM result;
-    result.distances = distances;
-    result.parents = parents;
+    ReturnMstPRIM* result = new ReturnMstPRIM;
+    result->distances = distances;
+    result->parents = parents;
     cout<<"Terminou o mstPrim"<<endl;
 
     return result;
@@ -548,8 +548,6 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
     int parent[numVertices];
     int origin = order.getDestination(); // Obter destinatário
     cout<<"Gerou arrays"<<endl;
-    ReturnMstPRIM Prim = mstPrim(origin, parent);
-    cout<<"Gerou Prim"<<endl;
     int numWarehouseAvaible = 0;
     vector<Warehouse> warehouseAvaible; // warehouseAvaible
     vector<DeliveryMan> deliveryManAvaible; //  Primeiro delivery, mais perto da warehouseAvaible (com posições correspondentes), está no vector deliveryManInMap
@@ -585,7 +583,9 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
         // Obtendo o delivery mais próximo
         ReturnNearestDMen* nearestDMan = nearestDMen(warehouseAvaible[i].getWarehouseLocation(),1);
         // Distância do destino até warehouse
-        int distanceDestinyWarehouse = Prim.distances[warehouseAvaible[i].getWarehouseLocation()];
+        
+        int distanceDestinyWarehouse = Prim->distances[warehouseAvaible[i].getWarehouseLocation()];
+
         // Distância da warehouse até delivery
         int distanceWarehouseDelivery = nearestDMan->distances[nearestDMan->nearDMen[0]]; 
         // Add delivery no vetor de deliverys avaibles

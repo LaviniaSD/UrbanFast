@@ -290,7 +290,7 @@ class Map {
          * @param parent The parent array.
          * @return The result of finding the MST.
          */
-        ReturnMstPRIM mstPrim(int origin, int* parent);
+        ReturnMstPRIM* mstPrim(int origin, int* parent);
         
         /**
          * @brief Method to find the optimized route for an order.
