@@ -454,28 +454,6 @@ ReturnNearestDMen* Map::nearestDMen(int origin, int numDMen) {
     return result;
 }
 
-void Map::initializePRIM(int origin, int* parent, bool* inTree, int* verticeDistance) {
-    // Initialize arrays for parent, inTree, and verticeDistance
-    for (int v = 0; v < numVertices; v++) {
-        parent[v] = -1;         // No parent assigned yet
-        inTree[v] = false;      // Not included in the MST yet
-        verticeDistance[v] = INT_MAX; // Initialize distances to infinity
-    }
-
-    // Starting from vertex origin
-    parent[origin] = origin;    // Vertex origin is the root of the MST
-    inTree[origin] = true;       // Vertex origin is already included
-    EdgeNode* edge = edgesList[origin]; // Get the edges connected to vertex origin
-
-    // Update distances for vertices connected to vertex origin
-    while (edge!=nullptr) {
-        int v2 = edge->getOtherVertex(); // Get the other end of the edge
-        parent[v2] = origin;             // Vertex origin is the parent of v2
-        verticeDistance[v2] = edge->getDistance(); // Update distance to v2
-        edge = edge->getNext();           // Move to the next edge
-    }
-    cout<<"Saiu do while no initializePRIM"<<endl;
-}
 
 vector<int> Map::getPathParent(int* parent, int origin, int start){
     vector<int> path;
@@ -490,57 +468,6 @@ vector<int> Map::getPathParent(int* parent, int origin, int start){
     return path;
 }
 
-ReturnMstPRIM* Map::mstPrim(int origin, int* parents){
-    // Arrays to track whether a vertex is in the MST and its distance from the MST
-    bool* inTree = new bool[numVertices];
-    int* distances = new int[numVertices];
-
-    // Initialize the arrays using the helper function
-    initializePRIM(origin, parents, inTree, distances);
-    Heap heap(-1); // Create the heapmin
-
-    // Push all vertices (except the root) into the heap with their initial distances
-    for (int v = 1; v < numVertices; v++) { heap.push(v, distances[v]); }
-    // Continue until all vertices are included in the MST
-    while (heap.getSize()!=0) {
-
-        // Extract the vertex with the minimum distance from the heap
-        int v1 = heap.getTop().id; 
-
-        // If the distance to v1 is still infinite, break the loop
-        heap.pop(); // Remove from heap
-        if (distances[v1] == INT_MAX) { break; }
-
-        // Mark v1 as included in the MST
-        inTree[v1] = true;
-
-        // Explore edges connected to v1
-        EdgeNode * edge = edgesList[v1];
-        while(edge) {
-            int v2 = edge->getOtherVertex();
-            int distance = edge->getDistance();
-
-            // If v2 is not in the MST and the distance is less than its current distance
-            if (!inTree[v2] && distance < distances[v2]) {
-                
-                // Update the distance and parent, then push v2 into the heap
-                distances[v2] = distance;
-                parents[v2] = v1;
-                heap.push(v2,distances[v2]);
-            }
-
-            // Move to the next edge
-            edge = edge->getNext();
-        }
-    }
-    ReturnMstPRIM* result = new ReturnMstPRIM;
-    result->distances = distances;
-    result->parents = parents;
-    cout<<"Terminou o mstPrim"<<endl;
-
-    return result;
-
-}
 
 ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
     cout<<"Testando a funcao FindRouteOpt"<<endl;

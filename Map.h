@@ -25,11 +25,6 @@ struct ReturnFindRoutOpt {
     Warehouse* bestWarehouse; // Warehouse escolhida
 };
 
-struct ReturnMstPRIM {
-    int* distances;
-    int* parents;
-};
-
 /**
  * @brief Struct that represents the return values of Dijkstra's algorithm.
  * 
@@ -262,16 +257,6 @@ class Map {
         ReturnDijkstra FindRoute(Order order, DeliveryMan deliveryman);
 
         /**
-         * @brief Method to initialize the parent, inTree, and verticeCost arrays for PRIM's algorithm.
-         * 
-         * @param origin The origin vertex.
-         * @param parent The parent array.
-         * @param inTree The inTree array.
-         * @param verticeCost The verticeCost array.
-         */
-        void initializePRIM(int origin, int* parent, bool* inTree,int* verticeCost);
-
-        /**
          * @brief Method to get the path from the parent array.
          * 
          * @param parent The parent array.
@@ -280,15 +265,6 @@ class Map {
          * @return The path as a vector of vertices.
          */
         vector<int> getPathParent(int* parent, int origin, int start);
-
-        /**
-         * @brief Method to find the minimum spanning tree (MST) using PRIM's algorithm.
-         * 
-         * @param origin The origin vertex.
-         * @param parent The parent array.
-         * @return The result of finding the MST.
-         */
-        ReturnMstPRIM* mstPrim(int origin, int* parent);
         
         /**
          * @brief Method to find the optimized route for an order.
