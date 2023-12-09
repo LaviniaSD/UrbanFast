@@ -231,6 +231,6 @@ class Order {
          * @param iQuantity The quantity of the product.
          * @param iWeight The weight of the product.
          */
-        void addProducts(int iProductID, int iPrice, int iQuantity, int iWeight);
+        void addProducts(int iProductID, int iPriceProduct, int iQuantityProduct, int iWeightProduct);
 
 };
