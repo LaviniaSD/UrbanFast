@@ -470,37 +470,47 @@ vector<int> Map::getPathParent(int* parent, int origin, int start){
 
 
 ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
-    cout<<"Testando a funcao FindRouteOpt"<<endl;
-    // Inicializa os veotres de 
+    // Initialize the array parent and verticeDistance
     int origin = order.getDestination(); // Obter destinatário
-
-    int numWarehouseAvaible = 0; // Contador para warehouses com produtos disponíveis
+    int numWarehouseAvaible = 0;
     vector<Warehouse> warehouseAvaible; // warehouseAvaible
     vector<DeliveryMan> deliveryManAvaible; //  Primeiro delivery, mais perto da warehouseAvaible (com posições correspondentes), está no vector deliveryManInMap
-    vector<int*> routeAvaible; // array de rotas do entregador até o destino;
-    ProductQuantity* pProducts = order.pProducts; // Obtendo lista encadeada de produtos
-    
+    vector<int*> routeAvaible; // array de parents do deliveryManAvaible até warehouseAvaible;
+    cout << numWarehouse << endl;
     // Avaliando warehouses
     for(int i = 0; i < numWarehouse; i++){
-        // Avaliando se a warehouse contém todos os itens e ad quantidades necessárias do pedido;
+        cout << "Verificando warehouse: " << i << endl;
+
+        // Avaliando se a warehouse contém todos os itens e quantidades necessárias do pedido
         bool hasAllProducts = true;
-        while(pProducts!=nullptr){
-            if(!warehouseInMap[i].hasProduct(pProducts->getProduct(),pProducts->getQuantity())){
-                    hasAllProducts = false;
-                    break;
-                }
-            else{
-                pProducts->getNext();
+        Product* currentProduct = order.pProducts;
+        while(currentProduct != nullptr) {
+            cout << "Verificando se tem produto: " << currentProduct->getProductID() << endl;
+            if(warehouseInMap[i].hasProduct(*currentProduct, currentProduct->getQuantity())==false) {
+                cout << "Não tem"<< endl;
+                cout<< "ProdutoID: " << currentProduct->getProductID() << endl;
+                cout<< "ProdutoQuantity: " << currentProduct->getQuantity() << endl;
+                hasAllProducts = false;
+                break;
+            }
+            else {
+                cout << "Têm"<< endl;
+                cout<< "ProdutoID: " << currentProduct->getProductID() << endl;
+                cout<< "ProdutoQuantity: " << currentProduct->getQuantity() << endl;
+                currentProduct = currentProduct->getNext();
             }
         }
-        // Se temm todos os produtos adicionar warehouse na lista de warehouses avaibles
-        if(hasAllProducts){
+
+        // Se tem todos os produtos, adicionar warehouse na lista de warehouses disponíveis
+        if(hasAllProducts) {
             warehouseAvaible.push_back(warehouseInMap[i]);
             numWarehouseAvaible++;
         }
     }
 
-    int bestComp = INT_MAX; // Guardando comprimento da menor rota
+    cout << "Saindo do loop de verificação " << endl;
+
+    int bestComp = INT_MAX;
     int idBestComp = -1;
     for(int i=0; i < numWarehouseAvaible; i++){
         // Obtendo o delivery mais próximo
@@ -514,29 +524,25 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
         // Add vector parents para o delivery até a warehouse
         routeAvaible.push_back(routeDestinationWarehouse.parents);
         // Add no heap o índice da warehouse avaible com a distância total
-        int tamRouteTemp = routeDestinationWarehouse.minDistance+distanceWarehouseDelivery;
-        // Atualizando se necessário
-        if(tamRouteTemp<tamRouteTemp){
+        int tamRouteTemp = routeDestinationWarehouse.minDistance + distanceWarehouseDelivery;
+        if (tamRouteTemp < bestComp) {
             idBestComp = i;
             bestComp = tamRouteTemp;
         }
     }
-    
-    // Obtendo ponteiros para o centro de distribuição escolhido e entregador
+
     Warehouse* ptrBestWarehouse;
-    Warehouse bestWarehouse = warehouseAvaible[idBestComp]; // Obtendo warehouse
+    Warehouse bestWarehouse = warehouseAvaible[idBestComp];
     ptrBestWarehouse = &bestWarehouse;
     DeliveryMan* ptrBestDeliveryMan;
     DeliveryMan bestDeliveryMan = deliveryManAvaible[idBestComp]; // Obtendo delivery mais próximo
     ptrBestDeliveryMan = &bestDeliveryMan;
-    int* routeMin = routeAvaible[idBestComp]; // Obtendo parents com o caminho
+    int* routeMin = routeAvaible[idBestComp];
 
-    // Adicionando resultados na estruct de retorno
     ReturnFindRoutOpt* result = new ReturnFindRoutOpt;
     result->parents = routeMin;
     result->nearestDMan = ptrBestDeliveryMan;
     result->bestWarehouse = ptrBestWarehouse;
-    
     return result;
 }
 
