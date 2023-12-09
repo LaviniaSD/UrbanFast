@@ -44,7 +44,7 @@ void DeliveryMan::addOrder(Order* newOrder){
     iPrice += newOrder->getPrice();
 
     // Add the order to the list
-    if(!oOrders){
+    if(oOrders==nullptr){
         oOrders = newOrder;      
     }
     else{

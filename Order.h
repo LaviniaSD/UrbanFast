@@ -31,7 +31,7 @@ struct ProductQuantity{
      * @param pProduct The product information.
      * @param iQuantity The quantity of the product.
      */
-    ProductQuantity(Product pProduct, int iQuantity): pProduct(pProduct), iQuantity(iQuantity), next(nullptr){}
+    ProductQuantity(Product const& pProduct, int iQuantity) : pProduct(pProduct), iQuantity(iQuantity), next(nullptr) {}
 
     /**
      * @brief Destructor for ProductQuantity.
@@ -231,6 +231,6 @@ class Order {
          * @param iQuantity The quantity of the product.
          * @param iWeight The weight of the product.
          */
-        void addProducts(int iProductID, int iPrice, int iQuantity, int iWeight);
+        void addProducts(int iProductID, int iPriceProduct, int iQuantityProduct, int iWeightProduct);
 
 };

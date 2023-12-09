@@ -17,11 +17,13 @@
 #include "Warehouse.h"
 #include "Seller.h"
 
+
 using namespace std;
 struct ReturnFindRoutOpt {
     int* distanceTotal; // Distância total da rota otimizada
     vector<int> routeMin; // Rota mínima otimizada
     DeliveryMan* nearestDMan; // Entregador mais próximo
+    Warehouse* bestWarehouse; // Warehouse escolhida
 };
 
 struct ReturnMstPRIM {
@@ -73,7 +75,7 @@ struct ReturnNearestDMen {
  */
 class Map {
     private:
-        int numVertices; // Number of vertices in the map
+        const int numVertices; // Number of vertices in the map
         int numEdges; // Number of edges in the map
         int numDeliveryMan; // Number of deliverymen in the map
         int numWarehouse; // Number of warehouses in the map
@@ -95,7 +97,7 @@ class Map {
          * 
          * @param numVertices The number of vertices in the map.
          */
-        Map(int numVertices);
+        Map(const int numVertices);
 
         /**
          * @brief Destructor for the Map class.
@@ -313,3 +315,5 @@ class Map {
         // Function to order the suggestions
         vector<int> OrderSuggestions(vector<int> route, vector<Order> orders, DeliveryMan deliveryman, int iMaxDistance = 100);
 };
+// Generate a map for Q1
+Map* generateMapQ1();
