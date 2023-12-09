@@ -528,7 +528,7 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
     for(int i = 0; i < numWarehouse; i++){
         // Evaluating if the warehouse contains all the items and required quantities from the order
         bool hasAllProducts = true;
-        Product* currentProduct = warehouseInMap[i].pProductsList;
+        Product* currentProduct = order.pProducts;
         while (currentProduct != nullptr) {
             if (!warehouseInMap[i].hasProduct(*currentProduct, currentProduct->getQuantity())) {
                 hasAllProducts = false;

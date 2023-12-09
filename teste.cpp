@@ -11,7 +11,6 @@ int main(){
     pedido.addProducts(0,1,2,1);
     pedido.addProducts(1,1,2,1);
 
-    cout<< "OI"<< endl;
     cout<< "AAAAAAAH"<<endl;
     ReturnFindRoutOpt* result =  mapClass.FindRouteOpt(pedido);
     cout << "OLA" << endl;
