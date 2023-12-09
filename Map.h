@@ -298,22 +298,22 @@ class Map {
         ReturnFindRoutOpt* FindRouteOpt(Order order);
 
         // DFS algorithm for finding warehouses and sellers near the route
-        vector<int> DFS(vector<int> route, int maxDistance);
+        void DFS(const vector<int>& route, int maxDistance, const vector<int>& warehousesAndSellers);
 
         // Function to check which orders can be delivered in the neighborhood of the route
-        vector<Order> checkNeighborhood(vector<Order> orders, vector<int> warehousesAndSellers);
+        void checkNeighborhood(const vector<Order>& orders, const vector<int>& warehousesAndSellers, const vector<Order>& possibleOrders);
 
         // Function to agregate the weight and value of the items in a order
         OrderAgregation agregateOrder(Order order);
 
         // Auxiliar function to knapsack
-        int knapSackMax(int i, vector<OrderAgregation>& orders, vector<vector<int>>& dp, int iCapacity);
+        int knapSackMax(int i, const vector<OrderAgregation>& orders, const vector<vector<int>>& dp, int iCapacity);
 
         // Main function to knapsack
-        vector<int> knapSack(vector<OrderAgregation> orders, int iCapacity);
+        void knapSack(const vector<OrderAgregation>& orders, int iCapacity, const vector<int>& possibleOrders);
 
         // Function to order the suggestions
-        vector<int> OrderSuggestions(vector<int> route, vector<Order> orders, DeliveryMan deliveryman, int iMaxDistance = 100);
+        void OrderSuggestions(const vector<int>& route,const vector<Order>& orders, DeliveryMan deliveryman, const vector<int>& selectedOrders ,int iMaxDistance = 100);
 };
 // Generate a map for Q1
 Map* generateMapQ1();

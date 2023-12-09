@@ -35,6 +35,7 @@ int main(){
     vector<Order> orders = {order1,order2,order3,order4,order5};
     cout<<"prepare to sugest"<<endl;
     // Sugest new orders
-    vector<int> sugestions = mapClass.OrderSuggestions(route,orders,deliveryman,110);
+    vector<int> sugestions;
+    mapClass.OrderSuggestions(route,orders,deliveryman,sugestions,110);
     cout<<"sugestions ok"<<endl;
 }

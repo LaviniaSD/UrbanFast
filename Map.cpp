@@ -604,11 +604,9 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order order){
 } 
 
 // DFS algorithm for finding warehouses and sellers near the route
-vector<int> Map::DFS(vector<int> route, int maxDistance){
+void Map::DFS(vector<int> route, int maxDistance, vector<int>& warehousesAndSellers){
     // Create a vector to store the visited vertices
     vector<bool> visited(numVertices, false);
-    // Create a vector to store the warehouses and sellers found
-    vector<int> warehousesAndSellers;
     // Create a queue to store the vertices to be visited
     queue<int> queue; 
     // Push the first vertex to the queue
@@ -643,21 +641,16 @@ vector<int> Map::DFS(vector<int> route, int maxDistance){
             }
         }
     }
-    return warehousesAndSellers;
 }
 
 // Function to check which orders can be delivered in the neighborhood of the route
-vector<Order> Map::checkNeighborhood(vector<Order> orders, vector<int> warehousesAndSellers){
-    // Create a vector to store the orders that can be delivered
-    vector<Order> ordersToDeliver;
+void Map::checkNeighborhood(vector<Order> orders, vector<int>& warehousesAndSellers, vector<Order>& ordersToDeliver){
     // Iterate through the orders
     for(int i = 0; i < orders.size(); i++){
-        cout<<"primeiro loop"<<endl;
         // Get the origin of the order
         int origin = orders[i].getOrigin();
         // Iterate through the warehouses and sellers
         for(int j = 0; j < warehousesAndSellers.size(); j++){
-            cout<<"segundo loop"<<endl;
             // If the origin or destination of the order is a warehouse or a seller
             if(origin == warehousesAndSellers[j]){
                 // Add the order to the vector
@@ -667,9 +660,6 @@ vector<Order> Map::checkNeighborhood(vector<Order> orders, vector<int> warehouse
             }
         }
     }
-    cout<<"fim dos loops"<<endl;
-    // Return the vector
-    return ordersToDeliver;
 }
 
 // Function to agregate the weight and value of the items in a order
@@ -709,7 +699,7 @@ int  Map::knapSackMax(int i, vector<OrderAgregation>& orders, vector<vector<int>
 }
 
 // Main function to knapsack
-vector<int>  Map::knapSack(vector<OrderAgregation> orders, int iCapacity) {
+void  Map::knapSack(vector<OrderAgregation>& orders, int iCapacity, vector<int>& selectedItems) {
     // Create a matrix to store the results
     int n = orders.size();
     vector<vector<int>> dp(n + 1, vector<int>(iCapacity + 1, -1));
@@ -727,7 +717,6 @@ vector<int>  Map::knapSack(vector<OrderAgregation> orders, int iCapacity) {
 
     int i = iCapacity;
     int j = n;
-    vector<int> selectedItems;
 
     while (j >= 1) {
         if (dp[j][i] != dp[j - 1][i]) {
@@ -737,23 +726,31 @@ vector<int>  Map::knapSack(vector<OrderAgregation> orders, int iCapacity) {
         --j;
     }
 
-    return selectedItems;
-
 }
 
 
-vector<int> Map::OrderSuggestions(vector<int> route, vector<Order> orders,DeliveryMan deliveryman, int maxDistance){
+void Map::OrderSuggestions(const vector<int>& route, const vector<Order>& orders, DeliveryMan deliveryman, const vector<int>& selectedOrders, int maxDistance = 100) {
     cout << "Order Suggestions" << endl;
     // Get the capacity of the deliveryman
     int iCapacity = deliveryman.getCapacity();
-    cout << "Capacity " << iCapacity << endl;
-
+    cout<<"Capacity of the deliveryman: "<<iCapacity<<endl;
     // Create a vector to store the locations of the warehouses and sellers near the route
-    vector<int> warehousesAndSellers = DFS(route, maxDistance);
+    vector<int> warehousesAndSellers;
+    // Get the locations of the warehouses and sellers near the route
+    DFS(route, maxDistance, warehousesAndSellers);
     cout<<"Warehouses and Sellers near the route: "<<endl;
+    for (int i = 0; i < warehousesAndSellers.size(); i++){
+        cout<<warehousesAndSellers[i]<<" ";
+    }
+    cout<<endl;
 
     // Create a vector to store the orders that can be delivered in the neighborhood of the route
-    vector<Order> ordersToDeliver = checkNeighborhood(orders, warehousesAndSellers);
+    vector<Order> ordersToDeliver;
+    for (int i = 0; i < orders.size(); i++){
+        cout<<orders[i].getOrderNumber()<<" ";
+    }
+    cout<<endl;
+    checkNeighborhood(orders, warehousesAndSellers, ordersToDeliver);
     cout<<"Orders that can be delivered in the neighborhood of the route: "<<endl;
     // Create a vector to store the orders agregated by weight and price
     vector<OrderAgregation> ordersAgregation;
@@ -763,10 +760,9 @@ vector<int> Map::OrderSuggestions(vector<int> route, vector<Order> orders,Delive
     cout<<"Orders agregated by weight and price: "<<endl;
 
     // Create a vector to store the selected orders
-    vector<int> selectedOrders = knapSack(ordersAgregation, iCapacity);
+    knapSack(ordersAgregation, iCapacity, selectedOrders);
     cout<<"Selected orders: "<<endl;
     // Return the vector with the selected orders
-    return selectedOrders;
 }
 
 Map* generateMapQ1() {
