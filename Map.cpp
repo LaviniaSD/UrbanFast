@@ -563,12 +563,8 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order* order){
             bestComp = tamRouteTemp;
         }
     }
-    Warehouse* ptrBestWarehouse;
-    Warehouse bestWarehouse = warehouseAvaible[idBestComp];
-    ptrBestWarehouse = &bestWarehouse;
-    DeliveryMan* ptrBestDeliveryMan;
-    DeliveryMan bestDeliveryMan = deliveryManAvaible[idBestComp]; // Getting the nearest delivery
-    ptrBestDeliveryMan = &bestDeliveryMan;
+    Warehouse* ptrBestWarehouse = &warehouseAvaible[idBestComp];
+    DeliveryMan* ptrBestDeliveryMan= &deliveryManAvaible[idBestComp]; // Getting the nearest delivery
     int* routeMin = routeAvaible[idBestComp];
 
     ReturnFindRoutOpt* result = new ReturnFindRoutOpt;
