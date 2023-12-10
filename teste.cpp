@@ -7,10 +7,9 @@ int main(){
     Map* map = generateMapQ2();
     Map mapClass = *map;
 
-    Order pedido(0,15,0,true);
+    Order pedido(0,0,0,true);
     pedido.addProducts(0,1,2,1);
     pedido.addProducts(1,1,2,1);
-    cout<< "Id do produto add: "<< pedido.pProducts[0].getProductID()<< endl;
 
     cout<< "AAAAAAAH"<<endl;
     ReturnFindRoutOpt* result =  mapClass.FindRouteOpt(&pedido);

@@ -44,8 +44,8 @@ class Warehouse {
          * 
          * @param iWarehouseID The ID of the warehouse.
          */
-        void setWarehouseID(int iWarehouseID){
-            iWarehouseID = iWarehouseID;
+        void setWarehouseID(int newiWarehouseID){
+            iWarehouseID = newiWarehouseID;
         }
 
         /**
@@ -62,8 +62,8 @@ class Warehouse {
          * 
          * @param WarehouseLocation The location of the warehouse.
          */
-        void setWarehouseLocation(int WarehouseLocation){
-            WarehouseLocation = WarehouseLocation;
+        void setWarehouseLocation(int newWarehouseLocation){
+            iWarehouseLocation = newWarehouseLocation;
         }
 
         /**

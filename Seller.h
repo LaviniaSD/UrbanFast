@@ -45,8 +45,8 @@ class Seller {
          * 
          * @param iSellerID The ID of the seller.
          */
-        void setSellerID(int iSellerID){
-            iSellerID = iSellerID;
+        void setSellerID(int newiSellerID){
+            iSellerID = newiSellerID;
         }
 
         /**
@@ -63,8 +63,8 @@ class Seller {
          * 
          * @param SellerLocation The location of the seller.
          */
-        void setSellerLocation(int SellerLocation){
-            SellerLocation = SellerLocation;
+        void setSellerLocation(int newSellerLocation){
+            iSellerLocation = newSellerLocation;
         }
 
         /**

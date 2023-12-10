@@ -40,8 +40,8 @@ class Product {
          * 
          * @param iProductID The ID of the product
          */
-        void setProductID(int iProductID){
-            iProductID = iProductID;             
+        void setProductID(int newiProductID){
+            iProductID = newiProductID;             
         }
 
         /**
@@ -58,8 +58,8 @@ class Product {
          * 
          * @param iPrice The price of the product
          */
-        void setPrice(int iPrice){
-            iPrice = iPrice;
+        void setPrice(int newiPrice){
+            iPrice = newiPrice;
         }
 
         /**
@@ -76,8 +76,8 @@ class Product {
          * 
          * @param iQuantity The quantity of the product
          */
-        void setQuantity(int iQuantity){
-            iQuantity = iQuantity;
+        void setQuantity(int newiQuantity){
+            iQuantity = newiQuantity;
         }
 
         /**
@@ -94,8 +94,8 @@ class Product {
          * 
          * @param iWeight The weight of the product
          */
-        void setWeight(int iWeight){
-            iWeight = iWeight;
+        void setWeight(int newiWeight){
+            iWeight = newiWeight;
         }
 
         /**

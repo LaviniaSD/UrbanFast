@@ -53,8 +53,8 @@ class Order {
          * @brief Set the type of the order.
          * @param bType The type of the order to set (0 for simple, 1 for optimized).
          */
-        void setType(bool bType){
-            bType = bType;
+        void setType(bool newbType){
+            bType = newbType;
         }
 
         /**
@@ -69,8 +69,8 @@ class Order {
          * @brief Set the order number.
          * @param iOrderNumber The order number to set.
          */
-        void setOrderNumber(int iOrderNumber){
-            iOrderNumber = iOrderNumber; 
+        void setOrderNumber(int newiOrderNumber){
+            iOrderNumber = newiOrderNumber; 
         }
 
         /**
@@ -85,8 +85,8 @@ class Order {
          * @brief Set the origin of the order.
          * @param iOrigin The origin of the order to set.
          */
-        void setOrigin(int iOrigin){
-            iOrigin = iOrigin;
+        void setOrigin(int newiOrigin){
+            iOrigin = newiOrigin;
         }
 
         /**
@@ -101,8 +101,8 @@ class Order {
          * @brief Set the destination of the order.
          * @param iDestination The destination of the order to set.
          */
-        void setDestination(int iDestination){
-            iDestination = iDestination;
+        void setDestination(int newiDestination){
+            iDestination = newiDestination;
         }
 
         /**

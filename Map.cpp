@@ -580,6 +580,14 @@ ReturnFindRoutOpt* Map::FindRouteOpt(Order* order){
     result->nearestDMan = ptrBestDeliveryMan;
     result->bestWarehouse = ptrBestWarehouse;
 
+    int current = result->nearestDMan->getLocation();
+    cout << current << endl;
+    while (result->parents[current] != current){
+        cout << current << "<- ";
+        current = result->parents[current];
+    }
+    cout << "Entregador ID: "<< result->nearestDMan[0].getDeliveryManID() << endl;
+    cout << "Warehouse ID: " << result->bestWarehouse->getWarehouseID()<<endl;
     cout << "Chegamos no fim" << endl;
 
     return result;
@@ -882,7 +890,7 @@ Map* generateMapQ2() {
     map->addDeliveryMan(2, 11, 10);
     map->addDeliveryMan(2, 14, 10);
 
-    map->addWarehouse(0,4);
+    map->addWarehouse(0,8);
     map->addWarehouse(1,13);
     map->addWarehouse(2,14);
     map->addWarehouse(3,6);
@@ -892,8 +900,8 @@ Map* generateMapQ2() {
     map->sellerInMap[0].addProducts(0,1,2,1);
     map->warehouseInMap[0].addProducts(0,1,2,1);
     map->warehouseInMap[0].addProducts(1,2,3,1);
-    map->warehouseInMap[1].addProducts(0,1,2,1);
-    map->warehouseInMap[1].addProducts(2,2,3,1);
+    map->warehouseInMap[1].addProducts(3,1,2,1);
+    map->warehouseInMap[1].addProducts(4,2,3,1);
 
     return map;
 }

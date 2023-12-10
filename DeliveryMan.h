@@ -46,7 +46,7 @@ class DeliveryMan {
          * @param newID The new ID of the delivery man
          */
         void setDeliveryManID(int newID){
-            iDeliveryManID = iDeliveryManID;
+            iDeliveryManID = newID;
         }
 
         /**
