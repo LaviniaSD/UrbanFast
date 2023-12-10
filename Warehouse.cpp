@@ -82,12 +82,10 @@ bool Warehouse::hasProduct(Product pProduct, int iQuantity) {
     // Iterate through the list of products
     Product* currentProduct = pProductsList;
 
-    while (currentProduct) {
+    while (currentProduct!=nullptr) {
         // Check if the current product matches the specified product
         if (currentProduct->getProductID() == pProduct.getProductID() &&
-            currentProduct->getPrice() == pProduct.getPrice() &&
-            currentProduct->getQuantity() >= iQuantity &&
-            currentProduct->getWeight() == pProduct.getWeight()) {
+            currentProduct->getQuantity() >= pProduct.getQuantity()) {
             return true;  // Product found with sufficient quantity
         }
 

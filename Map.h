@@ -313,7 +313,7 @@ class Map {
          * @param order The order to be delivered.
          * @return The result of finding the optimized route.
          */
-        ReturnFindRoutOpt* FindRouteOpt(Order order);
+        ReturnFindRoutOpt* FindRouteOpt(Order* order);
 
         /**
          * @brief Method to find the warehouses and sellers that are within a given distance from a given route.

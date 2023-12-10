@@ -85,9 +85,7 @@ bool Seller::hasProduct(Product pProduct, int iQuantity) {
     while (currentProduct) {
         // Check if the current product matches the specified product
         if (currentProduct->getProductID() == pProduct.getProductID() &&
-            currentProduct->getPrice() == pProduct.getPrice() &&
-            currentProduct->getQuantity() >= iQuantity &&
-            currentProduct->getWeight() == pProduct.getWeight()) {
+            currentProduct->getQuantity() >= pProduct.getQuantity()) {
             return true;  // Product found with sufficient quantity
         }
 
