@@ -4,194 +4,9 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include <filesystem>
 #include <gtest/gtest.h>
 #include "Map.h"
 
-using namespace std;
-namespace fs = std::filesystem;
-
-struct caseData {
-    // Counters
-    int numVertices = 0;
-    int numEdges = 0;
-    int numDeliveryMen = 0;
-    int numItems = 0;
-    int numSellers = 0;
-    int numWarehouses = 0;
-    int numOrders = 0;
-    int noiseLevel = 0;
-    int questionNumber = 0;
-
-    // Definitions
-    vector<vector<int>> edges;
-    vector<vector<int>> deliveryMen;
-    vector<vector<int>> items;
-    vector<vector<int>> sellers;
-    vector<vector<int>> warehouses;
-    vector<vector<int>> orders;
-};
-
-// Function to read a case from a txt file and return a caseData struct
-bool readCaseData(caseData data, string fileName) {
-
-    ifstream file(fileName);
-
-    if (!file.is_open()) {
-        cerr << "Unable to open file: " << fileName << endl;
-        return 1;
-    }
-
-    caseData data;
-
-    string line;
-    while (getline(file, line)) {
-        stringstream ss(line);
-        string marker;
-        ss >> marker;
-
-        // Vertice count
-        if (marker == "VC") {
-            ss >> data.numVertices;
-
-        // Edge count
-        } else if (marker == "EC") {
-            ss >> data.numEdges;
-        }
-
-        // Delivery Men Count
-        else if (marker == "DMC") {
-            ss >> data.numDeliveryMen;
-        }
-
-        // Items Count
-        else if (marker == "IC") {
-            ss >> data.numItems;
-        }
-
-        // Sellers Count
-        else if (marker == "SC") {
-            ss >> data.numSellers;
-        }
-
-        // Warehouses Count
-        else if (marker == "WC") {
-            ss >> data.numWarehouses;
-        }
-
-        // Orders Count
-        else if (marker == "OC") {
-            ss >> data.numOrders;
-        }
-
-        // Noise Level
-        else if (marker == "NL") {
-            ss >> data.noiseLevel;
-        }
-
-        // Question Number
-        else if (marker == "QN") {
-            ss >> data.questionNumber;
-        }
-
-        // Edges Definition
-        else if (marker == "ED") {
-            int a, b, c;
-            ss >> a >> b >> c;
-            data.edges.push_back({a, b, c});
-        }
-
-        // Delivery Men Definition
-        else if (marker == "DM") {
-            int a, b, c;
-            ss >> a >> b >> c;
-            data.edges.push_back({a, b, c});
-        }
-
-        // Items Definition
-        else if (marker == "ID") {
-            int a, b, c;
-            ss >> a >> b >> c;
-            data.items.push_back({a, b, c});
-        }
-
-        // Sellers Definition
-        else if (marker == "SD") {
-            int a, b;
-            ss >> a >> b;
-            data.sellers.push_back({a, b});
-        }
-
-        // Warehouses Definition
-        else if (marker == "DCD") {
-            int a, b;
-            ss >> a >> b;
-            data.warehouses.push_back({a, b});
-        }
-
-        // Orders Definition
-        else if (marker == "OD") {
-            int a, b;
-            ss >> a >> b;
-            data.orders.push_back({a, b});
-        }
-
-        // Unknown marker
-        else {
-            cout << "Unknown marker: " << marker << endl;
-            return false;
-        }
-
-    }
-
-    file.close();
-    return true;
-}
-
-Map* LoadMap(string fileName) {
-
-    caseData data;
-    string filename;
-
-    if (!readCaseData(data, filename)) {
-        return nullptr;
-    }
-
-    // Instantiate map
-    Map* map = new Map(data.numVertices);
-
-    // Add edges
-    for (vector<int> edge : data.edges) {
-        map->addEdge(edge[0], edge[1], edge[2]);
-    }
-
-    // Add Delivery Men
-    for (vector<int> deliveryMan : data.deliveryMen) {
-        map->addDeliveryMan(deliveryMan[0], deliveryMan[1], deliveryMan[2]);
-    }
-
-    // Add Items
-    for (vector<int> item : data.items) {
-        map->addItem(item[0], item[1], item[2]);
-    }
-
-    // Add Sellers
-    for (vector<int> seller : data.sellers) {
-        map->addSeller(seller[0], seller[1]);
-    }
-
-    // Add Warehouses
-    for (vector<int> warehouse : data.warehouses) {
-        map->addWarehouse(warehouse[0], warehouse[1]);
-    }
-
-    // Add Orders
-    for (vector<int> order : data.orders) {
-        map->addOrder(order[0], order[1]);
-    }
-
-    return map;
-}
 
 Map* generateMapTest() {
     Map* map = new Map(16);
@@ -221,11 +36,22 @@ Map* generateMapTest() {
     map->addEdge(13,14, 63);
     map->addEdge(14,15, 127);
 
-    map->addDeliveryMan(1, 5, 10);
-    map->addDeliveryMan(2, 12, 10);
-    map->addDeliveryMan(2, 15, 10);
+    map->addDeliveryMan(1, 4, 10);
+    map->addDeliveryMan(2, 11, 10);
+    map->addDeliveryMan(2, 14, 10);
 
-    map->addSeller(1, 7);
+    map->addWarehouse(0,4);
+    map->addWarehouse(1,13);
+    map->addWarehouse(2,14);
+    map->addWarehouse(3,6);
+    map->addWarehouse(4,11);
+
+    map->addSeller(0,8);
+    map->sellerInMap[0].addProducts(0,1,2,1);
+    map->warehouseInMap[0].addProducts(0,1,2,1);
+    map->warehouseInMap[0].addProducts(1,2,3,1);
+    map->warehouseInMap[1].addProducts(0,1,2,1);
+    map->warehouseInMap[1].addProducts(2,2,3,1);
 
     return map;
 }
@@ -247,7 +73,7 @@ protected:
 
 // Test case when one delivery man is significantly closer than others
 TEST_F(MapTest, NearestDMen_OneClosestDeliveryMan) {
-    int expected = 5;
+    int expected = 4;
 
     ReturnNearestDMen* resultStruct = mapa->nearestDMen(1, 1);
     vector<int> result = resultStruct->nearDMen;
@@ -273,19 +99,19 @@ TEST_F(MapTest, NearestDMen_AllDeliveryMenAtSameDistance) {
 }
 
 
-// // Test case with an invalid origin
-// TEST_F(MapTest, NearestDMen_InvalidOrigin) {
-//     int invalidOrigin = 16;
+// Test case with an invalid origin
+TEST_F(MapTest, NearestDMen_InvalidOrigin) {
+    int invalidOrigin = 16;
 
-//     ReturnNearestDMen* resultStruct = mapa->nearestDMen(invalidOrigin, 1);
-//     vector<int> result = resultStruct->nearDMen;
+    ReturnNearestDMen* resultStruct = mapa->nearestDMen(invalidOrigin, 1);
+    vector<int> result = resultStruct->nearDMen;
 
-//     // This assumes that the function returns an empty vector in case of an invalid origin
-//     vector<int> expected = {};
-//     ASSERT_EQ(result, expected);
+    // This assumes that the function returns an empty vector in case of an invalid origin
+    vector<int> expected = {};
+    ASSERT_EQ(result, expected);
 
-//     delete resultStruct;
-// }
+    delete resultStruct;
+}
 
 // Test case where the number of delivery men requested is more than available
 TEST_F(MapTest, NearestDMen_MoreDeliveryMenRequestedThanAvailable) {
@@ -304,20 +130,16 @@ TEST_F(MapTest, NearestDMen_MoreDeliveryMenRequestedThanAvailable) {
 
 // Q3 
 TEST_F(MapTest, FindRouteOpt_ValidRouteAndDistance) {
-    Order order(1, 10, 7, false);
-    order.addProducts(1, 50, 10, 2);
+    Order order(0,5,1,0); //numeor do pedido:0; Local de entrega vert 5; vendedor 1; typo 0;
+    order.addProducts(0,1,2,1);
+    order.addProducts(1,1,2,1);
 
     DeliveryMan deliveryMan = mapa->deliveryManInMap[0];
 
-    ReturnFindRoutOpt result = *mapa->FindRouteOpt(order);
+    ReturnFindRoutOpt* result = mapa->FindRouteOpt(order);
 
-    // ASSERT_NE(result, nullptr);
-    // ASSERT_EQ(*(result->distanceTotal), 388);
-    // ASSERT_NE(result->nearestDMan, nullptr);
-    // ASSERT_FALSE(result->routeMin.empty());
-    // ASSERT_EQ(result->routeMin, std::vector<int>({7, 11, 10}));
-    // ASSERT_EQ(result->routeMin.back(), order.getDestination());
-
+    ASSERT_NE(result, nullptr);
+    ASSERT_EQ((result->nearestDMan->getLocation()), 388);
 
     // delete result;
 }

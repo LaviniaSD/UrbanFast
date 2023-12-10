@@ -9,6 +9,6 @@ stop:
 	docker rm my-running-app
 
 make sequence_run:
-	make stop
+	# make stop
 	make build
 	make test
